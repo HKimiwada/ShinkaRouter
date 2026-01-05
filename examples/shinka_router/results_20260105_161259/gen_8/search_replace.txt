@@ -1,0 +1,30 @@
+<NAME>
+difficulty_based_routing
+</NAME>
+
+<DESCRIPTION>
+This modification introduces a difficulty-based routing strategy to improve the accuracy of the agent. By estimating the difficulty of the problem first, we can route easy problems to the baseline solver and more complex problems to a combination of deep thinking and verification. This approach leverages the strengths of different primitives based on the problem's complexity, aiming to increase the overall accuracy and efficiency of the agent.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+        response, cost = self.baseline_solve(problem)
+=======
+        # Estimate difficulty of the problem
+        difficulty, cost = self.estimate_difficulty(problem)
+
+        # Route based on difficulty
+        if difficulty == 'easy':
+            response, cost = self.baseline_solve(problem)
+        elif difficulty == 'medium':
+            response, cost = self.ensemble_vote(problem, n=3)
+        else:  # hard
+            response, cost = self.deep_think(problem)
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                response = verify_response
+                cost += verify_cost
+>>>>>>> REPLACE
+</DIFF>

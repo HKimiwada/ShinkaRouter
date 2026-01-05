@@ -175,5 +175,3 @@ cython_debug/
 .pypirc
 
 # ShinkaRouter specific ignores
-examples/shinka_router/results_*
-examples/adas_aime/results_*

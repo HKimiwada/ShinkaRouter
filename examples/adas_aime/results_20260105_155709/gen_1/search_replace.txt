@@ -1,0 +1,86 @@
+<NAME>
+chain_of_thought_prompting
+</NAME>
+
+<DESCRIPTION>
+Implementing chain-of-thought prompting can enhance the agent's reasoning capabilities. By guiding the LLM through a structured thought process, we can improve its ability to break down complex problems into manageable steps. This approach encourages the model to articulate its reasoning, leading to more accurate answers. I will modify the `get_prompt_for_task` method to include a series of prompts that encourage step-by-step reasoning before arriving at the final answer.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
+=======
+        task_prompt = (
+            "Let's solve the following problem step by step:\n"
+            f"{problem}\n\n"
+            "1. Identify the key elements of the problem.\n"
+            "2. Write down any relevant formulas or theorems.\n"
+            "3. Break the problem into smaller parts and solve each part.\n"
+            "4. Finally, combine your results to find the answer.\n\n"
+            f"{self.output_format_instructions}:\n\n"
+        )
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+multi_step_reflection
+</NAME>
+
+<DESCRIPTION>
+Introducing multi-step reflection allows the agent to review its reasoning and solutions at various checkpoints. By prompting the agent to verify each step before moving on, we can reduce the likelihood of errors and improve overall accuracy. This change will involve adding reflection checkpoints in the `forward` method after each major step in the reasoning process.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        intermediate_response, intermediate_cost = self.query_llm(
+=======
+        response, cost = self.query_llm(
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+        # Reflection step
+        reflection_prompt = f"Reflect on your solution: {intermediate_response}. Is there anything you would change or clarify?"
+        reflection_response, reflection_cost = self.query_llm(
+            prompt=reflection_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+>>>>>>> REPLACE
+        return response, cost
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+temperature_sampling
+</NAME>
+
+<DESCRIPTION>
+Implementing temperature sampling can help explore a range of possible answers and improve the robustness of the agent's responses. By querying the LLM with different temperature settings (e.g., 0.0 for deterministic answers and 1.0 for more creative responses), we can ensemble the results to select the best answer. This requires modifying the `forward` method to incorporate multiple queries at different temperatures.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        responses = []
+        total_cost = 0
+        temperatures = [0.0, 0.5, 1.0]
+
+        for temp in temperatures:
+            response, cost = self.query_llm(
+>>>>>>> REPLACE
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=temp,
+        )
+        responses.append(response)
+        total_cost += cost
+
+        # Select the best response (for simplicity, we could choose the most common or highest confidence)
+        final_response = Counter(responses).most_common(1)[0][0]
+        return final_response, total_cost
+>>>>>>> REPLACE
+</DIFF>

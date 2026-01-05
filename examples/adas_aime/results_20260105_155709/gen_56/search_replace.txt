@@ -1,0 +1,94 @@
+<NAME>
+adaptive_refinement
+</NAME>
+
+<DESCRIPTION>
+Introduce an adaptive refinement mechanism that dynamically adjusts the number of attempts based on the complexity of the problem. This allows the agent to allocate more resources to challenging problems while reducing unnecessary attempts on simpler ones. The complexity can be assessed using keywords in the problem statement, and the number of attempts can be adjusted accordingly. This approach aims to enhance the quality of responses while managing costs effectively.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        attempts = 0
+=======
+        attempts = 2  # Start with 2 attempts for all problems
+        complexity_keywords = ["complex", "difficult", "challenging", "geometry", "trigonometry"]
+        if any(keyword in problem.lower() for keyword in complexity_keywords):
+            attempts = 5  # Increase attempts for complex problems
+>>>>>>> REPLACE
+
+        while attempts < 5:  # Allow multiple attempts for refinement
+            response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+iterative_verification
+</NAME>
+
+<DESCRIPTION>
+Refine the iterative verification process to ensure that the agent checks for logical consistency and correctness after each response. This enhancement involves prompting the agent to validate its reasoning explicitly, which can help in recognizing and correcting mistakes more effectively. The process will also include a re-evaluation step where the agent considers alternative solutions based on its previous responses.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response = self.query_llm(
+=======
+        response, cost = self.query_llm(
+>>>>>>> REPLACE
+
+        for _ in range(2):  # Allow two iterations of refinement
+            verification_prompt = (
+                f"Please review your calculations and reasoning for the problem:\n\n"
+                f"{problem}\n\n"
+                f"Your answer is: {response}\n\n"
+                f"Are there any mistakes or areas for improvement? Please explain."
+            )
+            verification_response, _ = self.query_llm(
+                prompt=verification_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            if "mistake" in verification_response.lower():
+                refinement_prompt = (
+                    "Considering the feedback you provided, revise your answer and show your reasoning clearly."
+                )
+                initial_response, _ = self.query_llm(
+                    prompt=refinement_prompt,
+                    system=system_prompt,
+                    temperature=self.temperature,
+                )
+        return initial_response
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+few_shot_prompting
+</NAME>
+
+<DESCRIPTION>
+Integrate few-shot prompting by providing the agent with examples of similar problems and their solutions. This will help the agent understand the problem structure better and improve its reasoning capabilities. The examples should be relevant to the current problem type and demonstrate clear step-by-step solutions, enhancing the agent's ability to generate accurate responses.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\nThink carefully through the steps to solve. Please explain your reasoning in detail."
+=======
+        task_prompt = (
+            f"{self.output_format_instructions}:\n\n"
+            f"Here are some examples of similar problems solved step-by-step:\n"
+            f"1. Problem: Find the area of a triangle with base 5 and height 10.\n"
+            f"   Solution: Area = 0.5 * base * height = 0.5 * 5 * 10 = 25.\n"
+            f"2. Problem: What is the sum of angles in a triangle?\n"
+            f"   Solution: The sum is always 180 degrees.\n\n"
+            f"Now please solve the following problem step-by-step:\n\n"
+            f"{problem}\n\n"
+        )
+>>>>>>> REPLACE
+
+</DIFF>

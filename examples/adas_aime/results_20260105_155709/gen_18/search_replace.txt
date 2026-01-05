@@ -1,0 +1,85 @@
+```python
+<NAME>
+enhance_reflection_steps
+</NAME>
+
+<DESCRIPTION>
+Enhancing the reflection steps to include multiple verification prompts and introduce iterative refinement will improve the agent's ability to self-correct. This is critical for handling complex problems where initial responses may contain errors. By encouraging the model to iterate on its answer, we enable it to catch mistakes and enhance solution accuracy.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        return response, cost
+=======
+        # Enhanced iterative verification process
+        for _ in range(2):  # Allow two iterations of refinement
+            verification_prompt = (
+                f"Please review your calculations and reasoning for the problem:\n\n"
+                f"{problem}\n\n"
+                f"Your answer is: {response}\n\n"
+                f"Are there any mistakes or areas for improvement? Please explain."
+            )
+            verification_response, _ = self.query_llm(
+                prompt=verification_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            if "mistake" in verification_response.lower():
+                # Update response and refine the answer
+                refinement_prompt = (
+                    "Considering the feedback that you provided, revise your answer and show your reasoning clearly."
+                )
+                response, _ = self.query_llm(
+                    prompt=refinement_prompt,
+                    system=system_prompt,
+                    temperature=self.temperature,
+                )
+        return response, cost
+>>>>>>> REPLACE
+```
+
+```python
+<NAME>
+dynamic_temperature_adjustment
+</NAME>
+
+<DESCRIPTION>
+Introduce dynamic temperature adjustment based on the complexity of the problem. For more complex problems, a higher temperature will encourage more creativity in the responses, while simpler problems will benefit from a lower temperature to maintain accuracy. This approach aims to balance precision and innovative reasoning, thereby generating better results for AIME-style problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+=======
+        # Determine complexity of the problem based on keywords and adjust temperature
+        complexity_keywords = ["complex", "difficult", "challenging", "geometry", "trigonometry"]
+        self.temperature = 0.7 if any(keyword in problem.lower() for keyword in complexity_keywords) else 0.0
+
+        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+>>>>>>> REPLACE
+```
+
+```python
+<NAME>
+enhanced_output_syntax
+</NAME>
+
+<DESCRIPTION>
+Improve the output formatting by requesting the model to provide a more structured answer, including the key steps taken to derive the final answer. By ensuring clarity in response presentation, we can help users or evaluators better understand the model's reasoning and facilitate validation processes. This is critical for complex math problems where clarity in the solving methodology can identify potential flaws.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        system_prompt = "You are a skilled mathematician."
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
+=======
+        system_prompt = "You are a skilled mathematician who provides clarity and structure in explanations."
+        task_prompt = (
+            f"{self.output_format_instructions}:\n\n"
+            f"Please solve the following problem step-by-step, clearly indicating the reasoning behind each step:\n\n"
+            f"{problem}\n\n"
+        )
+>>>>>>> REPLACE
+```
+
+These modifications offer a more rigorous and dynamic approach to resolving complex math problems, enhancing the overall agent performance on AIME-style tasks.

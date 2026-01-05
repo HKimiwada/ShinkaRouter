@@ -1,0 +1,79 @@
+<NAME>
+enhanced_chain_of_thought
+</NAME>
+
+<DESCRIPTION>
+Incorporate a structured chain-of-thought prompting strategy that encourages the model to reason step-by-step through the problem. This will help the model break down complex problems into simpler parts and articulate its reasoning clearly, which is particularly beneficial for mathematical problems. The agent will provide intermediate steps and explanations before arriving at the final answer, allowing for better understanding and verification of its reasoning process.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+=======
+        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+        task_prompt = f"Please solve the following problem step-by-step, providing explanations for each step:\n\n{problem}\n\n"
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+dynamic_temperature_adjustment
+</NAME>
+
+<DESCRIPTION>
+Implement a dynamic temperature adjustment based on the complexity of the problem. This will allow the model to explore more creative solutions for complex problems while maintaining accuracy for simpler problems. By analyzing keywords that indicate complexity, the model can adjust its temperature accordingly, enhancing its performance on a wider range of AIME problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+    def forward(self, problem: str) -> tuple[str, float]:
+=======
+    def forward(self, problem: str) -> tuple[str, float]:
+        """Queries the LLM with a math problem and applies multi-step reflection."""
+        # Determine complexity of the problem based on keywords and adjust temperature
+        complexity_keywords = ["complex", "difficult", "challenging", "geometry", "trigonometry"]
+        self.temperature = 0.7 if any(keyword in problem.lower() for keyword in complexity_keywords) else 0.0
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+iterative_answer_refinement
+</NAME>
+
+<DESCRIPTION>
+Refine the answer through multiple iterations of feedback and reflection. After generating an initial response, the agent will prompt the model for feedback on its answer, allowing for the identification of potential errors and corrections. This iterative process will enhance the accuracy and reliability of the final answer by encouraging the model to critically evaluate its own responses.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        # Step 2: Enhanced self-verification process
+        verification_prompt = (
+=======
+        # Step 2: Enhanced iterative verification process
+        for _ in range(2):  # Allow two iterations of refinement
+            verification_prompt = (
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+self_verification_with_explanation
+</NAME>
+
+<DESCRIPTION>
+Enhance the self-verification process by requiring the model to not only confirm if its answer is correct but also to explain why it believes the answer is correct or incorrect. This added layer of reasoning will help the model articulate its thought process and improve the clarity of its responses, potentially leading to higher accuracy in complex mathematical problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+            verification_response, _ = self.query_llm(
+=======
+            verification_response, _ = self.query_llm(
+                prompt=verification_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+>>>>>>> REPLACE
+
+</DIFF>

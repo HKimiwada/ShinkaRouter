@@ -1,0 +1,71 @@
+<NAME>
+enhance_chain_of_thought
+</NAME>
+
+<DESCRIPTION>
+To improve the agent's performance on complex math problems, we can enhance the prompting strategy by integrating a chain-of-thought approach. This involves explicitly instructing the model to break down the problem into smaller parts and reason through each step methodically. By encouraging the model to articulate its reasoning at each stage, we can improve the accuracy of the final answer. This is particularly useful for math problems, where logical progression is key to arriving at the correct solution.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem step-by-step, showing all your reasoning. After each step, summarize your findings and check if they align with the problem requirements:\n\n{problem}\n\n"
+=======
+        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem by breaking it down into smaller steps. For each step, explain your reasoning clearly and check if it aligns with the problem requirements. This will help ensure accuracy in your final answer:\n\n{problem}\n\n"
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+multi_step_reflection
+</NAME>
+
+<DESCRIPTION>
+Implement a multi-step reflection mechanism that allows the agent to review its reasoning after each step. This can be achieved by prompting the model to evaluate whether its previous reasoning aligns with the problem requirements and if adjustments are necessary. This iterative approach can help catch errors and refine the final answer, leading to improved accuracy.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem by breaking it down into smaller steps. For each step, explain your reasoning clearly and check if it aligns with the problem requirements. This will help ensure accuracy in your final answer:\n\n{problem}\n\n"
+=======
+        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem by breaking it down into smaller steps. For each step, explain your reasoning clearly, reflect on whether your previous reasoning aligns with the problem requirements, and adjust if necessary. This will help ensure accuracy in your final answer:\n\n{problem}\n\n"
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+adaptive_temperature_sampling
+</NAME>
+
+<DESCRIPTION>
+Introduce an adaptive temperature sampling strategy that adjusts the temperature based on the complexity of the problem. For simpler problems, a lower temperature can be used to promote accuracy, while a higher temperature can be employed for more complex problems to encourage creative solutions. This approach can enhance the agent's ability to navigate a diverse range of mathematical challenges effectively.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+    def forward(self, problem: str) -> tuple[str, float]:
+=======
+    def forward(self, problem: str, complexity: str) -> tuple[str, float]:
+>>>>>>> REPLACE
+<|diff_marker|> ADD A1000
+        """Queries the LLM with a math problem."""
+        self.temperature = self.adjust_temperature(complexity)
+
+<|diff_marker|> ***
+        response, cost = self.query_llm(
+<|diff_marker|> AT 1010
+<|diff_marker|> ADD A1020
+
+<|diff_marker|> ***
+    def adjust_temperature(self, attempt: int) -> float:
+        """Adjust temperature based on the number of attempts made."""
+        return max(0.0, 0.5 - (0.05 * attempt))
+<|diff_marker|> REMOVE 1020 TO 1023
+<|diff_marker|> ADD A1040
+    def adjust_temperature(self, complexity: str) -> float:
+        """Adjust temperature based on the complexity of the problem."""
+        if complexity == 'simple':
+            return 0.0
+        elif complexity == 'medium':
+            return 0.5
+        else:  # complex
+            return 1.0
+>>>>>>> REPLACE
+</DIFF>

@@ -1,0 +1,14 @@
+<NAME>
+chain_of_thought_prompting
+</NAME>
+
+<DESCRIPTION>
+Implementing chain-of-thought prompting can enhance the model's reasoning capabilities by guiding it through each step of the problem logically. This approach encourages deeper processing and can lead to more accurate answers, particularly in complex mathematical reasoning. I'll modify the task prompt to include a structured breakdown of problem-solving steps, which can help the agent develop its answer incrementally.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
+=======
+        task_prompt = f"{self.output_format_instructions}\n\nTo solve the math problem step-by-step, please think through the following:\n1. Identify the key elements of the problem.\n2. State what needs to be calculated.\n3. Show each step of the calculation clearly.\n4. Final answer must be enclosed in a LaTeX \\boxed{{...}} command.\n\n{problem}\n\n"
+>>>>>>> REPLACE

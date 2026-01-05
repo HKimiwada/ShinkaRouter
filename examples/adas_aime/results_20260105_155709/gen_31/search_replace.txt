@@ -1,0 +1,86 @@
+<NAME>
+dynamic_reflection_mechanism
+</NAME>
+
+<DESCRIPTION>
+Introduce a dynamic reflection mechanism that allows the model to iteratively verify its calculations and reasoning after generating a response. This approach can help catch errors that may have been overlooked in a single pass, thereby improving accuracy. The agent will re-evaluate its previous answers, prompting for adjustments if necessary, which is particularly useful for complex problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        response, cost = None, None
+        for attempt in range(3):  # Allow for 3 attempts to refine the response
+            response, cost = self.query_llm(
+>>>>>>> REPLACE
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+<<<<<<< SEARCH
+        return response, cost
+=======
+            if self.is_valid_response(response):
+                break  # Accept the first valid response
+            # Create new prompt for reflection
+            task_prompt = self.refine_prompt(response)
+
+        return response.strip(), cost
+
+    def is_valid_response(self, response: str) -> bool:
+        """Check if the response meets the formatting or correctness criteria."""
+        match = re.match(r'^\d{1,3}$', response)
+        return bool(match)
+
+    def refine_prompt(self, last_response: str) -> str:
+        """Create a refined prompt based on the last response."""
+        return f"In the previous attempt, you provided the answer '{last_response}'. Please re-evaluate your reasoning and state if you stand by that answer, or provide a new one with clearer justification."
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+temperature_adjustment
+</NAME>
+
+<DESCRIPTION>
+Implement a temperature adjustment mechanism that dynamically modifies the temperature based on the complexity of the problem. For problems identified as complex (based on keywords), a higher temperature will encourage creative solutions, while simpler problems will use a lower temperature for precision. This can help balance creativity and accuracy across a wider range of problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        self.temperature = self.adjust_temperature(problem)  # Adjust temperature based on complexity
+        response, cost = self.query_llm(
+>>>>>>> REPLACE
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+
+    def adjust_temperature(self, problem: str) -> float:
+        """Adjust temperature based on the complexity of the problem."""
+        complexity_keywords = ["complex", "difficult", "challenging"]
+        if any(keyword in problem.lower() for keyword in complexity_keywords):
+            return 0.7  # Higher temperature for complex problems
+        else:
+            return 0.0  # Lower temperature for simpler problems
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+enhanced_output_format
+</NAME>
+
+<DESCRIPTION>
+Enhance the output format instructions to encourage clear reasoning and step-by-step explanations. This will help the model articulate its thought process and ensure that the final answer is derived logically. By requiring a structured response, the model is more likely to produce accurate and well-justified answers.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        self.output_format_instructions = "On the final line output only the digits of the answer (0‑999). Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
+=======
+        self.output_format_instructions = "On the final line output only the digits of the answer (0‑999). Provide your final answer enclosed in a LaTeX \\boxed{{...}} command. Additionally, ensure to show your reasoning step-by-step, summarizing findings after each step."
+>>>>>>> REPLACE
+</DIFF>

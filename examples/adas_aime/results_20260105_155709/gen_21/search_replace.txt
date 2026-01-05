@@ -1,0 +1,53 @@
+<NAME>
+dynamic_reflection_and_examples
+</NAME>
+
+<DESCRIPTION>
+This modification introduces a dynamic reflection mechanism that allows the agent to review its calculations and reasoning iteratively. Additionally, it incorporates contextual examples relevant to the problem type, which can help the model better understand the nuances of the task. By providing examples of similar problems solved step-by-step, the agent can leverage these patterns to improve its performance on new problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+=======
+        # Incorporate contextual examples in prompts
+        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+        task_prompt = (
+            f"{self.output_format_instructions}:\n\n"
+            f"Here are some examples of similar problems solved step-by-step:\n"
+            f"1. Problem: Find the area of a triangle with base 5 and height 10.\n"
+            f"   Solution: Area = 0.5 * base * height = 0.5 * 5 * 10 = 25.\n"
+            f"2. Problem: What is the sum of angles in a triangle?\n"
+            f"   Solution: The sum is always 180 degrees.\n\n"
+            f"Now please solve the following problem step-by-step:\n\n"
+            f"{problem}\n\n"
+        )
+>>>>>>> REPLACE
+
+        # Enhanced iterative verification process
+        for _ in range(2):  # Allow two iterations of refinement
+            verification_prompt = (
+                f"Please review your calculations and reasoning for the problem:\n\n"
+                f"{problem}\n\n"
+                f"Your answer is: {response}\n\n"
+                f"Are there any mistakes or areas for improvement? Please explain."
+            )
+            verification_response, _ = self.query_llm(
+                prompt=verification_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            if "mistake" in verification_response.lower():
+                # Update response and refine the answer
+                refinement_prompt = (
+                    "Considering the feedback that you provided, revise your answer and show your reasoning clearly."
+                )
+                response, _ = self.query_llm(
+                    prompt=refinement_prompt,
+                    system=system_prompt,
+                    temperature=self.temperature,
+                )
+        return response, cost
+>>>>>>> REPLACE
+
+</DIFF>

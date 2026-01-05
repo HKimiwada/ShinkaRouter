@@ -1,0 +1,40 @@
+<NAME>
+enhanced_routing_logic
+</NAME>
+
+<DESCRIPTION>
+The current routing logic primarily relies on `baseline_solve` for all problems, which limits the ability to tackle more complex problems effectively. To enhance performance, I propose incorporating a multi-stage routing strategy based on problem difficulty and potentially utilizing `deep_think` and `verify` for medium and hard problems. This will allow for improved accuracy in solving AIME problems, facilitating a better overall combined score by reducing misclassifications and enhancing solution correctness.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+        response, cost = self.baseline_solve(problem)
+=======
+        # Determine problem difficulty
+        difficulty, diff_cost = self.estimate_difficulty(problem)
+
+        # Route based on difficulty
+        if difficulty == 'easy':
+            response, cost = self.baseline_solve(problem)
+            cost += diff_cost  # Account for difficulty estimation cost
+        elif difficulty == 'medium':
+            response, deep_cost = self.deep_think(problem)
+            boxed_answer = self.extract_boxed_answer(response)
+            if boxed_answer:
+                verify_response, verify_cost = self.verify(problem, boxed_answer)
+                response = verify_response
+                cost = deep_cost + verify_cost + diff_cost  # Account for both costs
+            else:
+                cost = deep_cost + diff_cost  # Only deep_think cost if verification fails
+        else:  # hard
+            response, deep_cost = self.deep_think(problem)
+            boxed_answer = self.extract_boxed_answer(response)
+            if boxed_answer:
+                verify_response, verify_cost = self.verify(problem, boxed_answer)
+                response = verify_response
+                cost = deep_cost + verify_cost + diff_cost  # Account for both costs
+            else:
+                cost = deep_cost + diff_cost  # Only deep_think cost if verification fails
+>>>>>>> REPLACE
+</DIFF>

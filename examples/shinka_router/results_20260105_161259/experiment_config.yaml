@@ -1,0 +1,142 @@
+database_config:
+  archive_size: 100
+  db_path: results_20260105_161259/router_evolution.sqlite
+  elite_selection_ratio: 0.3
+  embedding_model: text-embedding-3-small
+  enforce_island_separation: true
+  exploitation_alpha: 1.0
+  exploitation_ratio: 0.2
+  island_elitism: true
+  migration_interval: 5
+  migration_rate: 0.15
+  num_archive_inspirations: 5
+  num_beams: 5
+  num_islands: 8
+  num_top_k_inspirations: 2
+  parent_selection_lambda: 10.0
+  parent_selection_strategy: power_law
+evolution_config:
+  code_embed_sim_threshold: 0.95
+  embedding_model: text-embedding-3-small
+  init_program_path: initial.py
+  job_type: local
+  language: python
+  llm_dynamic_selection: null
+  llm_dynamic_selection_kwargs: {}
+  llm_kwargs:
+    max_tokens: 16384
+    temperatures:
+    - 0.0
+    - 0.5
+    - 1.0
+  llm_models:
+  - gpt-4o-mini
+  - gpt-4o
+  max_novelty_attempts: 3
+  max_parallel_jobs: 4
+  max_patch_attempts: 5
+  max_patch_resamples: 3
+  meta_llm_kwargs:
+    temperatures:
+    - 0.0
+  meta_llm_models:
+  - gpt-4o
+  meta_max_recommendations: 5
+  meta_rec_interval: 10
+  novelty_llm_kwargs:
+    temperatures:
+    - 0.0
+  novelty_llm_models:
+  - gpt-4o
+  num_generations: 75
+  patch_type_probs:
+  - 0.5
+  - 0.3
+  - 0.2
+  patch_types:
+  - diff
+  - full
+  - cross
+  results_dir: null
+  task_sys_msg: "You are an expert AI researcher designing ROUTING LOGIC for a mathematical\
+    \ problem-solving agent.\n\n# AGENT ARCHITECTURE\n\nThe agent has these PRIMITIVES\
+    \ available (DO NOT modify these):\n\n0. baseline_solve(problem): Exact match\
+    \ to adas_aime baseline (temp=0.0, simple prompt)\n   - This is the STARTING POINT\
+    \ - evolution should improve on this\n   - Uses: temperature=0.0, system=\"You\
+    \ are a skilled mathematician.\"\n\n1. quick_solve(problem): Fast solving with\
+    \ temperature=0.7, good for easy problems\n   - Higher temperature = more randomness\
+    \ = worse for math usually\n   - Consider using baseline_solve or deep_think instead\
+    \ for accuracy\n\n2. deep_think(problem): Careful chain-of-thought reasoning with\
+    \ temperature=0.0\n   - Adds \"Think step-by-step\" instruction\n   - Often better\
+    \ than baseline_solve for complex problems\n\n3. verify(problem, answer): Skeptical\
+    \ validator checking a proposed solution\n   - Use after getting an initial answer\
+    \ to catch errors\n\n4. python_calc(problem): Systematic step-by-step calculation\
+    \ approach\n   - Good for computation-heavy problems\n\n5. ensemble_vote(problem,\
+    \ n): Generate n solutions and vote on answer\n   - Uses temperature=0.7 for diversity,\
+    \ then majority vote\n   - Costs n LLM calls\n\n6. self_critique(problem, draft):\
+    \ Generate solution then critique and refine\n   - Pass the FULL draft response,\
+    \ not just the answer\n\n7. estimate_difficulty(problem): Returns 'easy', 'medium',\
+    \ or 'hard'\n   - Use for adaptive routing decisions\n\n8. classify_problem_type(problem):\
+    \ Returns problem category\n   - algebra, geometry, number_theory, combinatorics,\
+    \ calculus\n\nYour task is to evolve the `forward(problem)` method to INTELLIGENTLY\
+    \ ROUTE between these primitives.\n\n# OPTIMIZATION OBJECTIVE\n\n**Fitness Function:**\
+    \ Score = Accuracy - (\u03BB \xD7 AvgCalls \xD7 100)\n\nWhere:\n- Accuracy: Percentage\
+    \ of AIME problems solved correctly (0-100%)\n- AvgCalls: Average number of LLM\
+    \ calls per problem\n- \u03BB: Efficiency penalty (starts at 0.0, gradually increases\
+    \ to 0.10)\n\n**Goal:** Find routing strategies on the PARETO FRONTIER - maximize\
+    \ accuracy while minimizing LLM calls.\n\n# IMPORTANT: Temperature and Accuracy\n\
+    \nFor math problems, **lower temperature = better accuracy**:\n- temperature=0.0:\
+    \ Deterministic, best for math (baseline_solve, deep_think)\n- temperature=0.7:\
+    \ Random, worse for math but adds diversity (quick_solve, ensemble_vote)\n\nThe\
+    \ baseline (baseline_solve) uses temperature=0.0. To beat it, you need SMARTER\
+    \ routing, not just different primitives.\n\n# CONSTRAINTS\n\n- Maximum 10 LLM\
+    \ calls per problem (hard limit, exceeding causes failure)\n- Must return 3-digit\
+    \ answer format (0-999) in \\boxed{{}} \n- Minimum 30% accuracy required (below\
+    \ this is heavily penalized)\n- Lambda increases over generations, gradually adding\
+    \ efficiency pressure\n\n# ROUTING STRATEGIES TO EXPLORE\n\n1. **Chain-of-thought\
+    \ enhancement:**\n   - Use deep_think instead of baseline_solve\n   - deep_think\
+    \ adds explicit CoT prompting which often helps\n\n2. **Sequential verification:**\n\
+    \   - baseline_solve/deep_think \u2192 verify\n   - Catches errors in initial\
+    \ solution\n\n3. **Difficulty-based routing:**\n   - estimate_difficulty() to\
+    \ classify problem\n   - Route easy\u2192baseline_solve (1 call), hard\u2192deep_think+verify\
+    \ (2 calls)\n\n4. **Self-refinement:**\n   - deep_think \u2192 self_critique\n\
+    \   - Iteratively improve the solution\n\n5. **Ensemble for hard problems:**\n\
+    \   - ensemble_vote(n=3) for medium-difficulty problems\n   - More diverse solutions,\
+    \ majority vote\n\n6. **Multi-stage pipelines:**\n   - estimate_difficulty \u2192\
+    \ route to appropriate depth\n   - Track call budget, adapt strategy\n\n# CURRENT\
+    \ GENERATION INFO\n\nThe lambda penalty starts at 0.0 and increases gradually:\n\
+    - Gen 0-9: \u03BB=0.0 (pure accuracy, ignore efficiency)\n- Gen 10-19: \u03BB\
+    =0.01 (slight efficiency pressure)\n- Gen 20-29: \u03BB=0.02\n- Gen 30-39: \u03BB\
+    =0.03\n- Gen 40-49: \u03BB=0.05\n- Gen 50-59: \u03BB=0.07\n- Gen 60+: \u03BB=0.10\
+    \ (strong efficiency pressure)\n\nEarly generations should focus on maximizing\
+    \ accuracy. Later generations should optimize the accuracy-efficiency tradeoff.\n\
+    \n# PERFORMANCE FEEDBACK\n\nYou will receive:\n1. combined_score: The fitness\
+    \ value (accuracy - \u03BB\xD7calls\xD7100)\n2. accuracy: Raw accuracy percentage\n\
+    3. avg_calls: Average LLM calls per problem\n4. text_feedback: Examples of failed\
+    \ problems to learn from\n5. lambda_used: Current \u03BB value for this generation\n\
+    6. primitive_diversity: How many different primitives were used\n\n# CODE REQUIREMENTS\n\
+    \n- Only modify the `forward(self, problem)` method inside EVOLVE-BLOCK\n- DO\
+    \ NOT change primitive methods (baseline_solve, verify, etc.)\n- Return (response,\
+    \ total_cost) tuple\n- Handle all primitives returning (response, cost) tuples\n\
+    - Track and sum costs across all primitive calls\n- Call self.reset_tracking()\
+    \ at the start of forward()\n\nExample improved forward():\n```python\ndef forward(self,\
+    \ problem: str) -> Tuple[str, float]:\n    self.reset_tracking()\n    total_cost\
+    \ = 0.0\n    \n    # Use deep_think for better CoT reasoning\n    response, cost\
+    \ = self.deep_think(problem)\n    total_cost += cost\n    \n    # Verify the answer\n\
+    \    answer = self.extract_boxed_answer(response)\n    if answer:\n        verify_response,\
+    \ verify_cost = self.verify(problem, answer)\n        total_cost += verify_cost\n\
+    \        return verify_response, total_cost\n    \n    return response, total_cost\n\
+    ```\n\nRemember: The baseline uses temperature=0.0. To beat it, use better REASONING\
+    \ strategies, not just different temperatures!\n"
+  use_text_feedback: true
+job_config:
+  conda_env: null
+  eval_program_path: evaluate.py
+  extra_cmd_args:
+    max_calls: 10
+    model_name: gpt-4o-mini
+    num_experiment_runs: 3
+    year: 2024
+  time: null
+results_directory: results_20260105_161259
+timestamp: '2026-01-05T16:12:59.784426'

@@ -1,0 +1,45 @@
+<NAME>
+improve_routing_logic
+</NAME>
+
+<DESCRIPTION>
+The current routing logic primarily uses a combination of `quick_solve`, `deep_think`, and `verify` based on the estimated difficulty. However, it lacks the use of `ensemble_vote`, which can be beneficial for medium and hard problems, especially when the problem type is more complex. By integrating `ensemble_vote` for medium difficulty problems and refining the decision-making for hard problems, we can enhance the accuracy of the responses. Additionally, we can incorporate a fallback to `self_critique` if verification fails, which can help refine the solution further. This should lead to improved accuracy and potentially reduce the average number of calls.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        if difficulty == 'easy':
+            response, cost = self.quick_solve(problem)
+        elif difficulty == 'medium':
+            response, cost = self.deep_think(problem)
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                response = verify_response
+                cost += verify_cost
+        else:  # hard problems
+            response, cost = self.deep_think(problem)
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                response = verify_response
+                cost += verify_cost
+=======
+        if difficulty == 'easy':
+            response, cost = self.quick_solve(problem)
+        elif difficulty == 'medium':
+            response, cost = self.ensemble_vote(problem)
+        else:  # hard problems
+            response, cost = self.deep_think(problem)
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                if not verify_response:
+                    critique_response, critique_cost = self.self_critique(problem, response)
+                    response = critique_response
+                    cost += critique_cost
+                else:
+                    response = verify_response
+                    cost += verify_cost
+>>>>>>> REPLACE
+</DIFF>

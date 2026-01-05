@@ -1,0 +1,69 @@
+<NAME>
+dynamic_reflection_mechanism
+</NAME>
+
+<DESCRIPTION>
+Implement a dynamic reflection mechanism that allows the agent to iteratively verify its calculations and reasoning after each response. This approach encourages the model to refine its answers based on previous attempts, potentially catching errors that may have been overlooked. By prompting the model to reflect on its responses, we can enhance the accuracy of the final output, especially for complex problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        responses = []
+        costs = []
+        for temp in [0.0, 0.5, 1.0]:
+            response, cost = self.query_llm(
+=======
+        response, cost = None, None
+        for attempt in range(3):  # Limit to 3 attempts for reflection
+            for temp in [0.0, 0.5, 1.0]:
+                response, cost = self.query_llm(
+>>>>>>> REPLACE
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=temp,
+            )
+            if self.is_valid_response(response):
+                break  # Accept the first valid response
+
+            # Create new prompt for reflection
+            task_prompt = self.refine_prompt(response)
+
+        return response.strip(), cost
+
+    def is_valid_response(self, response: str) -> bool:
+        """Check if the response meets the formatting or correctness criteria."""
+        match = re.match(r'^\d{1,3}$', response)
+        return bool(match)
+
+    def refine_prompt(self, last_response: str) -> str:
+        """Create a refined prompt based on the last response."""
+        return f"In the previous attempt, you provided the answer '{last_response}'. Please re-evaluate your reasoning and state if you stand by that answer, or provide a new one with clearer justification."
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+multi_temperature_strategy
+</NAME>
+
+<DESCRIPTION>
+Introduce a multi-temperature strategy that adjusts the temperature based on the complexity of the problem. For simpler problems, a lower temperature can ensure accuracy, while more complex problems can benefit from a higher temperature to encourage creative solutions. This approach can help balance creativity and precision, potentially leading to better performance across a wider range of problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        for attempt in range(3):  # Limit to 3 attempts for reflection
+=======
+        complexity_keywords = ["complex", "difficult", "challenging"]
+        if any(keyword in problem.lower() for keyword in complexity_keywords):
+            self.temperature = 0.7  # Higher temperature for complex problems
+        else:
+            self.temperature = 0.0  # Lower temperature for simpler problems
+        for attempt in range(3):  # Limit to 3 attempts for reflection
+>>>>>>> REPLACE
+            for temp in [0.0, 0.5, 1.0]:
+                response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+</DIFF>

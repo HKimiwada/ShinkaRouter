@@ -1,0 +1,56 @@
+<NAME>
+multi_step_reflection
+</NAME>
+
+<DESCRIPTION>
+Implement a multi-step reflection mechanism where the agent revisits its previous responses and refines its reasoning iteratively. This approach allows the agent to assess its previous calculations and logic, potentially leading to more accurate answers. By prompting the agent to evaluate its own responses after each attempt, we can catch errors that may have been overlooked in a single pass and improve the overall accuracy of the solution.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        responses = []
+        costs = []
+        for temp in [0.0, 0.5, 1.0]:
+            response, cost = self.query_llm(
+=======
+        response, cost = None, None
+        for attempt in range(self.max_attempts):
+            response, cost = self.query_llm(
+>>>>>>> REPLACE
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            if self.is_valid_response(response):
+                break  # Accept the first valid response
+
+            # Create new prompt for reflection
+            task_prompt = self.refine_prompt(response)
+
+        return response.strip(), cost
+=======
+        responses = []
+        costs = []
+        for temp in [0.0, 0.5, 1.0]:
+            response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=temp,
+            )
+            responses.append(response)
+            costs.append(cost)
+
+        # Implement reflection on responses
+        best_response = self.refine_responses(responses)
+
+        return best_response.strip(), sum(costs) / len(costs)
+>>>>>>> REPLACE
+    def refine_responses(self, responses: List[str]) -> str:
+        """Choose the best response based on clarity and correctness."""
+        # Logic to select the best response based on predefined criteria
+        # For now, we can return the first valid response
+        for response in responses:
+            if self.is_valid_response(response):
+                return response
+        return responses[0]  # Fallback if no valid response found
+</DIFF>

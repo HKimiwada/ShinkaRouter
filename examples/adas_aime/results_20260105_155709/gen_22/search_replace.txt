@@ -1,0 +1,85 @@
+<NAME>
+dynamic_reflection_mechanism
+</NAME>
+
+<DESCRIPTION>
+Implement a dynamic reflection mechanism that allows the model to iteratively verify its calculations and reasoning. After generating an initial response, the model will be prompted to review its work and make adjustments as necessary. This iterative approach can help catch errors that may have been overlooked in a single pass, thereby improving accuracy.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        # Initial response generation
+        response, cost = self.query_llm(
+        # Dynamic reflection for verification
+        reflection_prompt = (
+            f"Please review your calculations and reasoning for the problem:\n\n"
+            f"{problem}\n\n"
+            f"Your answer is: {response}\n\n"
+            f"Are there any mistakes or areas for improvement? Please explain."
+        )
+        reflection_response, _ = self.query_llm(
+            prompt=reflection_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+        # If reflection suggests an error, return a failure message
+        if "mistake" in reflection_response.lower():
+            return "Reflection indicates an error in reasoning.", cost
+>>>>>>> REPLACE
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+        return response, cost
+=======
+
+        return response, cost
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+contextual_examples_in_prompts
+</NAME>
+
+<DESCRIPTION>
+Enhance the structured prompting used in the current program by integrating contextual examples relevant to the problem type. This can help the model better grasp the nuances of the task, leading to more accurate responses. For instance, including solved examples of similar problems can guide the model in recognizing patterns and applying them effectively.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
+=======
+        task_prompt = (
+            f"{self.output_format_instructions}:\n\n"
+            f"Here are some examples of similar problems solved step-by-step:\n"
+            f"1. Problem: Find the area of a triangle with base 5 and height 10.\n"
+            f"   Solution: Area = 0.5 * base * height = 0.5 * 5 * 10 = 25.\n"
+            f"2. Problem: What is the sum of angles in a triangle?\n"
+            f"   Solution: The sum is always 180 degrees.\n\n"
+            f"Now please solve the following problem step-by-step:\n\n"
+            f"{problem}\n\n"
+        )
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+adaptive_output_formatting
+</NAME>
+
+<DESCRIPTION>
+Expand the output formatting instructions to not only include LaTeX commands but also a summary of the steps taken to arrive at the final answer. This can provide clarity and transparency in the model's reasoning process, making it easier for users to follow along and understand how the answer was derived. Clearer outputs can also facilitate better validation of the model's responses.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        self.output_format_instructions = "On the final line output only the digits of the answer (0‑999). Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
+=======
+        self.output_format_instructions = (
+            "On the final line output only the digits of the answer (0‑999). "
+            "Provide your final answer enclosed in a LaTeX \\boxed{{...}} command. "
+            "Additionally, summarize the steps taken to arrive at this answer."
+        )
+>>>>>>> REPLACE
+</DIFF>

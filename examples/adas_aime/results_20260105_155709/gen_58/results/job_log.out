@@ -1,0 +1,18 @@
+Evaluating program: results_20260105_155709/gen_58/main.py
+Saving results to: results_20260105_155709/gen_58/results
+Using model: gpt-4.1-nano
+Using year: 2024
+Using max calls: 10
+Using num experiment runs: 3
+Evaluation error: unexpected indent (main.py, line 31)
+Correctness and error status saved to results_20260105_155709/gen_58/results/correct.json
+Metrics saved to results_20260105_155709/gen_58/results/metrics.json
+Evaluation failed: unexpected indent (main.py, line 31)
+Default metrics stored due to error:
+  combined_score: 0.0
+  execution_time_mean: 0.0
+  execution_time_std: 0.0
+  num_successful_runs: 0
+  num_valid_runs: 0
+  num_invalid_runs: 0
+  all_validation_errors: []

@@ -1,0 +1,71 @@
+"""Agent design evaluation on math tasks."""
+
+import re
+from typing import Callable, Tuple
+from math_eval import agent_evaluation
+
+# EVOLVE-BLOCK-START
+class Agent:
+    def __init__(
+        self,
+        query_llm: Callable,
+        temperature=0.5,  # Initial temperature for balancing creativity and correctness
+    ):
+        self.output_format_instructions = "On the final line output only the digits of the answer (0‑999). Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
+        self.query_llm = query_llm
+        self.temperature = temperature
+
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """Queries the LLM with a math problem and iteratively improves the answer."""
+        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+        response, cost = None, None
+        attempts = 0
+
+        while attempts < 5:  # Allow multiple attempts for refinement
+            response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+
+            if self.is_valid_response(response):
+                break  # Accept the first valid response
+
+            attempts += 1
+            # Generate a refined prompt based on previous feedback
+            task_prompt = self.refine_prompt(response, problem)
+
+        return response.strip(), cost
+
+    def get_prompt_for_task(self, problem: str) -> Tuple[str, str]:
+        system_prompt = "You are a skilled mathematician who provides clear and structured solutions."
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\nThink carefully through the steps to solve. Please explain your reasoning in detail."
+        return system_prompt, task_prompt
+
+    def is_valid_response(self, response: str) -> bool:
+        """Checks if the response is correctly formatted as required."""
+        return bool(re.match(r'^\d{1,3}$', response.strip()))
+
+    def refine_prompt(self, last_response: str, problem: str) -> str:
+        """Creates a refined prompt based on the previous response for more clarity and validation."""
+        return f"In the last attempt, you provided the answer '{last_response}'. Please reconsider your reasoning and validate whether it is correct, providing a step-by-step verification for each calculation for the following problem:\n\n{problem}\n"
+
+# EVOLVE-BLOCK-END
+
+def run_experiment(**kwargs):
+    from utils import query_llm, create_call_limited_query_llm
+    from functools import partial
+
+    # Create base query_llm function
+    base_query_llm = partial(query_llm, model_name=kwargs["model_name"])
+
+    # Wrap it with call limiting (max 10 calls per forward pass)
+    limited_query_llm = create_call_limited_query_llm(
+        base_query_llm,
+        max_calls=kwargs["max_calls"],
+    )
+
+    accuracy, cost_total, processed, num_llm_calls, df = agent_evaluation(
+        Agent, limited_query_llm, year=kwargs["year"]
+    )
+    return accuracy, cost_total, processed, num_llm_calls, df

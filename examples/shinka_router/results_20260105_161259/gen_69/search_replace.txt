@@ -1,0 +1,48 @@
+<NAME>
+refined_routing_logic
+</NAME>
+
+<DESCRIPTION>
+The current routing logic is too simplistic and does not fully utilize the capabilities of the agent's primitives. The proposed changes aim to enhance routing by:
+1. Using `ensemble_vote` for medium-difficulty problems that are classified as combinatorial or geometric, which often benefit from diverse solutions.
+2. Including a self-critique step for hard problems to refine initial responses.
+3. Adjusting the routing logic to ensure that different primitives are effectively utilized based on the problem's characteristics.
+
+This approach is designed to maximize the combined score by improving solution accuracy while managing the average number of LLM calls.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+            # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+            response, cost = self.baseline_solve(problem)
+            return response, cost
+=======
+        # Estimate difficulty and classify problem type
+        difficulty, cost = self.estimate_difficulty(problem)
+        total_cost = cost
+
+        if difficulty == 'easy':
+            response, cost = self.quick_solve(problem)
+            total_cost += cost
+        elif difficulty == 'medium':
+            problem_type, _ = self.classify_problem_type(problem)
+            if problem_type in ['combinatorics', 'geometry']:
+                response, cost = self.ensemble_vote(problem, n=3)
+            else:
+                response, cost = self.deep_think(problem)
+            total_cost += cost
+        else:  # hard problems
+            response, cost = self.deep_think(problem)
+            total_cost += cost
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                total_cost += verify_cost
+                response = verify_response
+                critique_response, critique_cost = self.self_critique(problem, response)
+                total_cost += critique_cost
+                response = critique_response
+
+        return response, total_cost
+>>>>>>> REPLACE
+</DIFF>

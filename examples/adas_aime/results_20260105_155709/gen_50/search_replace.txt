@@ -1,0 +1,40 @@
+<NAME>
+multi_step_reflection_and_verification
+</NAME>
+
+<DESCRIPTION>
+The current implementation lacks an effective mechanism for self-verification of the generated answers. By introducing a multi-step reflection process where the agent iteratively refines its answer based on feedback from the LLM, we can enhance the accuracy and reliability of the responses. This method allows the agent to evaluate its previous answers and make necessary corrections, leading to improved performance on complex mathematical problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        final_answer = self.refine_answer(responses)
+=======
+        final_answer = self.multi_step_reflection(responses)
+>>>>>>> REPLACE
+
+    def refine_answer(self, responses: List[str]) -> str:
+        """Refine the final answer based on multiple responses."""
+        unique_responses = list(set(responses))
+        # Return the most frequently occurring response (could be improved with better logic)
+        return max(set(unique_responses), key=unique_responses.count)
+
+    def multi_step_reflection(self, responses: List[str]) -> str:
+        """Iteratively refine the final answer based on multiple responses."""
+        current_answer = max(set(responses), key=responses.count)  # Start with the most common response
+        for _ in range(2):  # Allow two iterations of refinement
+            reflection_prompt = (
+                f"Please review your answer to the following problem:\n\n"
+                f"Your answer is: {current_answer}\n\n"
+                f"Is this correct? If not, please provide corrections."
+            )
+            verification_response, _ = self.query_llm(
+                prompt=reflection_prompt,
+                system="You are a skilled mathematician.",
+                temperature=self.temperature,
+            )
+            if "incorrect" in verification_response.lower():
+                # Update current_answer based on feedback
+                current_answer = verification_response  # Take the new answer
+        return current_answer
+>>>>>>> REPLACE

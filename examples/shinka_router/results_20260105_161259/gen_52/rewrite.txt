@@ -1,0 +1,215 @@
+"""ShinkaRouter: Improved Agent with routing primitives for AIME problems.
+
+This agent provides a toolbox of specialized primitives that can be
+composed in optimized ways for better performance in solving AIME problems.
+"""
+
+import re
+from typing import Callable, Tuple, List, Optional, Dict
+from collections import Counter
+
+
+class Agent:
+    """Agent with multiple reasoning primitives for AIME math problems."""
+
+    def __init__(
+        self,
+        query_llm: Callable,
+        quick_temp: float = 0.7,
+        deep_temp: float = 0.0,
+        verify_temp: float = 0.0,
+        ensemble_size: int = 3,
+    ):
+        self.query_llm = query_llm
+        self.quick_temp = quick_temp
+        self.deep_temp = deep_temp
+        self.verify_temp = verify_temp
+        self.ensemble_size = ensemble_size
+        self.output_format = (
+            "On the final line output only the digits of the answer (0-999). "
+            "Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
+        )
+        self._primitive_calls: List[str] = []
+
+    def _track_call(self, primitive_name: str) -> None:
+        """Track a primitive call for analysis."""
+        self._primitive_calls.append(primitive_name)
+
+    def reset_tracking(self) -> None:
+        """Reset primitive call tracking."""
+        self._primitive_calls = []
+
+    @staticmethod
+    def extract_boxed_answer(response: str) -> Optional[str]:
+        """Extract answer from \\boxed{} in response."""
+        idx = response.rfind("\\boxed")
+        if idx < 0:
+            idx = response.rfind("\\fbox")
+        if idx < 0:
+            return None
+
+        brace_idx = response.find("{", idx)
+        if brace_idx < 0:
+            return None
+
+        level = 0
+        for i in range(brace_idx, len(response)):
+            if response[i] == "{":
+                level += 1
+            elif response[i] == "}":
+                level -= 1
+                if level == 0:
+                    content = response[brace_idx + 1:i]
+                    return content.strip().lstrip("0") or "0"
+        return None
+
+    # Primitive Methods
+    def baseline_solve(self, problem: str) -> Tuple[str, float]:
+        self._track_call("baseline_solve")
+        system_prompt = "You are a skilled mathematician."
+        task_prompt = f"{self.output_format}:\n\n{problem}\n\n"
+        response, cost = self.query_llm(prompt=task_prompt, system=system_prompt, temperature=0.0)
+        return response, cost
+
+    def quick_solve(self, problem: str) -> Tuple[str, float]:
+        self._track_call("quick_solve")
+        system_prompt = "You are a skilled mathematician. Solve quickly and efficiently."
+        task_prompt = f"{self.output_format}\n\n{problem}\n\n"
+        response, cost = self.query_llm(prompt=task_prompt, system=system_prompt, temperature=self.quick_temp)
+        return response, cost
+
+    def deep_think(self, problem: str) -> Tuple[str, float]:
+        self._track_call("deep_think")
+        system_prompt = (
+            "You are an expert mathematician. Think step-by-step, "
+            "showing all your reasoning before arriving at the final answer."
+        )
+        task_prompt = f"Solve this problem carefully with detailed reasoning:\n\n{problem}\n\n{self.output_format}"
+        response, cost = self.query_llm(prompt=task_prompt, system=system_prompt, temperature=self.deep_temp)
+        return response, cost
+
+    def verify(self, problem: str, candidate_answer: str) -> Tuple[str, float]:
+        self._track_call("verify")
+        system_prompt = (
+            "You are a rigorous mathematics professor checking a student's answer. "
+            "Verify if the answer is correct. If wrong, provide the correct answer."
+        )
+        task_prompt = (
+            f"Problem: {problem}\n\n"
+            f"Proposed Answer: {candidate_answer}\n\n"
+            f"Is this answer correct? If not, what is the correct answer?\n"
+            f"{self.output_format}"
+        )
+        response, cost = self.query_llm(prompt=task_prompt, system=system_prompt, temperature=self.verify_temp)
+        return response, cost
+
+    def ensemble_vote(self, problem: str) -> Tuple[str, float]:
+        self._track_call("ensemble_vote")
+        total_cost = 0.0
+        responses = []
+        answers = []
+
+        for _ in range(self.ensemble_size):
+            response, cost = self.quick_solve(problem)  # Use quick solve for diversity
+            responses.append(response)
+            total_cost += cost
+            
+            ans = self.extract_boxed_answer(response)
+            if ans:
+                answers.append(ans)
+
+        if answers:
+            vote_counts = Counter(answers)
+            winner, _ = vote_counts.most_common(1)[0]
+            for resp in responses:
+                extracted = self.extract_boxed_answer(resp)
+                if extracted == winner:
+                    return resp, total_cost
+
+        return responses[0], total_cost  # Fallback to first response if no valid answers found
+
+    def self_critique(self, problem: str, draft_response: str) -> Tuple[str, float]:
+        self._track_call("self_critique")
+        system_prompt = (
+            "You are a mathematician reviewing your own work. "
+            "Carefully check the solution for errors in logic, arithmetic, or reasoning. "
+            "Provide an improved answer if you find any issues."
+        )
+        task_prompt = (
+            f"Problem: {problem}\n\n"
+            f"Draft Solution:\n{draft_response}\n\n"
+            f"Review this solution carefully and provide your final answer (same or corrected).\n"
+            f"{self.output_format}"
+        )
+        response, cost = self.query_llm(prompt=task_prompt, system=system_prompt, temperature=self.deep_temp)
+        return response, cost
+
+    def estimate_difficulty(self, problem: str) -> Tuple[str, float]:
+        self._track_call("estimate_difficulty")
+        system_prompt = "You are an expert at evaluating AIME problem difficulty."
+        task_prompt = f"Analyze this AIME problem and classify its difficulty. Problem: {problem}\nRespond with easy, medium, or hard."
+        response, cost = self.query_llm(prompt=task_prompt, system=system_prompt, temperature=0.0)
+        difficulty = response.strip().lower()
+        return (difficulty if difficulty in {"easy", "medium", "hard"} else "medium"), cost
+
+    def classify_problem_type(self, problem: str) -> Tuple[str, float]:
+        self._track_call("classify_problem_type")
+        system_prompt = "You are an expert at categorizing mathematics competition problems."
+        task_prompt = f"Classify this AIME problem into ONE primary category: Problem: {problem}\nCategories: algebra, geometry, number_theory, combinatorics, calculus.\nRespond with exactly one word from the categories above."
+        response, cost = self.query_llm(prompt=task_prompt, system=system_prompt, temperature=0.0)
+        ptype = response.strip().lower().replace(" ", "_")
+        valid_types = ["algebra", "geometry", "number_theory", "combinatorics", "calculus"]
+        return (ptype if ptype in valid_types else "algebra"), cost
+
+    # Routing Logic
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """Route problem to appropriate primitives based on difficulty."""
+        self.reset_tracking()
+        difficulty, cost = self.estimate_difficulty(problem)
+        total_cost = cost
+
+        if difficulty == 'easy':
+            response, cost = self.quick_solve(problem)
+            total_cost += cost
+        elif difficulty == 'medium':
+            response, cost = self.ensemble_vote(problem)
+            total_cost += cost
+        else:  # hard
+            response, cost = self.deep_think(problem)
+            total_cost += cost
+            
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                total_cost += verify_cost
+                response = verify_response
+            
+            critique_response, critique_cost = self.self_critique(problem, response)
+            total_cost += critique_cost
+            response = critique_response
+
+        return response, total_cost
+
+
+def run_experiment(**kwargs):
+    """Entry point called by evaluate.py."""
+    from utils import query_llm, create_call_limited_query_llm
+    from functools import partial
+    from config import ROUTER_CONFIG
+
+    base_query_llm = partial(query_llm, model_name=kwargs["model_name"])
+    limited_query_llm = create_call_limited_query_llm(base_query_llm, max_calls=kwargs["max_calls"])
+
+    from math_eval import agent_evaluation
+
+    accuracy, cost_total, processed, num_llm_calls, df = agent_evaluation(
+        Agent,
+        limited_query_llm,
+        year=kwargs["year"],
+        quick_temp=ROUTER_CONFIG.quick_temp,
+        deep_temp=ROUTER_CONFIG.deep_temp,
+        verify_temp=ROUTER_CONFIG.verify_temp,
+        ensemble_size=ROUTER_CONFIG.ensemble_size,
+    )
+
+    return accuracy, cost_total, processed, num_llm_calls, df

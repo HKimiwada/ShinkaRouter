@@ -1,0 +1,81 @@
+<NAME>
+enhanced_routing_logic
+</NAME>
+
+<DESCRIPTION>
+The current routing logic primarily relies on the `estimate_difficulty` method to determine the problem's complexity. However, it does not utilize the `classify_problem_type` method, which can provide valuable insights into the nature of the problem. By incorporating the classification of the problem type into the routing logic, we can better tailor the approach based on the specific mathematical domain (e.g., algebra, geometry, etc.). This can lead to more effective use of the available primitives, especially for medium and hard problems.
+
+The proposed change will first classify the problem type and then route to the appropriate solving strategy based on both difficulty and type. This should improve accuracy and potentially reduce the number of LLM calls.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        # Estimate difficulty of the problem
+        difficulty, cost = self.estimate_difficulty(problem)
+        total_cost = cost
+
+        if difficulty == 'easy':
+            # Use baseline for easy problems
+            response, cost = self.baseline_solve(problem)
+            total_cost += cost
+            return response, total_cost
+
+        elif difficulty == 'medium':
+            # Use deep_think followed by verify for medium problems
+            response, cost = self.deep_think(problem)
+            total_cost += cost
+
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                total_cost += verify_cost
+                return verify_response, total_cost
+
+            return response, total_cost
+
+        else:  # hard
+            # Use ensemble_vote for hard problems
+            response, cost = self.ensemble_vote(problem)
+            total_cost += cost
+            return response, total_cost
+=======
+        # Classify the problem type
+        problem_type, cost = self.classify_problem_type(problem)
+        total_cost = cost
+
+        # Estimate difficulty of the problem
+        difficulty, cost = self.estimate_difficulty(problem)
+        total_cost += cost
+
+        if difficulty == 'easy':
+            # Use baseline for easy problems
+            response, cost = self.baseline_solve(problem)
+            total_cost += cost
+            return response, total_cost
+
+        elif difficulty == 'medium':
+            # Use deep_think for medium problems, tailored by problem type
+            if problem_type in ['algebra', 'geometry']:
+                response, cost = self.deep_think(problem)
+                total_cost += cost
+
+                answer = self.extract_boxed_answer(response)
+                if answer:
+                    verify_response, verify_cost = self.verify(problem, answer)
+                    total_cost += verify_cost
+                    return verify_response, total_cost
+
+                return response, total_cost
+            else:
+                # For other types, use ensemble_vote
+                response, cost = self.ensemble_vote(problem)
+                total_cost += cost
+                return response, total_cost
+
+        else:  # hard
+            # Use ensemble_vote for hard problems
+            response, cost = self.ensemble_vote(problem)
+            total_cost += cost
+            return response, total_cost
+>>>>>>> REPLACE
+</DIFF>

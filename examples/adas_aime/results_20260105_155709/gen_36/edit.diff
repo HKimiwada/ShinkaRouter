@@ -1,0 +1,100 @@
+--- a/original.py
++++ b/original.py
+@@ -1,55 +1,85 @@
+ """Agent design evaluation on math tasks."""
+ 
+ import re
+ from typing import Callable, List, Optional, Tuple, Dict
+ from collections import Counter, defaultdict
+ from math_eval import agent_evaluation
+ 
+ 
+ # EVOLVE-BLOCK-START
+ class Agent:
+     def __init__(
+         self,
+         query_llm: Callable,
+         temperature=0.0,
+     ):
+-        self.output_format_instructions = "On the final line output only the digits of the answer (0‑999). Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
++        self.output_format_instructions = (
++            "On the final line output only the digits of the answer (0‑999). "
++            "Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
++        )
+         self.query_llm = query_llm
+         self.temperature = temperature
+ 
+     def forward(self, problem: str) -> tuple[str, float]:
+-        """Queries the LLM with a math problem."""
+-        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+-        response, cost = self.query_llm(
+-            prompt=task_prompt,
+-            system=system_prompt,
+-            temperature=self.temperature,
+-        )
+-        return response, cost
++        """Queries the LLM with a math problem, implementing multi-step reasoning."""
++        # Break down the problem into logical steps
++        steps = self.break_down_problem(problem)
++        responses = []
++        total_cost = 0
+ 
+-    def get_prompt_for_task(self, problem: str) -> tuple[str, str]:
+-        system_prompt = "You are a skilled mathematician."
+-        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
++        for step in steps:
++            system_prompt, task_prompt = self.get_prompt_for_task(step)
++            response, cost = self.query_llm(
++                prompt=task_prompt,
++                system=system_prompt,
++                temperature=self.temperature,
++            )
++            responses.append(response)
++            total_cost += cost
++
++        final_answer = self.refine_answer(responses)
++        return final_answer, total_cost
++
++    def break_down_problem(self, problem: str) -> List[str]:
++        """Breaks down the problem into manageable steps."""
++        return [
++            f"Step {i + 1}: {problem} (for guidance, focus on key elements)"
++            for i in range(5)  # Adjust steps as necessary
++        ]
++
++    def get_prompt_for_task(self, step: str) -> tuple[str, str]:
++        system_prompt = "You are a skilled mathematician who thinks step-by-step."
++        task_prompt = f"{self.output_format_instructions}\n\n{step}\n\n"
+         return system_prompt, task_prompt
+ 
++    def refine_answer(self, responses: List[str]) -> str:
++        """Refines the final answer based on multiple responses."""
++        # Aggregate and clean responses
++        cleaned_responses = [resp for resp in responses if self.is_valid_response(resp)]
++        # Determine the best answer based on the last valid response
++        return cleaned_responses[-1].strip() if cleaned_responses else "0"  # Fallback to 0 if no valid responses
++
++    def is_valid_response(self, response: str) -> bool:
++        """Checks if the response is valid and in the correct format."""
++        return bool(re.match(r'^\d{1,3}$', response))
+ 
+ # EVOLVE-BLOCK-END
+ 
+ 
+ def run_experiment(**kwargs):
+     from utils import query_llm, create_call_limited_query_llm
+     from functools import partial
+ 
+     # Create base query_llm function
+     base_query_llm = partial(query_llm, model_name=kwargs["model_name"])
+ 
+     # Wrap it with call limiting (max 10 calls per forward pass)
+     limited_query_llm = create_call_limited_query_llm(
+         base_query_llm,
+         max_calls=kwargs["max_calls"],
+     )
+ 
+     accuracy, cost_total, processed, num_llm_calls, df = agent_evaluation(
+         Agent, limited_query_llm, year=kwargs["year"]
+     )
+     return accuracy, cost_total, processed, num_llm_calls, df

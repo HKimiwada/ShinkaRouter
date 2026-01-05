@@ -1,0 +1,64 @@
+<NAME>
+chain_of_thought_prompting
+</NAME>
+
+<DESCRIPTION>
+Implementing chain-of-thought prompting can help the agent break down complex problems into smaller, manageable steps. This approach encourages the model to reason through the problem step-by-step, which is particularly beneficial for math problems. By modifying the task prompt to include a request for a detailed reasoning process, we can enhance the agent's ability to arrive at the correct answer.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
+=======
+        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem step-by-step, showing all your reasoning:\n\n{problem}\n\n"
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+multi_step_reflection
+</NAME>
+
+<DESCRIPTION>
+Adding a multi-step reflection mechanism allows the agent to review its reasoning before finalizing the answer. This can be achieved by prompting the model to summarize its findings after each step and then evaluate whether the reasoning aligns with the problem requirements. This self-verification can help catch errors before the final answer is submitted.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem step-by-step, showing all your reasoning:\n\n{problem}\n\n"
+=======
+        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem step-by-step, showing all your reasoning. After each step, summarize your findings and check if they align with the problem requirements:\n\n{problem}\n\n"
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+temperature_sampling
+</NAME>
+
+<DESCRIPTION>
+Introducing temperature sampling with different values (e.g., 0.0, 0.5, 1.0) can help explore a range of possible solutions. By querying the LLM multiple times with varying temperatures, we can capture diverse reasoning paths and potentially find a more accurate answer. This approach can be particularly useful for problems with multiple valid approaches.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        responses = []
+        costs = []
+        for temp in [0.0, 0.5, 1.0]:
+            response, cost = self.query_llm(
+>>>>>>> REPLACE
+<|diff_marker|> ADD A1000
+                temperature=temp,
+<|diff_marker|> ***
+        return response, cost
+<|diff_marker|> REMOVE 1014 TO 1015
+<|diff_marker|> ADD A1020
+            responses.append(response)
+            costs.append(cost)
+
+        # Combine responses and costs
+        final_response = max(set(responses), key=responses.count)  # Majority vote
+        total_cost = sum(costs)
+        return final_response, total_cost
+>>>>>>> REPLACE
+</DIFF>

@@ -1,0 +1,78 @@
+<NAME>
+dynamic_reflection_mechanism
+</NAME>
+
+<DESCRIPTION>
+Introduce a dynamic reflection mechanism that allows the model to iteratively verify its calculations and reasoning. After generating an initial response, the model will review its work and make adjustments as necessary. This iterative approach can help catch errors that may have been overlooked in a single pass, thereby improving accuracy. The reflection process will involve prompting the model to identify potential mistakes and refine its answer based on its own feedback.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        verification_prompt = f"Is the answer {response} correct based on the problem requirements? If not, explain why."
+        verification_response, _ = self.query_llm(
+            prompt=verification_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+        return response if "correct" in verification_response else "Verification failed", cost
+=======
+        # Dynamic reflection for verification
+        reflection_prompt = (
+            f"Please review your calculations and reasoning for the problem:\n\n"
+            f"{problem}\n\n"
+            f"Your answer is: {response}\n\n"
+            f"Are there any mistakes or areas for improvement? Please explain."
+        )
+        reflection_response, _ = self.query_llm(
+            prompt=reflection_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+        if "mistake" in reflection_response.lower():
+            # Update response and refine the answer
+            refinement_prompt = (
+                "Based on your reflection, please revise your answer with detailed reasoning."
+            )
+            response, _ = self.query_llm(
+                prompt=refinement_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+enhanced_output_formatting
+</NAME>
+
+<DESCRIPTION>
+Expand the output formatting instructions to include a summary of the steps taken to arrive at the final answer. This will provide clarity and transparency in the model's reasoning process, making it easier for users to follow along and understand how the answer was derived. Clearer outputs can also facilitate better validation of the model's responses, aligning with successful output formatting seen in the current best programs.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        self.output_format_instructions = "On the final line output only the digits of the answer (0‑999). Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
+=======
+        self.output_format_instructions = (
+            "On the final line output only the digits of the answer (0‑999). "
+            "Provide your final answer enclosed in a LaTeX \\boxed{{...}} command. "
+            "Additionally, summarize the steps taken to arrive at the final answer."
+        )
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+multi_temperature_strategy
+</NAME>
+
+<DESCRIPTION>
+Implement a multi-temperature strategy that adjusts based on the complexity of the problem. For simpler problems, a lower temperature can ensure accuracy, while more complex problems can benefit from a higher temperature to encourage creative solutions. This approach can help balance creativity and precision, potentially leading to better performance across a wider range of problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        self.temperature = 0.0
+=======
+        self.temperature = 0.7 if any(keyword in problem.lower() for keyword in complexity_keywords) else 0.0
+>>>>>>> REPLACE
+</DIFF>

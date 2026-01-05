@@ -1,0 +1,40 @@
+<NAME>
+improve_routing_based_on_difficulty
+</NAME>
+
+<DESCRIPTION>
+To enhance the performance of the agent, I propose improving the routing logic based on the difficulty of the problem. Given that easy problems can be efficiently solved with `baseline_solve`, we should reserve resource-intensive methods (like deep_think and verify) for medium and hard problems while incorporating a preliminary quick check for easy problems. Moreover, integrating an ensemble vote approach for medium difficulty problems will harness multiple solutions and improve accuracy while maintaining efficiency. This change will help reduce the average number of calls for easier problems and enhance the agent's overall performance on harder problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        if difficulty == 'easy':
+            response, cost = self.quick_solve(problem)
+        elif difficulty == 'medium':
+            response, cost = self.deep_think(problem)
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                response = verify_response
+                cost += verify_cost
+        else:  # hard problems
+            response, cost = self.deep_think(problem)
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                response = verify_response
+                cost += verify_cost
+=======
+        if difficulty == 'easy':
+            response, cost = self.baseline_solve(problem)
+        elif difficulty == 'medium':
+            response, cost = self.ensemble_vote(problem, self.ensemble_size)
+        else:  # hard problems
+            response, cost = self.deep_think(problem)
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                response = verify_response
+                cost += verify_cost
+>>>>>>> REPLACE
+</DIFF>

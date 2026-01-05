@@ -1,0 +1,56 @@
+<NAME>
+dynamic_reflection_mechanism
+</NAME>
+
+<DESCRIPTION>
+Implement a dynamic reflection mechanism after the LLM generates a response. This involves prompting the model to critique its own answer, checking if it aligns with mathematical reasoning rules or common error patterns observed in prior problems. By embedding this self-critique step, we can enhance the model's performance on complex problems, catching potential errors before final submission and thus improving accuracy.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        response, cost = self.query_llm(
+        prompt=f"{task_prompt}\n\nEvaluate your response and reflect on whether your reasoning aligns with standard mathematical principles. Identify any potential mistakes or improvements:\n\n{response}\n\n",
+>>>>>>> REPLACE
+        )
+</DIFF>
+
+<NAME>
+enhanced_output_formatting
+</NAME>
+
+<DESCRIPTION>
+Refine the output formatting instructions to clarify the expectation for the answer. Adding a directive for the model to not only output the answer in the requested format but also to clarify the final answer by providing a short justification. This will help ensure that the submitted answer adheres to the required answer format while maintaining a connection to the reasoning behind the solution.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        self.output_format_instructions = "On the final line output only the digits of the answer (0‑999). Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
+=======
+        self.output_format_instructions = ("On the final line output only the digits of the answer (0‑999). "
+                                           "Provide your final answer enclosed in a LaTeX \\boxed{{...}} command. "
+                                           "Additionally, include a brief justification for your answer.")
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+multi_attempt_reflection
+</NAME>
+
+<DESCRIPTION>
+Introduce a multi-attempt strategy where the model can make up to 3 attempts at solving a problem. After each attempt, it will evaluate the previous response against the problem requirements, each time prompting for re-evaluation and improvement based on the previous answer. This should promote deeper reasoning and error correction, improving the agent's performance on challenging tasks.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+            for attempt in range(3):  # Limit to 3 attempts for reflection
+=======
+            previous_response = None
+            for attempt in range(3):  # Limit to 3 attempts for reflection
+                if previous_response:
+                    task_prompt = (f"{self.output_format_instructions}:\n\n"
+                                   f"Based on your previous answer {previous_response}, reflect on your solution and consider improvements:\n\n{problem}\n\n")
+                previous_response = response
+>>>>>>> REPLACE
+</DIFF>

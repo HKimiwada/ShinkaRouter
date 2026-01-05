@@ -1,0 +1,40 @@
+<NAME>
+enhanced_self_verification
+</NAME>
+
+<DESCRIPTION>
+Incorporate an enhanced self-verification mechanism where the model iteratively checks its answer after generating a response. This would involve producing a verification prompt that asks the model to evaluate its own answer for correctness and clarity. If the verification indicates any mistakes or uncertainties, the model generates a refined answer based on the feedback. This iterative approach can improve accuracy and the quality of the solutions, ultimately enhancing the model's performance in solving complex AIME problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        return response, cost
+=======
+        # Step 2: Enhanced self-verification process
+        verification_prompt = (
+            f"Please review your answer to the following problem:\n\n"
+            f"{problem}\n\n"
+            f"The answer provided is: {response}\n\n"
+            f"Confirm if the answer is correct, and if not, explain why. Provide the correct answer if possible."
+        )
+        verification_response, _ = self.query_llm(
+            prompt=verification_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+
+        # If the verification indicates an error, revise the answer
+        if "incorrect" in verification_response.lower():
+            refinement_prompt = (
+                "Based on the feedback, please revise and improve the previous answer with detailed reasoning."
+            )
+            refined_response, _ = self.query_llm(
+                prompt=refinement_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            return refined_response, cost
+
+        return response, cost
+>>>>>>> REPLACE
+</DIFF>

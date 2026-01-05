@@ -1,0 +1,32 @@
+<NAME>
+difficulty_based_routing
+</NAME>
+
+<DESCRIPTION>
+The current routing logic does not differentiate adequately between medium and hard problems, both of which are currently routed through the same logic. An improvement would be to use distinct methods for problems classified as medium and hard by implementing an ensemble strategy using ensemble_vote for medium problems to gain diversity, while using deep_think and verify for hard problems. This will enhance problem-solving capabilities and improve accuracy without significantly increasing the average number of calls.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+            response, cost = self.deep_think(problem)
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                response = verify_response
+                cost += verify_cost
+=======
+            response, cost = self.ensemble_vote(problem, n=3)
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                response = verify_response
+                cost += verify_cost
+>>>>>>> REPLACE
+        else:  # hard problems
+            response, cost = self.deep_think(problem)
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                response = verify_response
+                cost += verify_cost
+</DIFF>

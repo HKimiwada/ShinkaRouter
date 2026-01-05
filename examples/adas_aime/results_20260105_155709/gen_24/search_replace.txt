@@ -1,0 +1,58 @@
+<NAME>
+dynamic_temperature_adjustment
+</NAME>
+
+<DESCRIPTION>
+Implement a dynamic temperature adjustment strategy that varies the temperature based on the attempt number. By initially setting a higher temperature during the first few attempts, the agent is encouraged to explore diverse solutions and increase creativity. As the attempts progress, lowering the temperature can help refine the output towards accuracy. This thoughtful balance can enhance the quality of mathematical reasoning, especially for complex problems like those in the AIME competition.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        temperature=self.temperature,
+=======
+        temperature=self.adjust_temperature(attempt),
+>>>>>>> REPLACE
+    def adjust_temperature(self, attempt: int) -> float:
+        """Adjust temperature based on the number of attempts made."""
+        if attempt < 3:
+            return min(1.0, 0.5 + (0.1 * attempt))  # Increase temperature for exploration initially
+        else:
+            return max(0.0, 0.5 - (0.05 * (attempt - 2)))  # Decrease later for precision
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+feedback_loop
+</NAME>
+
+<DESCRIPTION>
+Introduce a more structured feedback loop that not only evaluates the response format but also provides specific suggestions for improvement based on the last submission. This will guide the model to refine its reasoning explicitly, leading to better reasoning and problem-solving capabilities. By creating a dialogue with the model about its previous attempt, we can increase the likelihood of achieving a valid and accurate final response.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        response, cost = self.query_llm(
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+
+        # Step 2: Feedback loop for structured improvement
+        feedback_prompt = self.create_feedback_prompt(response)
+        refined_response, feedback_cost = self.query_llm(
+            prompt=feedback_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+
+        return refined_response.strip(), cost + feedback_cost
+
+    def create_feedback_prompt(self, last_response: str) -> str:
+        """Create a structured feedback prompt based on the previous response."""
+        return f"In the last attempt, the answer was '{last_response}'. Please explain your reasoning and improve your solution if necessary."
+>>>>>>> REPLACE
+</DIFF>
+
+The changes introduced in both suggestions aim to enhance the learning and performance of the `Agent` by balancing creativity and precision, as well as fostering an iterative improvement process through feedback.

@@ -1,0 +1,65 @@
+<NAME>
+multi_step_reflection_and_verification
+</NAME>
+
+<DESCRIPTION>
+To enhance the agent's performance on complex math problems, I propose implementing a multi-step reflection and verification process. This involves breaking down the problem into smaller components, querying the LLM for each part, and then allowing for iterative refinement based on feedback. This method encourages deeper reasoning and helps catch errors earlier in the process. By verifying the responses at each step, we can ensure a more accurate final answer while adhering to the output format required by AIME.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+def refine_answer(self, responses: List[str]) -> str:
+    """Refine the final answer based on multiple responses."""
+    unique_responses = list(set(responses))
+    # Return the most frequently occurring response (could be improved with better logic)
+    return max(set(unique_responses), key=unique_responses.count)
+=======
+def refine_answer(self, responses: List[str]) -> str:
+    """Iteratively refine the final answer based on multiple responses."""
+    current_answer = max(set(responses), key=responses.count)  # Start with the most common response
+    for _ in range(2):  # Allow two iterations of refinement
+        verification_prompt = (
+            f"Please review your answer to the following problem:\n\n"
+            f"Your answer is: {current_answer}\n\n"
+            f"Is this correct? If not, please provide corrections."
+        )
+        verification_response, _ = self.query_llm(
+            prompt=verification_prompt,
+            system="You are a skilled mathematician.",
+            temperature=self.temperature,
+        )
+        if "incorrect" in verification_response.lower():
+            # Update current_answer based on feedback
+            current_answer = verification_response.strip()
+    return current_answer
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+enhanced_break_down_problem
+</NAME>
+
+<DESCRIPTION>
+To improve the agent's understanding of complex problems, I recommend enhancing the `break_down_problem` method. This method should analyze the problem statement for specific keywords and structure the problem into smaller, more manageable parts. By generating a more detailed breakdown, the agent can focus on solving each component step-by-step, leading to a more accurate final answer.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+def break_down_problem(self, problem: str) -> List[str]:
+    """Break down the problem into several steps for detailed reasoning."""
+    # Here we simplify to generate steps. More advanced breakdown can be implemented.
+    return [problem]  # In future, enhance with a real breakdown
+=======
+def break_down_problem(self, problem: str) -> List[str]:
+    """Break down the problem into several steps for detailed reasoning."""
+    # Analyze the problem statement for keywords and structure the problem
+    steps = []
+    if "rectangle" in problem.lower():
+        steps.append("Identify the properties of the rectangles involved.")
+    if "circle" in problem.lower():
+        steps.append("Analyze the relationships between points on the circle.")
+    # Add more breakdown rules based on common problem types
+    steps.append(problem)  # Include the original problem as the last step
+    return steps
+>>>>>>> REPLACE
+</DIFF>

@@ -1,0 +1,20 @@
+================================================================================
+ShinkaRouter Evaluation
+================================================================================
+Program: results_20260105_161259/gen_14/main.py
+Results: results_20260105_161259/gen_14/results
+Model: gpt-4o-mini
+Year: 2024
+Max calls: 10
+Runs: 3
+Generation: 0
+Lambda: 0.0000
+Score scale: baseline
+================================================================================
+Evaluation error: [Errno 2] No such file or directory: '/home/hiroki_kimiwada/sakana_ai/ShinkaRouter/examples/shinka_router/results_20260105_161259/gen_14/main.py'
+Correctness and error status saved to results_20260105_161259/gen_14/results/correct.json
+Metrics saved to results_20260105_161259/gen_14/results/metrics.json
+
+================================================================================
+Evaluation failed: [Errno 2] No such file or directory: '/home/hiroki_kimiwada/sakana_ai/ShinkaRouter/examples/shinka_router/results_20260105_161259/gen_14/main.py'
+================================================================================

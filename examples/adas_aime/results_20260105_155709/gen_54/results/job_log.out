@@ -1,0 +1,612 @@
+Evaluating program: results_20260105_155709/gen_54/main.py
+Saving results to: results_20260105_155709/gen_54/results
+Using model: gpt-4.1-nano
+Using year: 2024
+Using max calls: 10
+Using num experiment runs: 3
+Loaded AIME dataset with 30 examples
+Running parallel evaluation with 30 workers
+Step: 1, LLM answer: 73, True answer: 73, Accuracy: 100.00%, Cost: 0.0006, LLM calls: 5, Avg LLM calls: 5.0
+Step: 2, LLM answer: 116, True answer: 116, Accuracy: 100.00%, Cost: 0.0014, LLM calls: 10, Avg LLM calls: 5.0
+Step: 3, LLM answer: 294, True answer: 294, Accuracy: 100.00%, Cost: 0.0021, LLM calls: 15, Avg LLM calls: 5.0
+Step: 4, LLM answer: 204, True answer: 204, Accuracy: 100.00%, Cost: 0.0029, LLM calls: 20, Avg LLM calls: 5.0
+Step: 5, LLM answer: 3, True answer: 315, Accuracy: 80.00%, Cost: 0.0034, LLM calls: 25, Avg LLM calls: 5.0
+Step: 6, LLM answer: 10 \sqrt{2926}, True answer: 540, Accuracy: 66.67%, Cost: 0.0042, LLM calls: 30, Avg LLM calls: 5.0
+Step: 7, LLM answer: 55, True answer: 55, Accuracy: 71.43%, Cost: 0.0050, LLM calls: 35, Avg LLM calls: 5.0
+Step: 8, LLM answer: 0, True answer: 45, Accuracy: 62.50%, Cost: 0.0058, LLM calls: 40, Avg LLM calls: 5.0
+Step: 9, LLM answer: 12, True answer: 127, Accuracy: 55.56%, Cost: 0.0066, LLM calls: 45, Avg LLM calls: 5.0
+Step: 10, LLM answer: 6, True answer: 211, Accuracy: 50.00%, Cost: 0.0076, LLM calls: 50, Avg LLM calls: 5.0
+Step: 11, LLM answer: 321, True answer: 321, Accuracy: 54.55%, Cost: 0.0085, LLM calls: 55, Avg LLM calls: 5.0
+Step: 12, LLM answer: 33, True answer: 33, Accuracy: 58.33%, Cost: 0.0096, LLM calls: 60, Avg LLM calls: 5.0
+Step: 13, LLM answer: 192, True answer: 468, Accuracy: 53.85%, Cost: 0.0105, LLM calls: 65, Avg LLM calls: 5.0
+Step: 14, LLM answer: 287, True answer: 197, Accuracy: 50.00%, Cost: 0.0116, LLM calls: 70, Avg LLM calls: 5.0
+Step: 15, LLM answer: 25, True answer: 25, Accuracy: 53.33%, Cost: 0.0125, LLM calls: 75, Avg LLM calls: 5.0
+Step: 16, LLM answer: 810, True answer: 809, Accuracy: 50.00%, Cost: 0.0139, LLM calls: 80, Avg LLM calls: 5.0
+Step: 17, LLM answer: 5, True answer: 371, Accuracy: 47.06%, Cost: 0.0151, LLM calls: 85, Avg LLM calls: 5.0
+Step: 18, LLM answer: 2048, True answer: 902, Accuracy: 44.44%, Cost: 0.0162, LLM calls: 90, Avg LLM calls: 5.0
+Step: 19, LLM answer: 236, True answer: 236, Accuracy: 47.37%, Cost: 0.0174, LLM calls: 95, Avg LLM calls: 5.0
+Step: 20, LLM answer: 200, True answer: 80, Accuracy: 45.00%, Cost: 0.0186, LLM calls: 100, Avg LLM calls: 5.0
+Step: 21, LLM answer: \text{Number of solutions} = 1, True answer: 601, Accuracy: 42.86%, Cost: 0.0200, LLM calls: 105, Avg LLM calls: 5.0
+Step: 22, LLM answer: 155, True answer: 110, Accuracy: 40.91%, Cost: 0.0214, LLM calls: 110, Avg LLM calls: 5.0
+Step: 23, LLM answer: 4, True answer: 385, Accuracy: 39.13%, Cost: 0.0235, LLM calls: 115, Avg LLM calls: 5.0
+Step: 24, LLM answer: 721, True answer: 721, Accuracy: 41.67%, Cost: 0.0247, LLM calls: 120, Avg LLM calls: 5.0
+Step: 25, LLM answer: 107, True answer: 104, Accuracy: 40.00%, Cost: 0.0263, LLM calls: 125, Avg LLM calls: 5.0
+Step: 26, LLM answer: 5, True answer: 104, Accuracy: 38.46%, Cost: 0.0280, LLM calls: 130, Avg LLM calls: 5.0
+Step: 27, LLM answer: 2, True answer: 699, Accuracy: 37.04%, Cost: 0.0295, LLM calls: 135, Avg LLM calls: 5.0
+Step: 28, LLM answer: 80, True answer: 480, Accuracy: 35.71%, Cost: 0.0312, LLM calls: 140, Avg LLM calls: 5.0
+Step: 29, LLM answer: 19, True answer: 23, Accuracy: 34.48%, Cost: 0.0330, LLM calls: 145, Avg LLM calls: 5.0
+Step: 30, LLM answer: 31, True answer: 113, Accuracy: 33.33%, Cost: 0.0353, LLM calls: 150, Avg LLM calls: 5.0
+Complete, final accuracy: 33.33%, Cost: 0.04
+Time taken: 178.30 seconds
+Time per example: 5.94 seconds
+Run 1/3 completed in 178.32 seconds
+Loaded AIME dataset with 30 examples
+Running parallel evaluation with 30 workers
+Step: 1, LLM answer: 116, True answer: 116, Accuracy: 100.00%, Cost: 0.0005, LLM calls: 5, Avg LLM calls: 5.0
+Step: 2, LLM answer: 294, True answer: 294, Accuracy: 100.00%, Cost: 0.0011, LLM calls: 10, Avg LLM calls: 5.0
+Step: 3, LLM answer: 73, True answer: 73, Accuracy: 100.00%, Cost: 0.0016, LLM calls: 15, Avg LLM calls: 5.0
+Step: 4, LLM answer: 204, True answer: 204, Accuracy: 100.00%, Cost: 0.0024, LLM calls: 20, Avg LLM calls: 5.0
+Step: 5, LLM answer: 55, True answer: 55, Accuracy: 100.00%, Cost: 0.0030, LLM calls: 25, Avg LLM calls: 5.0
+Step: 6, LLM answer: 25, True answer: 25, Accuracy: 100.00%, Cost: 0.0039, LLM calls: 30, Avg LLM calls: 5.0
+Step: 7, LLM answer: 3, True answer: 315, Accuracy: 85.71%, Cost: 0.0047, LLM calls: 35, Avg LLM calls: 5.0
+Step: 8, LLM answer: \sqrt{292,200}, True answer: 540, Accuracy: 75.00%, Cost: 0.0055, LLM calls: 40, Avg LLM calls: 5.0
+Step: 9, LLM answer: 31, True answer: 721, Accuracy: 66.67%, Cost: 0.0062, LLM calls: 45, Avg LLM calls: 5.0
+Step: 10, LLM answer: 2, True answer: 197, Accuracy: 60.00%, Cost: 0.0070, LLM calls: 50, Avg LLM calls: 5.0
+Step: 11, LLM answer: 33, True answer: 33, Accuracy: 63.64%, Cost: 0.0082, LLM calls: 55, Avg LLM calls: 5.0
+Step: 12, LLM answer: 6, True answer: 385, Accuracy: 58.33%, Cost: 0.0092, LLM calls: 60, Avg LLM calls: 5.0
+Step: 13, LLM answer: 96, True answer: 321, Accuracy: 53.85%, Cost: 0.0099, LLM calls: 65, Avg LLM calls: 5.0
+Step: 14, LLM answer: 7, True answer: 127, Accuracy: 50.00%, Cost: 0.0114, LLM calls: 70, Avg LLM calls: 5.0
+Step: 15, LLM answer: 2, True answer: 902, Accuracy: 46.67%, Cost: 0.0127, LLM calls: 75, Avg LLM calls: 5.0
+Step: 16, LLM answer: 7, True answer: 601, Accuracy: 43.75%, Cost: 0.0141, LLM calls: 80, Avg LLM calls: 5.0
+Step: 17, LLM answer: 5, True answer: 23, Accuracy: 41.18%, Cost: 0.0153, LLM calls: 85, Avg LLM calls: 5.0
+Step: 18, LLM answer: 338, True answer: 468, Accuracy: 38.89%, Cost: 0.0166, LLM calls: 90, Avg LLM calls: 5.0
+Step: 19, LLM answer: 169, True answer: 110, Accuracy: 36.84%, Cost: 0.0180, LLM calls: 95, Avg LLM calls: 5.0
+Step: 20, LLM answer: 675, True answer: 809, Accuracy: 35.00%, Cost: 0.0197, LLM calls: 100, Avg LLM calls: 5.0
+Step: 21, LLM answer: 15, True answer: 104, Accuracy: 33.33%, Cost: 0.0208, LLM calls: 105, Avg LLM calls: 5.0
+Step: 22, LLM answer: 20, True answer: 80, Accuracy: 31.82%, Cost: 0.0225, LLM calls: 110, Avg LLM calls: 5.0
+Step: 23, LLM answer: 480, True answer: 480, Accuracy: 34.78%, Cost: 0.0237, LLM calls: 115, Avg LLM calls: 5.0
+Step: 24, LLM answer: 16, True answer: 211, Accuracy: 33.33%, Cost: 0.0252, LLM calls: 120, Avg LLM calls: 5.0
+Step: 25, LLM answer: 73, True answer: 371, Accuracy: 32.00%, Cost: 0.0262, LLM calls: 125, Avg LLM calls: 5.0
+Step: 26, LLM answer: 444, True answer: 699, Accuracy: 30.77%, Cost: 0.0277, LLM calls: 130, Avg LLM calls: 5.0
+Step: 27, LLM answer: \frac{4 \sqrt{105}}{21}, True answer: 104, Accuracy: 29.63%, Cost: 0.0292, LLM calls: 135, Avg LLM calls: 5.0
+Step: 28, LLM answer: 35, True answer: 113, Accuracy: 28.57%, Cost: 0.0310, LLM calls: 140, Avg LLM calls: 5.0
+Step: 29, LLM answer: 500, True answer: 45, Accuracy: 27.59%, Cost: 0.0335, LLM calls: 145, Avg LLM calls: 5.0
+Step: 30, LLM answer: 246, True answer: 236, Accuracy: 26.67%, Cost: 0.0346, LLM calls: 150, Avg LLM calls: 5.0
+Complete, final accuracy: 26.67%, Cost: 0.03
+Time taken: 159.69 seconds
+Time per example: 5.32 seconds
+Run 2/3 completed in 159.71 seconds
+Loaded AIME dataset with 30 examples
+Running parallel evaluation with 30 workers
+Step: 1, LLM answer: 25, True answer: 25, Accuracy: 100.00%, Cost: 0.0004, LLM calls: 5, Avg LLM calls: 5.0
+Step: 2, LLM answer: 294, True answer: 294, Accuracy: 100.00%, Cost: 0.0010, LLM calls: 10, Avg LLM calls: 5.0
+Step: 3, LLM answer: 116, True answer: 116, Accuracy: 100.00%, Cost: 0.0017, LLM calls: 15, Avg LLM calls: 5.0
+Step: 4, LLM answer: 3, True answer: 315, Accuracy: 75.00%, Cost: 0.0024, LLM calls: 20, Avg LLM calls: 5.0
+Step: 5, LLM answer: 540, True answer: 540, Accuracy: 80.00%, Cost: 0.0033, LLM calls: 25, Avg LLM calls: 5.0
+Step: 6, LLM answer: 204, True answer: 204, Accuracy: 83.33%, Cost: 0.0040, LLM calls: 30, Avg LLM calls: 5.0
+Step: 7, LLM answer: 287, True answer: 197, Accuracy: 71.43%, Cost: 0.0049, LLM calls: 35, Avg LLM calls: 5.0
+Step: 8, LLM answer: 32 \times 32 = 1024, True answer: 902, Accuracy: 62.50%, Cost: 0.0057, LLM calls: 40, Avg LLM calls: 5.0
+Step: 9, LLM answer: 6, True answer: 385, Accuracy: 55.56%, Cost: 0.0066, LLM calls: 45, Avg LLM calls: 5.0
+Step: 10, LLM answer: 73, True answer: 73, Accuracy: 60.00%, Cost: 0.0075, LLM calls: 50, Avg LLM calls: 5.0
+Step: 11, LLM answer: 33, True answer: 33, Accuracy: 63.64%, Cost: 0.0085, LLM calls: 55, Avg LLM calls: 5.0
+Step: 12, LLM answer: 675, True answer: 809, Accuracy: 58.33%, Cost: 0.0098, LLM calls: 60, Avg LLM calls: 5.0
+Step: 13, LLM answer: 676, True answer: 468, Accuracy: 53.85%, Cost: 0.0106, LLM calls: 65, Avg LLM calls: 5.0
+Step: 14, LLM answer: 80, True answer: 480, Accuracy: 50.00%, Cost: 0.0115, LLM calls: 70, Avg LLM calls: 5.0
+Step: 15, LLM answer: 35, True answer: 371, Accuracy: 46.67%, Cost: 0.0126, LLM calls: 75, Avg LLM calls: 5.0
+Step: 16, LLM answer: 45, True answer: 721, Accuracy: 43.75%, Cost: 0.0135, LLM calls: 80, Avg LLM calls: 5.0
+Step: 17, LLM answer: 300, True answer: 80, Accuracy: 41.18%, Cost: 0.0144, LLM calls: 85, Avg LLM calls: 5.0
+Step: 18, LLM answer: 55, True answer: 55, Accuracy: 44.44%, Cost: 0.0155, LLM calls: 90, Avg LLM calls: 5.0
+Step: 19, LLM answer: 42, True answer: 110, Accuracy: 42.11%, Cost: 0.0166, LLM calls: 95, Avg LLM calls: 5.0
+Step: 20, LLM answer: 216, True answer: 236, Accuracy: 40.00%, Cost: 0.0183, LLM calls: 100, Avg LLM calls: 5.0
+Step: 21, LLM answer: 952, True answer: 321, Accuracy: 38.10%, Cost: 0.0193, LLM calls: 105, Avg LLM calls: 5.0
+Step: 22, LLM answer: 79,200, True answer: 45, Accuracy: 36.36%, Cost: 0.0207, LLM calls: 110, Avg LLM calls: 5.0
+Step: 23, LLM answer: 61, True answer: 211, Accuracy: 34.78%, Cost: 0.0220, LLM calls: 115, Avg LLM calls: 5.0
+Step: 24, LLM answer: 695, True answer: 699, Accuracy: 33.33%, Cost: 0.0232, LLM calls: 120, Avg LLM calls: 5.0
+Step: 25, LLM answer: 121, True answer: 127, Accuracy: 32.00%, Cost: 0.0247, LLM calls: 125, Avg LLM calls: 5.0
+Step: 26, LLM answer: 107, True answer: 104, Accuracy: 30.77%, Cost: 0.0266, LLM calls: 130, Avg LLM calls: 5.0
+Step: 27, LLM answer: 18250, True answer: 104, Accuracy: 29.63%, Cost: 0.0285, LLM calls: 135, Avg LLM calls: 5.0
+Step: 28, LLM answer: 6, True answer: 601, Accuracy: 28.57%, Cost: 0.0306, LLM calls: 140, Avg LLM calls: 5.0
+Step: 29, LLM answer: 17, True answer: 113, Accuracy: 27.59%, Cost: 0.0324, LLM calls: 145, Avg LLM calls: 5.0
+Step: 30, LLM answer: 2, True answer: 23, Accuracy: 26.67%, Cost: 0.0351, LLM calls: 150, Avg LLM calls: 5.0
+Complete, final accuracy: 26.67%, Cost: 0.04
+Time taken: 206.54 seconds
+Time per example: 6.88 seconds
+Run 3/3 completed in 206.55 seconds
+Extra data saved to results_20260105_155709/gen_54/results/extra.pkl
+Correctness and error status saved to results_20260105_155709/gen_54/results/correct.json
+Metrics saved to results_20260105_155709/gen_54/results/metrics.json
+Evaluation completed successfully.
+Metrics:
+  public: {'cost': 0.035002000000000005, 'avg_num_llm_calls': 5.0}
+  private: {'all_performance': (33.33333333333333, 26.666666666666668, 26.666666666666668), 'all_cost': (0.03531, 0.0346168, 0.035079200000000005), 'all_processed': 90, 'all_num_llm_calls': (150, 150, 150)}
+  combined_score: 28.88888888888889
+  text_feedback: # Example of an AIME problem that could not be answered correctly:
+
+ Rectangles $ABCD$ and $EFGH$ are drawn such that $D,E,C,F$ are collinear. Also, $A,D,H,G$ all lie on a circle. If $BC=16$,$AB=107$,$FG=17$, and $EF=184$, what is the length of $CE$?
+
+# The Agent's wrong full response:
+
+Let's carefully analyze the problem and verify each step to find the length of \(CE\).
+
+---
+
+### Restating the problem:
+
+- Rectangles \(ABCD\) and \(EFGH\).
+- Points \(D, E, C, F\) are collinear.
+- Points \(A, D, H, G\) are concyclic.
+- Given lengths:
+  \[
+  BC=16, \quad AB=107, \quad FG=17, \quad EF=184.
+  \]
+- Find the length \(CE\).
+
+---
+
+### Step 1: Coordinate Setup for \(ABCD\)
+
+- Place \(A\) at the origin: \(A=(0,0)\).
+- \(AB=107\), assume \(AB\) along the \(x\)-axis:
+  \[
+  B=(107,0).
+  \]
+- \(D\) is directly below \(A\), so:
+  \[
+  D=(0,h).
+  \]
+- \(C\) is at:
+  \[
+  C=(107,h).
+  \]
+  
+Given \(BC=16\), and \(B=(107,0)\), \(C=(107,h)\):
+\[
+|h - 0|=16 \Rightarrow h=16.
+\]
+
+**Thus, the rectangle \(ABCD\) has vertices:**
+\[
+A=(0,0), \quad B=(107,0), \quad C=(107,16), \quad D=(0,16).
+\]
+
+---
+
+### Step 2: Coordinates of \(E, F, G, H\)
+
+- \(EFGH\) is a rectangle with sides \(EF=184\) and \(FG=17\).
+- Points \(E, F, G, H\) form this rectangle.
+- Points \(D, E, C, F\) are collinear.
+
+Since \(D=(0,16)\) and \(C=(107,16)\), the line \(DC\) is horizontal at \(y=16\).
+
+- \(E\) and \(F\) are on this line:
+  \[
+  E=(x_E, 16), \quad F=(x_F, 16),
+  \]
+with
+\[
+|x_F - x_E|=184.
+\]
+
+Assuming \(E\) is to the left of \(F\):
+\[
+x_F = x_E + 184.
+\]
+
+- The rectangle \(EFGH\) is oriented such that:
+
+  - \(E=(x_E, 16)\),
+  - \(F=(x_E + 184, 16)\),
+  - \(H\) and \(G\) are vertices below or above \(E\) and \(F\). 
+
+- Since the rectangle has side \(FG=17\), and the points are on the same horizontal line \(y=16\), the rectangle is oriented vertically:
+
+  - \(H\) and \(G\) are directly below \(E\) and \(F\):
+    \[
+    H = (x_E, 16 - 17) = (x_E, -1),
+    \]
+    \[
+    G = (x_E + 184, -1).
+    \]
+
+---
+
+### Step 3: Vertices of \(EFGH\):
+
+\[
+E = (x_E, 16),
+\]
+\[
+F = (x_E + 184, 16),
+\]
+\[
+H = (x_E, -1),
+\]
+\[
+G = (x_E + 184, -1).
+\]
+
+---
+
+### Step 4: Points \(A, D, H, G\) are concyclic
+
+- \(A=(0,0)\),
+- \(D=(0,16)\),
+- \(H=(x_E, -1)\),
+- \(G=(x_E + 184, -1)\).
+
+They lie on a common circle.
+
+---
+
+### Step 5: Find the circle passing through \(A, D, H, G\)
+
+Let the circle have center \((x_0, y_0)\) and radius \(R\).
+
+Equation of circle:
+
+\[
+(x - x_0)^2 + (y - y_0)^2 = R^2.
+\]
+
+Plugging in the four points:
+
+- \(A=(0,0)\):
+
+\[
+(0 - x_0)^2 + (0 - y_0)^2 = R^2,
+\]
+- \(D=(0,16)\):
+
+\[
+(0 - x_0)^2 + (16 - y_0)^2 = R^2,
+\]
+- \(H=(x_E, -1)\):
+
+\[
+(x_E - x_0)^2 + (-1 - y_0)^2 = R^2,
+\]
+- \(G=(x_E + 184, -1)\):
+
+\[
+(x_E + 184 - x_0)^2 + (-1 - y_0)^2 = R^2.
+\]
+
+---
+
+### Step 6: Find \(x_0, y_0\)
+
+Subtract the first two equations:
+
+\[
+(0 - x_0)^2 + (0 - y_0)^2 = (0 - x_0)^2 + (16 - y_0)^2,
+\]
+which simplifies to:
+
+\[
+x_0^2 + y_0^2 = x_0^2 + (16 - y_0)^2,
+\]
+\[
+y_0^2 = (16 - y_0)^2,
+\]
+\[
+y_0^2 = 256 - 32 y_0 + y_0^2,
+\]
+\[
+0 = 256 - 32 y_0,
+\]
+\[
+32 y_0 = 256,
+\]
+\[
+y_0 = 8.
+\]
+
+**The circle's center has \(y\)-coordinate \(8\).**
+
+---
+
+### Step 7: Find \(x_0\)
+
+Using point \(A=(0,0)\):
+
+\[
+(0 - x_0)^2 + (0 - 8)^2 = R^2,
+\]
+\[
+x_0^2 + 64 = R^2.
+\]
+
+Using point \(H=(x_E, -1)\):
+
+\[
+(x_E - x_0)^2 + (-1 - 8)^2 = R^2,
+\]
+\[
+(x_E - x_0)^2 + 81 = R^2,
+\]
+which must equal \(x_0^2 + 64\):
+
+\[
+(x_E - x_0)^2 + 81 = x_0^2 + 64,
+\]
+\[
+(x_E - x_0)^2 = x_0^2 - 17.
+\]
+
+Expanding:
+
+\[
+x_E^2 - 2 x_E x_0 + x_0^2 = x_0^2 - 17,
+\]
+cancel \(x_0^2\):
+
+\[
+x_E^2 - 2 x_E x_0 = -17,
+\]
+\[
+2 x_E x_0 = x_E^2 + 17,
+\]
+\[
+x_0 = \frac{x_E^2 + 17}{2 x_E}.
+\]
+
+---
+
+### Step 8: Find \(CE\)
+
+- \(C=(107, 16)\),
+- \(E=(x_E, 16)\).
+
+Since both are on \(y=16\):
+
+\[
+CE = |107 - x_E|.
+\]
+
+Our goal: determine \(x_E\).
+
+---
+
+### Step 9: Use the point \(G=(x_E + 184, -1)\)
+
+Since \(G\) is on the circle:
+
+\[
+(x_E + 184 - x_0)^2 + (-1 - 8)^2 = R^2,
+\]
+\[
+(x_E + 184 - x_0)^2 + 81 = R^2,
+\]
+and from earlier:
+
+\[
+R^2 = x_0^2 + 64,
+\]
+so:
+
+\[
+(x_E + 184 - x_0)^2 + 81 = x_0^2 + 64,
+\]
+\[
+(x_E + 184 - x_0)^2 = x_0^2 - 17.
+\]
+
+Recall \(x_0 = \frac{x_E^2 + 17}{2 x_E}\). Let's substitute:
+
+\[
+x_E + 184 - \frac{x_E^2 + 17}{2 x_E} \text{ into the expression.}
+\]
+
+Express numerator:
+
+\[
+x_E + 184 - \frac{x_E^2 + 17}{2 x_E} = \frac{2 x_E (x_E + 184) - (x_E^2 + 17)}{2 x_E}.
+\]
+
+Calculate numerator:
+
+\[
+2 x_E (x_E + 184) - (x_E^2 + 17) = 2 x_E^2 + 368 x_E - x_E^2 - 17 = x_E^2 + 368 x_E - 17.
+\]
+
+Thus:
+
+\[
+x_E + 184 - x_0 = \frac{x_E^2 + 368 x_E - 17}{2 x_E}.
+\]
+
+Now, square both sides:
+
+\[
+\left( \frac{x_E^2 + 368 x_E - 17}{2 x_E} \right)^2 = x_0^2 - 17.
+\]
+
+But \(x_0^2 = \left( \frac{x_E^2 + 17}{2 x_E} \right)^2\). So,
+
+\[
+\left( \frac{x_E^2 + 368 x_E - 17}{2 x_E} \right)^2 = \left( \frac{x_E^2 + 17}{2 x_E} \right)^2 - 17.
+\]
+
+Multiply through by \((2 x_E)^2 = 4 x_E^2\):
+
+\[
+(x_E^2 + 368 x_E - 17)^2 = (x_E^2 + 17)^2 - 17 \times 4 x_E^2.
+\]
+
+Compute RHS:
+
+\[
+(x_E^2 + 17)^2 - 68 x_E^2 = x_E^4 + 34 x_E^2 + 289 - 68 x_E^2 = x_E^4 - 34 x_E^2 + 289.
+\]
+
+Now, expand the LHS:
+
+\[
+(x_E^2 + 368 x_E - 17)^2 = x_E^4 + 2 \times 368 x_E \times x_E^2 - 2 \times 17 x_E^2 + (368)^2 x_E^2 - 2 \times 368 \times 17 x_E + 17^2.
+\]
+
+Calculations:
+
+- \(2 \times 368 x_E \times x_E^2 = 736 x_E^3\),
+- \(-2 \times 17 x_E^2 = -34 x_E^2\),
+- \((368)^2 x_E^2 = 135,424 x_E^2\),
+- \(-2 \times 368 \times 17 x_E = -12,536 x_E\),
+- \(17^2=289\).
+
+Sum:
+
+\[
+x_E^4 + 736 x_E^3 + (135,424 x_E^2 - 34 x_E^2 + 68 x_E^2) - 12,536 x_E + 289,
+\]
+\[
+x_E^4 + 736 x_E^3 + 135,458 x_E^2 - 12,536 x_E + 289.
+\]
+
+Set equal to RHS:
+
+\[
+x_E^4 - 34 x_E^2 + 289.
+\]
+
+Subtract RHS from LHS:
+
+\[
+\left( x_E^4 + 736 x_E^3 + 135,458 x_E^2 - 12,536 x_E + 289 \right) - \left( x_E^4 - 34 x_E^2 + 289 \right) = 0,
+\]
+which simplifies to:
+
+\[
+736 x_E^3 + (135,458 x_E^2 + 34 x_E^2) - 12,536 x_E = 0,
+\]
+\[
+736 x_E^3 + 135,492 x_E^2 - 12,536 x_E=0.
+\]
+
+Factor out \(x_E\):
+
+\[
+x_E \left(736 x_E^2 + 135,492 x_E - 12,536 \right)=0.
+\]
+
+- Either \(x_E=0\),
+- or solve quadratic:
+
+\[
+736 x_E^2 + 135,492 x_E - 12,536=0.
+\]
+
+---
+
+### Step 10: Solve the quadratic
+
+Divide entire equation by 8:
+
+\[
+92 x_E^2 + 16,936.5 x_E - 1,567=0.
+\]
+
+Use quadratic formula:
+
+\[
+x_E = \frac{-16,936.5 \pm \sqrt{(16,936.5)^2 - 4 \times 92 \times (-1,567)}}{2 \times 92}.
+\]
+
+Estimate discriminant:
+
+\[
+(16,936.5)^2 \approx 286,861,322,
+\]
+and
+
+\[
+4 \times 92 \times 1,567 \approx 576,856.
+\]
+
+Discriminant:
+
+\[
+\approx 286,861,322 + 576,856 = 287,438,178.
+\]
+
+Square root:
+
+\[
+\sqrt{287,438,178} \approx 16,954.
+\]
+
+Calculate solutions:
+
+\[
+x_E \approx \frac{-16,936.5 \pm 16,954}{184}.
+\]
+
+- For the plus:
+
+\[
+x_E \approx \frac{17.5}{184} \approx 0.095,
+\]
+
+- For the minus:
+
+\[
+x_E \approx \frac{-33,890.5}{184} \approx -184.2.
+\]
+
+---
+
+### **Step 11: Find \(CE\)**
+
+Recall:
+
+\[
+CE = |107 - x_E|.
+\]
+
+- For \(x_E \approx 0.095\):
+
+\[
+CE \approx |107 - 0.095| \approx 106.905,
+\]
+
+- For \(x_E \approx -184.2\):
+
+\[
+CE \approx |107 - (-184.2)| = 291.2.
+\]
+
+The plausible value (consistent with the geometry) is \(x_E \approx 0.095\), giving:
+
+\[
+\boxed{CE \approx 107}.
+\]
+
+---
+
+### **Conclusion:**
+
+The detailed algebraic analysis confirms that:
+
+\[
+\boxed{\boxed{107}}.
+\]
+
+**The length \(CE\) is exactly \(\boxed{107}\).**
+
+---
+
+### **Final note:**
+
+This matches the initial intuitive conclusion, and the problem's structure strongly suggests the answer is \(107\). The detailed calculations verify that the key value of \(x_E\) is close to zero, making \(CE \approx 107\). The problem's symmetry and the lengths involved support this conclusion.
+
+**Answer: \(\boxed{107}\).**
+
+# The Agent's submit answer:
+
+107
+
+#The ground truth problem answer:
+
+104
+  execution_time_mean: 181.5294700356511
+  execution_time_std: 19.256499220103176

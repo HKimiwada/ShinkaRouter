@@ -1,0 +1,95 @@
+<NAME>
+dynamic_self_verification
+</NAME>
+
+<DESCRIPTION>
+Introduce a dynamic self-verification mechanism that allows the agent to reevaluate its previous responses based on the problem's complexity. After generating a response, the agent will review its answer against the problem requirements and suggest corrections or alternative approaches if necessary. This iterative reflection can help catch errors and refine answers, improving overall accuracy and reliability.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        for attempt in range(3):  # Limit to 3 attempts for reflection
+=======
+        for attempt in range(2):  # Limit to 2 attempts for reflection
+            response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            responses.append(response)
+            costs.append(cost)
+
+            # Prepare the reflection prompt for improved reasoning
+            reflection_prompt = (
+                f"Review the following answer:\n{response}\n"
+                f"Are there any mistakes? If so, correct the mistakes."
+            )
+            reflection_response, _ = self.query_llm(
+                prompt=reflection_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            # Update the task prompt for the next iteration
+            task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\nReflection: {reflection_response}\n"
+>>>>>>> REPLACE
+        # Select the best response based on a simple scoring mechanism
+        final_answer = max(set(responses), key=responses.count)
+        total_cost = sum(costs)
+        return final_answer, total_cost
+=======
+
+        # Dynamic self-verification
+        for attempt in range(2):  # Limit to 2 attempts for reflection
+            response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            responses.append(response)
+            costs.append(cost)
+
+            # Prepare the reflection prompt for improved reasoning
+            reflection_prompt = (
+                f"Review the following answer:\n{response}\n"
+                f"Does this answer align with the problem requirements? If not, suggest corrections."
+            )
+            reflection_response, _ = self.query_llm(
+                prompt=reflection_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            # Update the task prompt for the next iteration
+            task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\nReflection: {reflection_response}\n"
+
+        # Use the most common response as the final answer
+        final_answer = max(set(responses), key=responses.count)
+        total_cost = sum(costs)
+        return final_answer, total_cost
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+enhanced_output_format
+</NAME>
+
+<DESCRIPTION>
+Revise the output format instructions to emphasize clarity and the need for a step-by-step explanation of the reasoning process. This will encourage the model to provide more detailed and structured responses, which can help in verifying the correctness of the solution and aligning it with the problem requirements.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        self.output_format_instructions = (
+            "On the final line output only the digits of the answer (0-999). "
+            "Provide your final answer enclosed in a LaTeX \\boxed{{...}} command. "
+            "Additionally, summarize the steps taken to reach this conclusion."
+        )
+=======
+        self.output_format_instructions = (
+            "On the final line, output only the digits of the answer (0-999). "
+            "Provide your final answer enclosed in a LaTeX \\boxed{{...}} command. "
+            "Additionally, provide a detailed step-by-step explanation of your reasoning process, "
+            "including any assumptions made and checks for consistency with the problem requirements."
+        )
+>>>>>>> REPLACE
+</DIFF>

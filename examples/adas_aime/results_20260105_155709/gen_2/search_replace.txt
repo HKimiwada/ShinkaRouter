@@ -1,0 +1,64 @@
+<NAME>
+chain_of_thought
+</NAME>
+
+<DESCRIPTION>
+Implementing chain-of-thought prompting can help the model to process the mathematical problems in a more structured and logical manner. By explicitly guiding the LLM through multiple reasoning steps, we aim to improve the coherence and accuracy of the final answer. This approach encourages the model to articulate intermediate thoughts and reflections which is especially valuable for complex problem-solving.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
+=======
+        task_prompt = f"{self.output_format_instructions}:\n\nLet's break down the problem step by step. We'll analyze the given problem: {problem}\n\n"
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+multi_step_reflection
+</NAME>
+
+<DESCRIPTION>
+Incorporating multi-step reflection allows the agent to evaluate and refine its responses during the problem-solving process. By prompting for clarifications after each reasoning step, we can select the most logical path to the final answer or adjust based on identified assumptions. This will lead to more robust solutions, particularly with complex mathematical problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        response_intermediate, cost = self.query_llm(
+            prompt=f"Reflect on the response generated:\n{response}\n\nAre there any assumptions or errors? What can be clarified?",
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+        final_response = f"{response_intermediate}\n\nFinalize your answer based on this reflection:"
+        response, cost = self.query_llm(
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+temperature_ensembling
+</NAME>
+
+<DESCRIPTION>
+Adjusting temperature settings and ensembling responses can enhance the diversity and quality of generated answers. By querying the model at different temperatures (0.0, 0.5, and 1.0) and aggregating results (e.g., via majority voting or averaging), we leverage different exploration strategies of the model to improve accuracy on AIME-style problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        responses = []
+        for temp in [0.0, 0.5, 1.0]:
+            response_temp, cost_temp = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=temp,
+            )
+            responses.append(response_temp)
+        response = max(set(responses), key=responses.count)  # Majority voting
+>>>>>>> REPLACE
+
+</DIFF>

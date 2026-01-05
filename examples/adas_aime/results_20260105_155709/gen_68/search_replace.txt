@@ -1,0 +1,53 @@
+<NAME>
+dynamic_self_verification
+</NAME>
+
+<DESCRIPTION>
+Introduce a dynamic self-verification mechanism that iteratively reviews the generated response against the problem statement. This will help the model identify potential errors or misinterpretations in its reasoning. The agent will first generate the initial response and then perform a secondary verification round where it checks the correctness of its answer and reasoning before finalizing the output. This approach can significantly enhance the accuracy of the responses by allowing the agent to refine its solution based on its own reflections.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        best_response, best_cost = self.verify_responses(responses, costs, system_prompt)
+=======
+        best_response, best_cost = self.verify_responses(responses, costs, system_prompt)
+
+        # Step 3: Dynamic self-verification
+        if best_response:
+            reflection_prompt = (
+                f"Please review your answer: {best_response} for the problem: {problem}.\n"
+                f"Are there any mistakes or areas for improvement? Please explain."
+            )
+            reflection_response, _ = self.query_llm(
+                prompt=reflection_prompt,
+                system=system_prompt,
+                temperature=0.0,
+            )
+            if "mistake" in reflection_response.lower():
+                best_response = "Reflection indicates an error in reasoning. Please revise your answer."
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+contextual_examples
+</NAME>
+
+<DESCRIPTION>
+Enhance the prompt generation by incorporating contextual examples that are more closely related to the specific problem type. This will help the model recognize patterns and apply learned strategies effectively. By providing specific examples relevant to the problem at hand, the agent can better understand the nuances of the task, leading to improved accuracy in its responses.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = (
+            f"{self.output_format_instructions}:\n\n"
+            f"Here are some examples of similar problems solved step-by-step:\n"
+=======
+        task_prompt = (
+            f"{self.output_format_instructions}:\n\n"
+            f"Here are some contextual examples of similar problems solved step-by-step:\n"
+            f"1. Problem: For a right triangle with legs of lengths 3 and 4, find the hypotenuse.\n"
+            f"   Solution: Using Pythagorean theorem: hypotenuse = sqrt(3^2 + 4^2) = 5.\n"
+            f"2. Problem: If the sum of angles in a triangle is 180 degrees, what is the measure of each angle in an equilateral triangle?\n"
+            f"   Solution: Each angle = 180/3 = 60 degrees.\n\n"
+>>>>>>> REPLACE
+</DIFF>

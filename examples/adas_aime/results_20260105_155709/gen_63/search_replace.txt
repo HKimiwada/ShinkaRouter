@@ -1,0 +1,82 @@
+<NAME>
+dynamic_temperature_adjustment
+</NAME>
+
+<DESCRIPTION>
+Implement a more sophisticated dynamic temperature adjustment based on the complexity of the problem. Instead of a fixed formula, we will utilize a scoring mechanism based on the number of keywords indicating complexity to adjust the temperature dynamically. This should help the model balance between exploration and exploitation based on the nature of the problem, potentially leading to better answers for complex AIME questions.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        complexity_score = sum(keyword in problem.lower() for keyword in complexity_keywords)
+        self.temperature = min(1.0, 0.5 + 0.2 * complexity_score)  # Adjust temperature based on complexity
+=======
+        complexity_score = sum(keyword in problem.lower() for keyword in complexity_keywords)
+        self.temperature = 0.0  # Default temperature
+        if complexity_score >= 3:  # High complexity
+            self.temperature = 1.0
+        elif complexity_score == 2:  # Medium complexity
+            self.temperature = 0.7
+        elif complexity_score == 1:  # Low complexity
+            self.temperature = 0.3
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+enhanced_self_verification
+</NAME>
+
+<DESCRIPTION>
+Introduce an enhanced self-verification step after generating the response. This step will prompt the model to reflect on its answer, checking for logical consistency and potential errors. This iterative reflection process can help catch mistakes that may have been missed during the initial generation, improving overall accuracy.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        for attempt in range(3):  # Limit to 3 attempts for reflection
+=======
+        for attempt in range(2):  # Limit to 2 attempts for generation
+            response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            responses.append(response)
+            costs.append(cost)
+
+            # Prepare the reflection prompt for improved reasoning
+            reflection_prompt = (
+                f"Review the following answer:\n{response}\n"
+                f"Are there any mistakes? If so, correct the mistakes."
+            )
+            reflection_response, _ = self.query_llm(
+                prompt=reflection_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\nReflection: {reflection_response}\n"
+            response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            responses.append(response)
+            costs.append(cost)
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+multi_temperature_sampling
+</NAME>
+
+<DESCRIPTION>
+Implement a multi-temperature sampling strategy during the response generation phase. This means generating responses using different temperatures (0.0, 0.5, and 1.0) in separate attempts, and then selecting the most frequently occurring response as the final answer. This technique can enhance the diversity of responses and potentially lead to better final answers.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+            for temp in [0.0, 0.5, 1.0]:  # Generate responses with different temperatures
+=======
+            for temp in [0.0, 0.5, 1.0]:  # Generate responses with different temperatures
+                self.temperature = temp
+>>>>>>> REPLACE
+</DIFF>

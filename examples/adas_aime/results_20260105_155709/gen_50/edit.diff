@@ -1,0 +1,97 @@
+--- a/original.py
++++ b/original.py
+@@ -1,55 +1,84 @@
+ """Agent design evaluation on math tasks."""
+ 
+ import re
+ from typing import Callable, List, Optional, Tuple, Dict
+ from collections import Counter, defaultdict
+ from math_eval import agent_evaluation
+ 
+ 
+ # EVOLVE-BLOCK-START
+-class Agent:
++class ImprovedAgent:
+     def __init__(
+         self,
+         query_llm: Callable,
+-        temperature=0.0,
++        max_attempts: int = 3,
++        temperature: float = 0.0,
+     ):
+         self.output_format_instructions = "On the final line output only the digits of the answer (0‑999). Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
+         self.query_llm = query_llm
++        self.max_attempts = max_attempts
+         self.temperature = temperature
+ 
+     def forward(self, problem: str) -> tuple[str, float]:
+-        """Queries the LLM with a math problem."""
++        """Queries the LLM with a math problem and performs multi-step reasoning."""
+         system_prompt, task_prompt = self.get_prompt_for_task(problem)
+-        response, cost = self.query_llm(
+-            prompt=task_prompt,
+-            system=system_prompt,
+-            temperature=self.temperature,
+-        )
+-        return response, cost
++        responses = []
++        costs = []
++
++        # Determine complexity of the problem based on keywords
++        complexity_keywords = ["complex", "difficult", "challenging"]
++        if any(keyword in problem.lower() for keyword in complexity_keywords):
++            self.temperature = 0.7  # Higher temperature for complex problems
++        else:
++            self.temperature = 0.0  # Lower temperature for simpler problems
++
++        for attempt in range(self.max_attempts):
++            response, cost = self.query_llm(
++                prompt=task_prompt,
++                system=system_prompt,
++                temperature=self.temperature,
++            )
++            responses.append(response)
++            costs.append(cost)
++
++        # Self-verification: Analyze responses for consistency
++        final_response = self.verify_responses(responses)
++        return final_response, sum(costs) / len(costs)  # Average cost
+ 
+     def get_prompt_for_task(self, problem: str) -> tuple[str, str]:
+         system_prompt = "You are a skilled mathematician."
+-        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
++        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem step-by-step, showing all your reasoning. After each step, summarize your findings and check if they align with the problem requirements:\n\n{problem}\n\n"
+         return system_prompt, task_prompt
+ 
++    def verify_responses(self, responses: List[str]) -> str:
++        """Select the most reliable response based on consistency."""
++        response_counter = Counter(responses)
++        most_common_response, count = response_counter.most_common(1)[0]
++        
++        # If the most common response appears more than half the time, return it
++        if count > len(responses) / 2:
++            return most_common_response
++        else:
++            # If no clear consensus, return the first response as a fallback
++            return responses[0]
+ 
+ # EVOLVE-BLOCK-END
+ 
+ 
+ def run_experiment(**kwargs):
+     from utils import query_llm, create_call_limited_query_llm
+     from functools import partial
+ 
+     # Create base query_llm function
+     base_query_llm = partial(query_llm, model_name=kwargs["model_name"])
+ 
+     # Wrap it with call limiting (max 10 calls per forward pass)
+     limited_query_llm = create_call_limited_query_llm(
+         base_query_llm,
+         max_calls=kwargs["max_calls"],
+     )
+ 
+     accuracy, cost_total, processed, num_llm_calls, df = agent_evaluation(
+         Agent, limited_query_llm, year=kwargs["year"]
+     )
+     return accuracy, cost_total, processed, num_llm_calls, df

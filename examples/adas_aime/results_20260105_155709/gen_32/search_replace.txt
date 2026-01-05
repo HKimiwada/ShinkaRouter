@@ -1,0 +1,54 @@
+<NAME>
+dynamic_reflection_mechanism
+</NAME>
+
+<DESCRIPTION>
+Introduce a dynamic reflection mechanism that allows the agent to iteratively refine its answer based on feedback. After generating an initial response, the agent will review its calculations and reasoning, and if it detects any inconsistencies or errors, it will prompt the LLM to revise its answer accordingly. This iterative approach can help capture mistakes that may have been overlooked and enhance the overall accuracy of the responses.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        # Reflection step for verification
+        reflection_prompt = (
+            f"Please review your calculations and reasoning for the problem:\n\n"
+            f"{problem}\n\n"
+            f"Your answer is: {response}\n\n"
+            f"Are there any mistakes or areas for improvement? Please explain."
+        )
+        reflection_response, _ = self.query_llm(
+            prompt=reflection_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+
+        # If reflection suggests an error, return a failure message
+        if "mistake" in reflection_response.lower():
+            return "Reflection indicates an error in reasoning.", cost
+
+=======
+        # Enhanced iterative reflection process
+        for _ in range(2):  # Allow two iterations of refinement
+            reflection_prompt = (
+                f"Please review your calculations and reasoning for the problem:\n\n"
+                f"{problem}\n\n"
+                f"Your answer is: {response}\n\n"
+                f"Are there any mistakes or areas for improvement? Please explain."
+            )
+            reflection_response, _ = self.query_llm(
+                prompt=reflection_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            if "mistake" in reflection_response.lower():
+                # Update response and refine the answer
+                refinement_prompt = (
+                    "Considering the feedback that you provided, revise your answer and show your reasoning clearly."
+                )
+                response, _ = self.query_llm(
+                    prompt=refinement_prompt,
+                    system=system_prompt,
+                    temperature=self.temperature,
+                )
+                break
+>>>>>>> REPLACE
+</DIFF>

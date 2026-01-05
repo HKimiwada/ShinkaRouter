@@ -1,0 +1,42 @@
+<NAME>
+multi_step_refinement
+</NAME>
+
+<DESCRIPTION>
+To enhance the agent's performance, I propose implementing a multi-step refinement process that allows the agent to iteratively improve its answer based on feedback from the LLM. This approach encourages deeper reasoning and can help the agent arrive at more accurate solutions. By allowing the model to review its previous responses and refine them through multiple iterations, we can increase the accuracy of the final output while maintaining the original structure of the program.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        final_answer = self.refine_answer(responses)
+=======
+        final_answer = self.multi_step_refinement(responses)
+>>>>>>> REPLACE
+
+<<<<<<< SEARCH
+    def refine_answer(self, responses: List[str]) -> str:
+        """Refine the final answer based on multiple responses."""
+        unique_responses = list(set(responses))
+        # Return the most frequently occurring response (could be improved with better logic)
+        return max(set(unique_responses), key=unique_responses.count)
+=======
+    def multi_step_refinement(self, responses: List[str]) -> str:
+        """Iteratively refine the final answer based on multiple responses."""
+        current_answer = max(set(responses), key=responses.count)  # Start with the most common response
+        for _ in range(2):  # Allow two iterations of refinement
+            reflection_prompt = (
+                f"Please review your answer to the following problem:\n\n"
+                f"Your answer is: {current_answer}\n\n"
+                f"Is this correct? If not, please provide corrections."
+            )
+            verification_response, _ = self.query_llm(
+                prompt=reflection_prompt,
+                system="You are a skilled mathematician.",
+                temperature=self.temperature,
+            )
+            if "incorrect" in verification_response.lower():
+                # Update current_answer based on feedback
+                current_answer = verification_response  # Take the new answer
+        return current_answer
+>>>>>>> REPLACE
+</DIFF>

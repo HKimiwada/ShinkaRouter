@@ -1,0 +1,84 @@
+<NAME>
+multi_step_refinement_with_feedback
+</NAME>
+
+<DESCRIPTION>
+Introduce a multi-step refinement process where the agent not only generates an answer but also iteratively reviews and improves its solution based on feedback from its previous responses. This approach will help in correcting any potential errors and refining the solution before final submission, leading to increased accuracy and a better understanding of the problem.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        initial_response, cost = self.query_llm(
+>>>>>>> REPLACE
+        prompt=task_prompt,
+        system=system_prompt,
+        temperature=self.temperature,
+        )
+
+        # Step 2: Multi-step refinement with feedback
+        for _ in range(2):  # Allow two iterations of refinement
+            reflection_prompt = (
+                f"Please review your answer to the following problem:\n\n"
+                f"{problem}\n\n"
+                f"Your answer is: {initial_response}\n\n"
+                f"Are there any mistakes or areas for improvement? Please explain."
+            )
+            refined_response, _ = self.query_llm(
+                prompt=reflection_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            if "mistake" in refined_response.lower():
+                initial_response = refined_response.strip()  # Update the response for the next iteration
+            else:
+                break  # Exit if no mistakes found
+
+        return initial_response, cost
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+enhanced_output_format
+</NAME>
+
+<DESCRIPTION>
+Revise the output format instructions to include a clear request for a step-by-step solution along with the final answer. This encourages the model to provide more detailed reasoning, which can help in understanding the problem better and potentially lead to more accurate answers.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        self.output_format_instructions = "On the final line output only the digits of the answer (0‑999). Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
+=======
+        self.output_format_instructions = (
+            "On the final line output only the digits of the answer (0‑999). "
+            "Provide your final answer enclosed in a LaTeX \\boxed{{...}} command. "
+            "Please show your work step-by-step."
+        )
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+dynamic_temperature_adjustment
+</NAME>
+
+<DESCRIPTION>
+Implement a dynamic temperature adjustment based on the complexity of the problem. This allows the agent to use a higher temperature for more complex problems, potentially leading to more creative solutions, while maintaining a lower temperature for simpler problems to ensure accuracy.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+=======
+        # Determine complexity of the problem based on keywords
+        complexity_keywords = ["complex", "difficult", "challenging"]
+        if any(keyword in problem.lower() for keyword in complexity_keywords):
+            self.temperature = 0.7  # Higher temperature for complex problems
+        else:
+            self.temperature = 0.0  # Lower temperature for simpler problems
+
+        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+>>>>>>> REPLACE
+</DIFF>

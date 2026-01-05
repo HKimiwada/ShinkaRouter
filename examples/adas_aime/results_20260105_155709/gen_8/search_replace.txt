@@ -1,0 +1,56 @@
+<NAME>
+chain_of_thought_prompting
+</NAME>
+
+<DESCRIPTION>
+Implementing chain-of-thought prompting can significantly enhance the reasoning capabilities of the agent. By encouraging the model to break down the problem into smaller, manageable steps and articulate its reasoning at each stage, we can improve the accuracy of the final answer. This approach allows the model to reflect on its reasoning process and correct any potential mistakes before arriving at a conclusion.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
+=======
+        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem step-by-step, showing all your reasoning:\n\n{problem}\n\n"
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+multi_step_reflection
+</NAME>
+
+<DESCRIPTION>
+Adding a multi-step reflection mechanism allows the agent to evaluate its reasoning after each step. This can be implemented by prompting the model to summarize its findings and check if they align with the problem requirements after each reasoning step. This iterative reflection can help catch errors early in the reasoning process, leading to more accurate final answers.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem step-by-step, showing all your reasoning:\n\n{problem}\n\n"
+=======
+        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem step-by-step, showing all your reasoning. After each step, summarize your findings and check if they align with the problem requirements:\n\n{problem}\n\n"
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+self_verification
+</NAME>
+
+<DESCRIPTION>
+Implementing a self-verification mechanism can enhance the accuracy of the agent's responses. After generating a solution, the agent can be prompted to verify its answer by checking if it meets the problem's requirements and constraints. This additional layer of scrutiny can help catch errors and improve the overall reliability of the solution.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        return response, cost
+=======
+        verification_prompt = f"Is the answer {response} correct based on the problem requirements? If not, explain why."
+        verification_response, _ = self.query_llm(
+            prompt=verification_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+        return response if "correct" in verification_response else "Verification failed", cost
+>>>>>>> REPLACE
+
+</DIFF>

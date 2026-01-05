@@ -1,0 +1,28 @@
+<NAME>
+difficulty_based_routing
+</NAME>
+
+<DESCRIPTION>
+Incorporating difficulty-based routing will enhance the agent's ability to select the most suitable primitive for solving various levels of mathematics problems. By estimating the difficulty of a problem before deciding which primitive to use, we can route easier problems to the baseline solver and harder problems to more complex reasoning strategies. This will likely improve the overall accuracy without significantly increasing the number of LLM calls, thus optimizing the combined score.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+        response, cost = self.baseline_solve(problem)
+=======
+        # Determine problem difficulty
+        difficulty, diff_cost = self.estimate_difficulty(problem)
+
+        # Route based on difficulty
+        if difficulty == 'easy':
+            response, cost = self.baseline_solve(problem)
+            cost += diff_cost  # Account for difficulty estimation cost
+        elif difficulty == 'medium':
+            response, cost = self.quick_solve(problem)
+            cost += diff_cost  # Account for difficulty estimation cost
+        else:  # hard
+            response, cost = self.deep_think(problem)
+            cost += diff_cost  # Account for difficulty estimation cost
+>>>>>>> REPLACE
+</DIFF>

@@ -1,0 +1,28 @@
+{
+    "public": {
+        "cost": 0.03187340000000001,
+        "avg_num_llm_calls": 5.333333333333333
+    },
+    "private": {
+        "all_performance": [
+            13.333333333333334,
+            16.666666666666664,
+            13.333333333333334
+        ],
+        "all_cost": [
+            0.033090200000000014,
+            0.033499400000000006,
+            0.029030600000000007
+        ],
+        "all_processed": 90,
+        "all_num_llm_calls": [
+            159,
+            159,
+            162
+        ]
+    },
+    "combined_score": 14.444444444444445,
+    "text_feedback": "# Example of an AIME problem that could not be answered correctly:\n\n Let $p$ be the least prime number for which there exists a positive integer $n$ such that $n^{4}+1$ is divisible by $p^{2}$. Find the least positive integer $m$ such that $m^{4}+1$ is divisible by $p^{2}$.\n\n# The Agent's wrong full response:\n\nReflection indicates an error in reasoning. Please revise your answer.\n\n# The Agent's submit answer:\n\n\n\n#The ground truth problem answer:\n\n110",
+    "execution_time_mean": 165.66070838272572,
+    "execution_time_std": 15.463827826512771
+}

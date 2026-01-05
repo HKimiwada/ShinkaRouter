@@ -1,0 +1,56 @@
+<NAME>
+dynamic_reflection_and_ensembling
+</NAME>
+
+<DESCRIPTION>
+To enhance the agent's performance, I propose implementing a dynamic reflection mechanism that allows for multiple iterations of self-verification with ensembling of answers. This approach would involve querying the LLM multiple times with slight variations in prompts (e.g., changing temperature settings or rephrasing the question) to gather a diverse set of responses. The final answer would then be determined by selecting the most common or highest confidence response among the ensemble. This method aims to improve accuracy by leveraging the strengths of different responses and allowing the model to catch potential mistakes through iterative reflection.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        responses = []
+        costs = []
+        for temp in [0.0, 0.5, 1.0]:  # Ensembling over different temperatures
+            response, cost = self.query_llm(
+>>>>>>> REPLACE
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=temp,
+        )
+        responses.append(response)
+        costs.append(cost)
+
+        # Dynamic reflection for verification
+        for _ in range(2):  # Allow two iterations of reflection
+            reflection_prompt = (
+                f"Please review your calculations and reasoning for the problem:\n\n"
+                f"{problem}\n\n"
+                f"Your answer is: {response}\n\n"
+                f"Are there any mistakes or areas for improvement? Please explain."
+            )
+            reflection_response, _ = self.query_llm(
+                prompt=reflection_prompt,
+                system=system_prompt,
+                temperature=temp,
+            )
+            if "mistake" in reflection_response.lower():
+                response = "Reflection indicates an error in reasoning."
+                break
+
+        # Final answer selection based on ensemble
+        final_response = max(set(responses), key=responses.count)  # Select the most common response
+        return final_response, sum(costs) / len(costs)  # Return average cost
+
+>>>>>>> REPLACE
+    def get_prompt_for_task(self, problem: str) -> tuple[str, str]:
+        system_prompt = "You are a skilled mathematician."
+        task_prompt = (
+            f"{self.output_format_instructions}:\n\n"
+            f"Please solve the following problem step-by-step, showing all your reasoning. "
+            f"After each step, summarize your findings and check if they align with the problem requirements:\n\n"
+            f"{problem}\n\n"
+        )
+        return system_prompt, task_prompt
+</DIFF>

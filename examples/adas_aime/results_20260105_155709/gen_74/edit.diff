@@ -1,0 +1,122 @@
+--- a/original.py
++++ b/original.py
+@@ -1,55 +1,102 @@
+ """Agent design evaluation on math tasks."""
+ 
+ import re
+ from typing import Callable, List, Optional, Tuple, Dict
+ from collections import Counter, defaultdict
+ from math_eval import agent_evaluation
+ 
+ 
+ # EVOLVE-BLOCK-START
+ class Agent:
+-    def __init__(
+-        self,
+-        query_llm: Callable,
+-        temperature=0.0,
+-    ):
+-        self.output_format_instructions = "On the final line output only the digits of the answer (0‑999). Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
++    def __init__(self, query_llm: Callable, max_attempts: int = 5):
++        self.output_format_instructions = (
++            "On the final line output only the digits of the answer (0‑999). "
++            "Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
++        )
+         self.query_llm = query_llm
+-        self.temperature = temperature
++        self.max_attempts = max_attempts
+ 
+-    def forward(self, problem: str) -> tuple[str, float]:
+-        """Queries the LLM with a math problem."""
++    def forward(self, problem: str) -> Tuple[str, float]:
++        """Queries the LLM with a math problem and uses multi-step reasoning."""
+         system_prompt, task_prompt = self.get_prompt_for_task(problem)
+-        response, cost = self.query_llm(
+-            prompt=task_prompt,
+-            system=system_prompt,
+-            temperature=self.temperature,
+-        )
+-        return response, cost
++        responses = []
++        costs = []
+ 
+-    def get_prompt_for_task(self, problem: str) -> tuple[str, str]:
++        for attempt in range(self.max_attempts):
++            response, cost = self.query_llm(
++                prompt=task_prompt,
++                system=system_prompt,
++                temperature=0.0,  # Fixed temperature for consistent output
++            )
++            responses.append(response)
++            costs.append(cost)
++
++            # Reflect and refine the answer
++            reflection_response = self.refine_answer(response, problem)
++            task_prompt = self.get_reflection_prompt(problem, reflection_response)
++
++        # Determine the final answer based on common responses
++        final_answer = self.get_consensus_response(responses)
++        total_cost = sum(costs)
++        return final_answer, total_cost
++
++    def get_prompt_for_task(self, problem: str) -> Tuple[str, str]:
+         system_prompt = "You are a skilled mathematician."
+-        task_prompt = f"{self.output_format_instructions}\n\nTo solve the math problem step-by-step, please think through the following:\n1. Identify the key elements of the problem.\n2. State what needs to be calculated.\n3. Show each step of the calculation clearly.\n4. Final answer must be enclosed in a LaTeX \\boxed{{...}} command.\n\n{problem}\n\n"
++        task_prompt = f"{self.output_format_instructions}\n\n{problem}\n\n"
+         return system_prompt, task_prompt
+ 
++    def refine_answer(self, answer: str, problem: str) -> str:
++        """Refine the answer by reflecting on the provided answer."""
++        verification_prompt = (
++            f"Review your calculations and reasoning for the problem:\n\n{problem}\n\n"
++            f"Your answer is: {answer}\n\nAre there any mistakes? If so, correct them."
++        )
++        reflection_response, _ = self.query_llm(
++            prompt=verification_prompt,
++            system="You are a skilled mathematician.",
++            temperature=0.0,
++        )
++        return reflection_response
++
++    def get_reflection_prompt(self, problem: str, reflection: str) -> str:
++        """Construct a new task prompt based on the reflection."""
++        return (
++            f"{self.output_format_instructions}\n"
++            f"Please solve the following problem step-by-step, considering this reflection:\n"
++            f"{reflection}\n\n{problem}\n\n"
++        )
++
++    def get_consensus_response(self, responses: list) -> str:
++        """Find the most common valid response among the generated answers."""
++        # Filter valid responses based on format
++        valid_responses = [response for response in responses if self.is_valid_response(response)]
++        if valid_responses:
++            # Return the most common valid response
++            return Counter(valid_responses).most_common(1)[0][0].strip()
++        return "0"  # Fallback if no valid responses
++
++    def is_valid_response(self, response: str) -> bool:
++        """Check if the response meets the formatting criteria."""
++        match = re.match(r'^\d{1,3}$', response.strip().replace("\\boxed{", "").replace("}", ""))
++        return bool(match)
+ 
+ # EVOLVE-BLOCK-END
+ 
+ 
+ def run_experiment(**kwargs):
+     from utils import query_llm, create_call_limited_query_llm
+     from functools import partial
+ 
+     # Create base query_llm function
+     base_query_llm = partial(query_llm, model_name=kwargs["model_name"])
+ 
+     # Wrap it with call limiting (max 10 calls per forward pass)
+     limited_query_llm = create_call_limited_query_llm(
+         base_query_llm,
+         max_calls=kwargs["max_calls"],
+     )
+ 
+     accuracy, cost_total, processed, num_llm_calls, df = agent_evaluation(
+         Agent, limited_query_llm, year=kwargs["year"]
+     )
+     return accuracy, cost_total, processed, num_llm_calls, df

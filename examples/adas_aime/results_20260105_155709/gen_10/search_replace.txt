@@ -1,0 +1,65 @@
+<NAME>
+multi_step_reflection
+</NAME>
+
+<DESCRIPTION>
+Implement a multi-step reflection mechanism that allows the agent to review and refine its initial response. After generating an answer, the agent will be prompted to verify its calculations and reasoning, making adjustments as necessary. This iterative approach can help catch errors that may have been overlooked in a single pass, improving the accuracy of the final answer.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        initial_response, cost = self.query_llm(
+        # First query to get an initial response
+>>>>>>> REPLACE
+        prompt=task_prompt,
+        system=system_prompt,
+        temperature=self.temperature,
+    )
+
+    # Multi-step reflection
+    reflection_prompt = f"Review the following response and check for any errors or improvements:\n{initial_response}\n\n{self.output_format_instructions}:\n\n{problem}\n\n"
+    refined_response, _ = self.query_llm(
+        prompt=reflection_prompt,
+        system=system_prompt,
+        temperature=self.temperature,
+    )
+
+    # Final response
+    response = refined_response
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+adaptive_temperature
+</NAME>
+
+<DESCRIPTION>
+Introduce an adaptive temperature setting that adjusts based on the complexity of the problem. For simpler problems, a lower temperature can be used to ensure accuracy, while more complex problems can benefit from a higher temperature to encourage creative solutions. This approach can help balance creativity and precision, potentially leading to better performance across a wider range of problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+    def forward(self, problem: str) -> tuple[str, float]:
+=======
+    def forward(self, problem: str, complexity: str) -> tuple[str, float]:
+>>>>>>> REPLACE
+        """Queries the LLM with a math problem."""
+        # Adjust temperature based on problem complexity
+        if complexity == "simple":
+            self.temperature = 0.0
+        elif complexity == "complex":
+            self.temperature = 1.0
+        else:
+            self.temperature = 0.5  # Default temperature
+
+        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+        initial_response, cost = self.query_llm(
+>>>>>>> REPLACE
+        prompt=task_prompt,
+        system=system_prompt,
+        temperature=self.temperature,
+    )
+>>>>>>> REPLACE
+</DIFF>

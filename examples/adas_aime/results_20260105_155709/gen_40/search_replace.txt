@@ -1,0 +1,38 @@
+```python
+<NAME>
+dynamic_reflection_and_few_shot
+</NAME>
+
+<DESCRIPTION>
+Incorporate a dynamic reflection mechanism along with few-shot prompting to enhance reasoning. The reflection mechanism allows the agent to analyze the previous responses and improve upon them, while few-shot examples provide contextually relevant patterns and methodologies for similar problems, enabling the model to utilize past knowledge effectively.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        for attempt in range(3):  # Limit to 3 attempts for reflection
+            for temp in [0.0, 0.5, 1.0]:
+=======
+        response_history = []  # Store previous responses for reflection
+        for attempt in range(3):  # Limit to 3 attempts for reflection
+            system_prompt, task_prompt = self.get_prompt_for_task(problem)
+            if attempt > 0:
+                # Create a few-shot prompt based on previous responses
+                few_shot_prompt = self.construct_few_shot_prompt(response_history)
+                task_prompt = few_shot_prompt + "\n" + task_prompt  # Combine new prompt with history
+            for temp in [0.0, 0.5, 1.0]:
+>>>>>>> REPLACE
+                    response, cost = self.query_llm(
+                    prompt=task_prompt,
+                    system=system_prompt,
+                    temperature=self.temperature,
+                )
+            # Store the response for reflection and few-shot prompting
+            response_history.append(response)
+        return response, cost
+
+    def construct_few_shot_prompt(self, response_history: List[str]) -> str:
+        """Create a few-shot prompt based on previous responses."""
+        examples = "\n".join([f"Example {i+1}: {response}" for i, response in enumerate(response_history)])
+        return f"Here are some previous examples of responses:\n{examples}\n"
+>>>>>>> REPLACE
+```

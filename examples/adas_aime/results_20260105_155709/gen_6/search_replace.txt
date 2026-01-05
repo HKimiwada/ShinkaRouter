@@ -1,0 +1,87 @@
+<NAME>
+chain_of_thought_prompting
+</NAME>
+
+<DESCRIPTION>
+Implement chain-of-thought prompting in the agent's task definition to encourage step-by-step reasoning. By breaking down the problems into smaller logical steps and promoting intermediate outputs, we enhance the agent’s capacity for complex mathematical reasoning. This is particularly useful for AIME problems, which often require multi-step solutions.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
+=======
+        task_prompt = (
+            f"{self.output_format_instructions}:\n\n"
+            f"To solve the following problem, please reason through each step:\n"
+            f"{problem}\n\n"
+            "Explain your thought process step-by-step:\n\n"
+        )
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+temperature_sampling
+</NAME>
+
+<DESCRIPTION>
+Introduce temperature sampling with ensembling by generating responses at varying temperatures (0.0, 0.5, and 1.0) to leverage the capabilities of the LLM better. The combination of different outputs can provide a more robust answer. This reduces the likelihood of fixating on a single reasoning path, promoting diverse outcomes that can be analyzed for improved accuracy.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        responses = []
+        costs = []
+        for temp in [0.0, 0.5, 1.0]:
+            response, cost = self.query_llm(
+>>>>>>> REPLACE
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=temp,
+        )
+<<<<<<< SEARCH
+        return response, cost
+=======
+            responses.append(response)
+            costs.append(cost)
+
+        combined_response = self.ensemble_responses(responses)
+        total_cost = sum(costs)
+        return combined_response, total_cost
+
+    def ensemble_responses(self, responses: List[str]) -> str:
+        # Simple approach for ensembling: majority vote or choose the most complete one
+        response_counter = Counter(responses)
+        return response_counter.most_common(1)[0][0]
+>>>>>>> REPLACE
+
+</DIFF>
+
+<NAME>
+self_verification
+</NAME>
+
+<DESCRIPTION>
+Implement a self-verification mechanism to evaluate the reasoned response against a set of established criteria. This helps ensure the output adheres to the format and derives from sound reasoning. By employing a different prompt that queries the model to critique its own answer, we can identify potential flaws before final submission.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        combined_response = self.ensemble_responses(responses)
+=======
+        verification_prompt = (
+            "Please review your answer below and assess whether it's logical and correctly formatted:\n"
+            f"{combined_response}\n"
+            "Are there any errors in your reasoning or format? If so, provide the corrected version."
+        )
+        verification_response, _ = self.query_llm(
+            prompt=verification_prompt,
+            system=system_prompt,
+            temperature=0.0
+        )
+        return verification_response, total_cost
+>>>>>>> REPLACE
+
+</DIFF>

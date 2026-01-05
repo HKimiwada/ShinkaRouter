@@ -1,0 +1,50 @@
+Evaluating program: results_20260105_155709/gen_40/main.py
+Saving results to: results_20260105_155709/gen_40/results
+Using model: gpt-4.1-nano
+Using year: 2024
+Using max calls: 10
+Using num experiment runs: 3
+Loaded AIME dataset with 30 examples
+Running parallel evaluation with 30 workers
+Error processing example 9: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 12: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 21: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 11: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 0: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 26: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 13: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 3: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 29: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 25: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 23: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 8: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 28: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 7: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 17: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 15: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 18: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 24: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 14: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 16: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 10: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 19: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 2: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 6: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 22: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 20: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 27: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 5: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 1: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Error processing example 4: 'Agent' object has no attribute 'construct_few_shot_prompt'
+Evaluation error: Final accuracy is 0. This should not happen.
+Correctness and error status saved to results_20260105_155709/gen_40/results/correct.json
+Metrics saved to results_20260105_155709/gen_40/results/metrics.json
+Evaluation failed: Final accuracy is 0. This should not happen.
+Default metrics stored due to error:
+  combined_score: 0.0
+  execution_time_mean: 0.0
+  execution_time_std: 0.0
+  num_successful_runs: 0
+  num_valid_runs: 0
+  num_invalid_runs: 0
+  all_validation_errors: []

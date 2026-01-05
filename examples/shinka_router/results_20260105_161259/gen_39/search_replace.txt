@@ -1,0 +1,49 @@
+<NAME>
+improve_routing_logic
+</NAME>
+
+<DESCRIPTION>
+The current routing logic primarily relies on three difficulty levels (easy, medium, hard) to determine the approach for solving problems. However, it lacks a more nuanced strategy for medium and hard problems, which can lead to unnecessary LLM calls and reduce efficiency. By incorporating a self-refinement step after using `deep_think` for medium problems, we can enhance the accuracy of the solution while minimizing redundant calls. Additionally, for hard problems, we can use `ensemble_vote` followed by `verify` to ensure the final answer is robust. This will improve the overall accuracy and reduce average calls.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+            # Use deep_think followed by verify for medium problems
+            response, cost = self.deep_think(problem)
+            total_cost += cost
+
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                total_cost += verify_cost
+                return verify_response, total_cost
+=======
+            # Use deep_think followed by self_critique for medium problems
+            response, cost = self.deep_think(problem)
+            total_cost += cost
+
+            # Self-critique the answer
+            critique_response, critique_cost = self.self_critique(problem, response)
+            total_cost += critique_cost
+
+            answer = self.extract_boxed_answer(critique_response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                total_cost += verify_cost
+                return verify_response, total_cost
+
+            return critique_response, total_cost
+=======
+            # Use ensemble_vote followed by verify for hard problems
+            response, cost = self.ensemble_vote(problem)
+            total_cost += cost
+
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                total_cost += verify_cost
+                return verify_response, total_cost
+
+            return response, total_cost
+>>>>>>> REPLACE
+<DIFF>

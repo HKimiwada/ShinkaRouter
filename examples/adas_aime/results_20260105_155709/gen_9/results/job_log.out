@@ -1,0 +1,513 @@
+Evaluating program: results_20260105_155709/gen_9/main.py
+Saving results to: results_20260105_155709/gen_9/results
+Using model: gpt-4.1-nano
+Using year: 2024
+Using max calls: 10
+Using num experiment runs: 3
+Loaded AIME dataset with 30 examples
+Running parallel evaluation with 30 workers
+Step: 1, LLM answer: 3, True answer: 315, Accuracy: 0.00%, Cost: 0.0003, LLM calls: 1, Avg LLM calls: 1.0
+Step: 2, LLM answer: 25, True answer: 25, Accuracy: 50.00%, Cost: 0.0007, LLM calls: 2, Avg LLM calls: 1.0
+Step: 3, LLM answer: 116, True answer: 116, Accuracy: 66.67%, Cost: 0.0010, LLM calls: 3, Avg LLM calls: 1.0
+Step: 4, LLM answer: 1225, True answer: 294, Accuracy: 50.00%, Cost: 0.0016, LLM calls: 4, Avg LLM calls: 1.0
+Step: 5, LLM answer: 12, True answer: 385, Accuracy: 40.00%, Cost: 0.0022, LLM calls: 5, Avg LLM calls: 1.0
+Step: 6, LLM answer: 246, True answer: 236, Accuracy: 33.33%, Cost: 0.0028, LLM calls: 6, Avg LLM calls: 1.0
+Step: 7, LLM answer: 540, True answer: 540, Accuracy: 42.86%, Cost: 0.0034, LLM calls: 7, Avg LLM calls: 1.0
+Step: 8, LLM answer: 204, True answer: 204, Accuracy: 50.00%, Cost: 0.0040, LLM calls: 8, Avg LLM calls: 1.0
+Step: 9, LLM answer: 346, True answer: 80, Accuracy: 44.44%, Cost: 0.0046, LLM calls: 9, Avg LLM calls: 1.0
+Step: 10, LLM answer: 84, True answer: 73, Accuracy: 40.00%, Cost: 0.0054, LLM calls: 10, Avg LLM calls: 1.0
+Step: 11, LLM answer: 287, True answer: 197, Accuracy: 36.36%, Cost: 0.0061, LLM calls: 11, Avg LLM calls: 1.0
+Step: 12, LLM answer: 47, True answer: 127, Accuracy: 33.33%, Cost: 0.0069, LLM calls: 12, Avg LLM calls: 1.0
+Step: 13, LLM answer: 33, True answer: 33, Accuracy: 38.46%, Cost: 0.0079, LLM calls: 13, Avg LLM calls: 1.0
+Step: 14, LLM answer: 107, True answer: 104, Accuracy: 35.71%, Cost: 0.0089, LLM calls: 14, Avg LLM calls: 1.0
+Step: 15, LLM answer: 182, True answer: 468, Accuracy: 33.33%, Cost: 0.0099, LLM calls: 15, Avg LLM calls: 1.0
+Step: 16, LLM answer: 55, True answer: 55, Accuracy: 37.50%, Cost: 0.0108, LLM calls: 16, Avg LLM calls: 1.0
+Step: 17, LLM answer: 1, True answer: 601, Accuracy: 35.29%, Cost: 0.0118, LLM calls: 17, Avg LLM calls: 1.0
+Step: 18, LLM answer: 809, True answer: 809, Accuracy: 38.89%, Cost: 0.0128, LLM calls: 18, Avg LLM calls: 1.0
+Step: 19, LLM answer: 0, True answer: 45, Accuracy: 36.84%, Cost: 0.0139, LLM calls: 19, Avg LLM calls: 1.0
+Step: 20, LLM answer: 23, True answer: 371, Accuracy: 35.00%, Cost: 0.0153, LLM calls: 20, Avg LLM calls: 1.0
+Step: 21, LLM answer: 999, True answer: 480, Accuracy: 33.33%, Cost: 0.0167, LLM calls: 21, Avg LLM calls: 1.0
+Step: 22, LLM answer: 5, True answer: 23, Accuracy: 31.82%, Cost: 0.0182, LLM calls: 22, Avg LLM calls: 1.0
+Step: 23, LLM answer: 218, True answer: 104, Accuracy: 30.43%, Cost: 0.0198, LLM calls: 23, Avg LLM calls: 1.0
+Step: 24, LLM answer: 699, True answer: 699, Accuracy: 33.33%, Cost: 0.0214, LLM calls: 24, Avg LLM calls: 1.0
+Step: 25, LLM answer: 22, True answer: 211, Accuracy: 32.00%, Cost: 0.0231, LLM calls: 25, Avg LLM calls: 1.0
+Step: 26, LLM answer: 151, True answer: 110, Accuracy: 30.77%, Cost: 0.0246, LLM calls: 26, Avg LLM calls: 1.0
+Step: 27, LLM answer: 1, True answer: 321, Accuracy: 29.63%, Cost: 0.0265, LLM calls: 27, Avg LLM calls: 1.0
+Step: 28, LLM answer: 31, True answer: 113, Accuracy: 28.57%, Cost: 0.0284, LLM calls: 28, Avg LLM calls: 1.0
+Step: 29, LLM answer: 251, True answer: 721, Accuracy: 27.59%, Cost: 0.0306, LLM calls: 29, Avg LLM calls: 1.0
+Step: 30, LLM answer: 0, True answer: 902, Accuracy: 26.67%, Cost: 0.0334, LLM calls: 30, Avg LLM calls: 1.0
+Complete, final accuracy: 26.67%, Cost: 0.03
+Time taken: 37.58 seconds
+Time per example: 1.25 seconds
+Run 1/3 completed in 37.59 seconds
+Loaded AIME dataset with 30 examples
+Running parallel evaluation with 30 workers
+Step: 1, LLM answer: 3, True answer: 315, Accuracy: 0.00%, Cost: 0.0003, LLM calls: 1, Avg LLM calls: 1.0
+Step: 2, LLM answer: 116, True answer: 116, Accuracy: 50.00%, Cost: 0.0007, LLM calls: 2, Avg LLM calls: 1.0
+Step: 3, LLM answer: 540, True answer: 540, Accuracy: 66.67%, Cost: 0.0011, LLM calls: 3, Avg LLM calls: 1.0
+Step: 4, LLM answer: 204, True answer: 204, Accuracy: 75.00%, Cost: 0.0016, LLM calls: 4, Avg LLM calls: 1.0
+Step: 5, LLM answer: 294, True answer: 294, Accuracy: 80.00%, Cost: 0.0020, LLM calls: 5, Avg LLM calls: 1.0
+Step: 6, LLM answer: 55, True answer: 55, Accuracy: 83.33%, Cost: 0.0026, LLM calls: 6, Avg LLM calls: 1.0
+Step: 7, LLM answer: 12, True answer: 385, Accuracy: 71.43%, Cost: 0.0032, LLM calls: 7, Avg LLM calls: 1.0
+Step: 8, LLM answer: 254, True answer: 197, Accuracy: 62.50%, Cost: 0.0038, LLM calls: 8, Avg LLM calls: 1.0
+Step: 9, LLM answer: 809, True answer: 809, Accuracy: 66.67%, Cost: 0.0044, LLM calls: 9, Avg LLM calls: 1.0
+Step: 10, LLM answer: 199, True answer: 104, Accuracy: 60.00%, Cost: 0.0054, LLM calls: 10, Avg LLM calls: 1.0
+Step: 11, LLM answer: 300, True answer: 80, Accuracy: 54.55%, Cost: 0.0062, LLM calls: 11, Avg LLM calls: 1.0
+Step: 12, LLM answer: 33, True answer: 33, Accuracy: 58.33%, Cost: 0.0069, LLM calls: 12, Avg LLM calls: 1.0
+Step: 13, LLM answer: 1183, True answer: 371, Accuracy: 53.85%, Cost: 0.0078, LLM calls: 13, Avg LLM calls: 1.0
+Step: 14, LLM answer: 24, True answer: 902, Accuracy: 50.00%, Cost: 0.0089, LLM calls: 14, Avg LLM calls: 1.0
+Step: 15, LLM answer: 1, True answer: 601, Accuracy: 46.67%, Cost: 0.0098, LLM calls: 15, Avg LLM calls: 1.0
+Step: 16, LLM answer: 100, True answer: 25, Accuracy: 43.75%, Cost: 0.0108, LLM calls: 16, Avg LLM calls: 1.0
+Step: 17, LLM answer: 0, True answer: 321, Accuracy: 41.18%, Cost: 0.0120, LLM calls: 17, Avg LLM calls: 1.0
+Step: 18, LLM answer: 26, True answer: 104, Accuracy: 38.89%, Cost: 0.0132, LLM calls: 18, Avg LLM calls: 1.0
+Step: 19, LLM answer: 444, True answer: 699, Accuracy: 36.84%, Cost: 0.0144, LLM calls: 19, Avg LLM calls: 1.0
+Step: 20, LLM answer: 43, True answer: 73, Accuracy: 35.00%, Cost: 0.0158, LLM calls: 20, Avg LLM calls: 1.0
+Step: 21, LLM answer: 721, True answer: 721, Accuracy: 38.10%, Cost: 0.0172, LLM calls: 21, Avg LLM calls: 1.0
+Step: 22, LLM answer: 79, True answer: 480, Accuracy: 36.36%, Cost: 0.0186, LLM calls: 22, Avg LLM calls: 1.0
+Step: 23, LLM answer: 141, True answer: 127, Accuracy: 34.78%, Cost: 0.0201, LLM calls: 23, Avg LLM calls: 1.0
+Step: 24, LLM answer: 532, True answer: 468, Accuracy: 33.33%, Cost: 0.0219, LLM calls: 24, Avg LLM calls: 1.0
+Step: 25, LLM answer: 66, True answer: 113, Accuracy: 32.00%, Cost: 0.0238, LLM calls: 25, Avg LLM calls: 1.0
+Step: 26, LLM answer: 45, True answer: 45, Accuracy: 34.62%, Cost: 0.0258, LLM calls: 26, Avg LLM calls: 1.0
+Step: 27, LLM answer: 25, True answer: 211, Accuracy: 33.33%, Cost: 0.0279, LLM calls: 27, Avg LLM calls: 1.0
+Step: 28, LLM answer: 298, True answer: 236, Accuracy: 32.14%, Cost: 0.0301, LLM calls: 28, Avg LLM calls: 1.0
+Step: 29, LLM answer: 34, True answer: 23, Accuracy: 31.03%, Cost: 0.0331, LLM calls: 29, Avg LLM calls: 1.0
+Step: 30, LLM answer: 1, True answer: 110, Accuracy: 30.00%, Cost: 0.0359, LLM calls: 30, Avg LLM calls: 1.0
+Complete, final accuracy: 30.00%, Cost: 0.04
+Time taken: 63.41 seconds
+Time per example: 2.11 seconds
+Run 2/3 completed in 63.43 seconds
+Loaded AIME dataset with 30 examples
+Running parallel evaluation with 30 workers
+Step: 1, LLM answer: 25, True answer: 25, Accuracy: 100.00%, Cost: 0.0002, LLM calls: 1, Avg LLM calls: 1.0
+Step: 2, LLM answer: 3, True answer: 315, Accuracy: 50.00%, Cost: 0.0005, LLM calls: 2, Avg LLM calls: 1.0
+Step: 3, LLM answer: 73, True answer: 73, Accuracy: 66.67%, Cost: 0.0009, LLM calls: 3, Avg LLM calls: 1.0
+Step: 4, LLM answer: 204, True answer: 204, Accuracy: 75.00%, Cost: 0.0014, LLM calls: 4, Avg LLM calls: 1.0
+Step: 5, LLM answer: 450, True answer: 294, Accuracy: 60.00%, Cost: 0.0018, LLM calls: 5, Avg LLM calls: 1.0
+Step: 6, LLM answer: 116, True answer: 116, Accuracy: 66.67%, Cost: 0.0023, LLM calls: 6, Avg LLM calls: 1.0
+Step: 7, LLM answer: 287, True answer: 197, Accuracy: 57.14%, Cost: 0.0029, LLM calls: 7, Avg LLM calls: 1.0
+Step: 8, LLM answer: 540, True answer: 540, Accuracy: 62.50%, Cost: 0.0035, LLM calls: 8, Avg LLM calls: 1.0
+Step: 9, LLM answer: 55, True answer: 55, Accuracy: 66.67%, Cost: 0.0042, LLM calls: 9, Avg LLM calls: 1.0
+Step: 10, LLM answer: 60, True answer: 80, Accuracy: 60.00%, Cost: 0.0049, LLM calls: 10, Avg LLM calls: 1.0
+Step: 11, LLM answer: 236, True answer: 236, Accuracy: 63.64%, Cost: 0.0058, LLM calls: 11, Avg LLM calls: 1.0
+Step: 12, LLM answer: 6, True answer: 385, Accuracy: 58.33%, Cost: 0.0067, LLM calls: 12, Avg LLM calls: 1.0
+Step: 13, LLM answer: 674, True answer: 809, Accuracy: 53.85%, Cost: 0.0075, LLM calls: 13, Avg LLM calls: 1.0
+Step: 14, LLM answer: 33, True answer: 33, Accuracy: 57.14%, Cost: 0.0083, LLM calls: 14, Avg LLM calls: 1.0
+Step: 15, LLM answer: 2, True answer: 902, Accuracy: 53.33%, Cost: 0.0093, LLM calls: 15, Avg LLM calls: 1.0
+Step: 16, LLM answer: 1, True answer: 601, Accuracy: 50.00%, Cost: 0.0104, LLM calls: 16, Avg LLM calls: 1.0
+Step: 17, LLM answer: 163, True answer: 371, Accuracy: 47.06%, Cost: 0.0114, LLM calls: 17, Avg LLM calls: 1.0
+Step: 18, LLM answer: 999, True answer: 480, Accuracy: 44.44%, Cost: 0.0126, LLM calls: 18, Avg LLM calls: 1.0
+Step: 19, LLM answer: 475, True answer: 45, Accuracy: 42.11%, Cost: 0.0137, LLM calls: 19, Avg LLM calls: 1.0
+Step: 20, LLM answer: 2, True answer: 23, Accuracy: 40.00%, Cost: 0.0150, LLM calls: 20, Avg LLM calls: 1.0
+Step: 21, LLM answer: 13, True answer: 211, Accuracy: 38.10%, Cost: 0.0164, LLM calls: 21, Avg LLM calls: 1.0
+Step: 22, LLM answer: 107, True answer: 104, Accuracy: 36.36%, Cost: 0.0180, LLM calls: 22, Avg LLM calls: 1.0
+Step: 23, LLM answer: 27, True answer: 721, Accuracy: 34.78%, Cost: 0.0195, LLM calls: 23, Avg LLM calls: 1.0
+Step: 24, LLM answer: 120, True answer: 468, Accuracy: 33.33%, Cost: 0.0210, LLM calls: 24, Avg LLM calls: 1.0
+Step: 25, LLM answer: 96, True answer: 321, Accuracy: 32.00%, Cost: 0.0226, LLM calls: 25, Avg LLM calls: 1.0
+Step: 26, LLM answer: 656, True answer: 699, Accuracy: 30.77%, Cost: 0.0243, LLM calls: 26, Avg LLM calls: 1.0
+Step: 27, LLM answer: 110, True answer: 110, Accuracy: 33.33%, Cost: 0.0261, LLM calls: 27, Avg LLM calls: 1.0
+Step: 28, LLM answer: 24, True answer: 127, Accuracy: 32.14%, Cost: 0.0279, LLM calls: 28, Avg LLM calls: 1.0
+Step: 29, LLM answer: 116775, True answer: 104, Accuracy: 31.03%, Cost: 0.0301, LLM calls: 29, Avg LLM calls: 1.0
+Step: 30, LLM answer: 61, True answer: 113, Accuracy: 30.00%, Cost: 0.0322, LLM calls: 30, Avg LLM calls: 1.0
+Complete, final accuracy: 30.00%, Cost: 0.03
+Time taken: 31.34 seconds
+Time per example: 1.04 seconds
+Run 3/3 completed in 31.36 seconds
+Extra data saved to results_20260105_155709/gen_9/results/extra.pkl
+Correctness and error status saved to results_20260105_155709/gen_9/results/correct.json
+Metrics saved to results_20260105_155709/gen_9/results/metrics.json
+Evaluation completed successfully.
+Metrics:
+  public: {'cost': 0.033839133333333334, 'avg_num_llm_calls': 1.0}
+  private: {'all_performance': (26.666666666666668, 30.0, 30.0), 'all_cost': (0.0333766, 0.035897, 0.0322438), 'all_processed': 90, 'all_num_llm_calls': (30, 30, 30)}
+  combined_score: 28.88888888888889
+  text_feedback: # Example of an AIME problem that could not be answered correctly:
+
+ Let \(b\ge 2\) be an integer. Call a positive integer \(n\) \(b\text-\textit{eautiful}\) if it has exactly two digits when expressed in base \(b\)  and these two digits sum to \(\sqrt n\). For example, \(81\) is \(13\text-\textit{eautiful}\) because \(81  = \underline{6} \ \underline{3}_{13} \) and \(6 + 3 =  \sqrt{81}\). Find the least integer \(b\ge 2\) for which there are more than ten \(b\text-\textit{eautiful}\) integers.
+
+# The Agent's wrong full response:
+
+Let's carefully analyze the problem step-by-step.
+
+### Step 1: Understand the key elements
+- \(b \ge 2\) is an integer base.
+- A positive integer \(n\) is \(b\)-eautiful if:
+  - When expressed in base \(b\), \(n\) has exactly two digits.
+  - The sum of these two digits equals \(\sqrt{n}\).
+
+### Step 2: Express the conditions mathematically
+- Since \(n\) has exactly two digits in base \(b\), it can be written as:
+  \[
+  n = a b + c,
+  \]
+  where \(a, c\) are digits with \(a \ge 1\) (since it's a two-digit number) and \(0 \le c \le b-1\).
+
+- The digits sum to:
+  \[
+  a + c = \sqrt{n}.
+  \]
+
+- Because \(n = a b + c\), substitute into the sum:
+  \[
+  a + c = \sqrt{a b + c}.
+  \]
+
+### Step 3: Find the possible values of \(a, c\)
+- Since \(a + c = \sqrt{a b + c}\), and both sides are positive, \(\sqrt{a b + c}\) must be an integer, say \(k\):
+  \[
+  a + c = k,
+  \]
+  and
+  \[
+  a b + c = k^2.
+  \]
+
+- From the first:
+  \[
+  c = k - a.
+  \]
+
+- Substitute into the second:
+  \[
+  a b + (k - a) = k^2,
+  \]
+  which simplifies to:
+  \[
+  a b + k - a = k^2,
+  \]
+  \[
+  a (b - 1) + k = k^2,
+  \]
+  \[
+  a (b - 1) = k^2 - k.
+  \]
+
+### Step 4: Express \(a\) in terms of \(b\) and \(k\)
+\[
+a = \frac{k(k - 1)}{b - 1}.
+\]
+
+- Since \(a\) is a digit in base \(b\), it must satisfy:
+  \[
+  1 \le a \le b - 1,
+  \]
+  and \(a\) must be an integer, so:
+  \[
+  (b - 1) \mid k(k - 1).
+  \]
+
+- Also, from \(c = k - a\), and \(0 \le c \le b - 1\), we get:
+  \[
+  0 \le k - a \le b - 1,
+  \]
+  which implies:
+  \[
+  a \le k \le a + b - 1.
+  \]
+
+### Step 5: Find the range of \(k\)
+- Since \(a \ge 1\), and \(a = \frac{k(k - 1)}{b - 1}\), for \(a\) to be at least 1:
+  \[
+  \frac{k(k - 1)}{b - 1} \ge 1,
+  \]
+  \[
+  k(k - 1) \ge b - 1.
+  \]
+
+- Also, \(a \le b - 1\):
+  \[
+  \frac{k(k - 1)}{b - 1} \le b - 1,
+  \]
+  \[
+  k(k - 1) \le (b - 1)^2.
+  \]
+
+### Step 6: Summarize the conditions
+- For each \(b \ge 2\), find integers \(k\) satisfying:
+  \[
+  b - 1 \le k(k - 1) \le (b - 1)^2,
+  \]
+  and such that:
+  \[
+  a = \frac{k(k - 1)}{b - 1} \text{ is an integer with } 1 \le a \le b - 1,
+  \]
+  and
+  \[
+  c = k - a,
+  \]
+  with \(0 \le c \le b - 1\).
+
+### Step 7: Count the number of \(b\)-eautiful integers
+- For each valid \(k\), the corresponding \(n\) is:
+  \[
+  n = a b + c = a b + (k - a) = a (b - 1) + k.
+  \]
+- Since \(a = \frac{k(k - 1)}{b - 1}\), and \(c = k - a\), the value of \(n\) becomes:
+  \[
+  n = a (b - 1) + c = \frac{k(k - 1)}{b - 1} (b - 1) + (k - a) = k(k - 1) + (k - a).
+  \]
+- But note that:
+  \[
+  a (b - 1) = k(k - 1),
+  \]
+  so:
+  \[
+  n = k(k - 1) + (k - a).
+  \]
+- Since \(a = \frac{k(k - 1)}{b - 1}\), and \(a\) is an integer, the total number of such \(n\) for each \(b\) corresponds to the number of valid \(k\) satisfying the above inequalities and divisibility conditions.
+
+### Step 8: Find the smallest \(b\) with more than 10 such \(b\)-eautiful integers
+- We need to check for the smallest \(b\) where the count of such \(n\) exceeds 10.
+
+### Step 9: Testing values of \(b\)
+- For small \(b\), the number of solutions is small.
+- As \(b\) increases, the range of \(k\) satisfying the inequalities increases, leading to more solutions.
+
+Let's check some values:
+
+- For \(b=2\):
+  - \(b-1=1\),
+  - \(k(k-1) \ge 1\),
+  - \(k(k-1) \le 1^2=1\),
+  - So \(k(k-1)=1\),
+  - \(k=1\) or \(k=-1\),
+  - Only \(k=1\) is valid,
+  - \(a = \frac{1 \times 0}{1} = 0\), invalid since \(a \ge 1\),
+  - No solutions.
+
+- For \(b=3\):
+  - \(b-1=2\),
+  - \(k(k-1) \ge 2\),
+  - \(k(k-1) \le 4\),
+  - Possible \(k\):
+    - \(k=2\): \(2 \times 1=2\), valid,
+    - \(k=3\): \(3 \times 2=6\), exceeds 4, invalid,
+  - For \(k=2\):
+    - \(a = \frac{2 \times 1}{2} = 1\),
+    - \(c = 2 - 1=1\),
+    - \(n = a b + c = 1 \times 3 + 1=4\),
+    - \(\sqrt{4}=2\), sum of digits \(a + c=2\), matches \(\sqrt{n}\),
+    - Valid.
+
+- For \(b=4\):
+  - \(b-1=3\),
+  - \(k(k-1) \ge 3\),
+  - \(k(k-1) \le 9\),
+  - \(k=2\): \(2 \times 1=2\), too small,
+  - \(k=3\): \(3 \times 2=6\), valid,
+  - \(k=4\): \(4 \times 3=12\), too large,
+  - For \(k=3\):
+    - \(a= \frac{6}{3}=2\),
+    - \(c=3-2=1\),
+    - \(n=2 \times 4 + 1=9\),
+    - \(\sqrt{9}=3\),
+    - sum of digits \(a + c=3\), matches \(\sqrt{n}\),
+    - Valid.
+
+- For \(b=5\):
+  - \(b-1=4\),
+  - \(k(k-1) \ge 4\),
+  - \(k(k-1) \le 16\),
+  - \(k=3\): \(6\), valid,
+  - \(k=4\): \(12\), valid,
+  - \(k=5\): \(20\), too large,
+  - For \(k=3\):
+    - \(a= \frac{6}{4}=1.5\), invalid,
+  - For \(k=4\):
+    - \(a= \frac{12}{4}=3\),
+    - \(c=4-3=1\),
+    - \(n=3 \times 5 + 1=16\),
+    - \(\sqrt{16}=4\),
+    - sum of digits \(a + c=4\), matches \(\sqrt{n}\),
+    - Valid.
+
+- For \(b=6\):
+  - \(b-1=5\),
+  - \(k(k-1) \ge 5\),
+  - \(k(k-1) \le 25\),
+  - \(k=3\): \(6\), valid,
+  - \(k=4\): \(12\), valid,
+  - \(k=5\): \(20\), valid,
+  - \(k=6\): \(30\), too large,
+  - For \(k=3\):
+    - \(a= \frac{6}{5}=1.2\), invalid,
+  - For \(k=4\):
+    - \(a= \frac{12}{5}=2.4\), invalid,
+  - For \(k=5\):
+    - \(a= \frac{20}{5}=4\),
+    - \(c=5-4=1\),
+    - \(n=4 \times 6 + 1=25\),
+    - \(\sqrt{25}=5\),
+    - sum of digits \(a + c=5\), matches \(\sqrt{n}\),
+    - Valid.
+
+- For \(b=7\):
+  - \(b-1=6\),
+  - \(k(k-1) \ge 6\),
+  - \(k(k-1) \le 36\),
+  - \(k=3\): \(6\), valid,
+  - \(k=4\): \(12\), valid,
+  - \(k=5\): \(20\), valid,
+  - \(k=6\): \(30\), valid,
+  - \(k=7\): \(42\), too large,
+  - For each \(k=3,4,5,6\):
+    - \(a= \frac{k(k-1)}{6}\),
+    - \(a=1\) for \(k=3\),
+    - \(a=2\) for \(k=4\),
+    - \(a=3\) for \(k=5\),
+    - \(a=5\) for \(k=6\),
+    - All these are within \(1 \le a \le 6\),
+    - Corresponding \(c=k - a\) are valid (since \(c \le b-1=6\)).
+
+Counting solutions for \(b=7\):
+- \(k=3\): \(a=1\), \(c=2\), \(n=1 \times 7 + 2=9\),
+- \(k=4\): \(a=2\), \(c=2\), \(n=2 \times 7 + 2=16\),
+- \(k=5\): \(a=3\), \(c=2\), \(n=3 \times 7 + 2=23\),
+- \(k=6\): \(a=5\), \(c=1\), \(n=5 \times 7 + 1=36\).
+
+Total solutions for \(b=7\): **4**.
+
+---
+
+### Step 10: Continue for larger \(b\)
+- For \(b=8\):
+  - \(b-1=7\),
+  - \(k(k-1) \ge 7\),
+  - \(k(k-1) \le 49\),
+  - \(k=3\): \(6\), too small,
+  - \(k=4\): \(12\), valid,
+  - \(k=5\): \(20\), valid,
+  - \(k=6\): \(30\), valid,
+  - \(k=7\): \(42\), valid,
+  - \(k=8\): \(56\), too large.
+
+Counting solutions:
+- \(k=4\): \(a= \frac{12}{7}\), invalid,
+- \(k=5\): \(a= \frac{20}{7}\), invalid,
+- \(k=6\): \(a= \frac{30}{7}\), invalid,
+- \(k=7\): \(a= \frac{42}{7}=6\), valid,
+  - \(c=7-6=1\),
+  - \(n=6 \times 8 + 1=49\),
+  - \(\sqrt{49}=7\),
+  - sum of digits \(a + c=7\), matches \(\sqrt{n}\).
+
+Total solutions for \(b=8\): **1**.
+
+---
+
+### Step 11: For \(b=9\):
+- \(b-1=8\),
+- \(k(k-1) \ge 8\),
+- \(k(k-1) \le 64\),
+- \(k=3\): \(6\), too small,
+- \(k=4\): \(12\), valid,
+- \(k=5\): \(20\), valid,
+- \(k=6\): \(30\), valid,
+- \(k=7\): \(42\), valid,
+- \(k=8\): \(56\), valid,
+- \(k=9\): \(72\), too large.
+
+Counting solutions:
+- \(k=4\): \(a= \frac{12}{8}=1.5\), invalid,
+- \(k=5\): \(a= \frac{20}{8}=2.5\), invalid,
+- \(k=6\): \(a= \frac{30}{8}=3.75\), invalid,
+- \(k=7\): \(a= \frac{42}{8}=5.25\), invalid,
+- \(k=8\): \(a= \frac{56}{8}=7\), valid,
+  - \(c=8-7=1\),
+  - \(n=7 \times 9 + 1=64\),
+  - \(\sqrt{64}=8\),
+  - sum of digits \(a + c=8\), matches \(\sqrt{n}\).
+
+Total solutions for \(b=9\): **1**.
+
+---
+
+### Step 12: For \(b=10\):
+- \(b-1=9\),
+- \(k(k-1) \ge 9\),
+- \(k(k-1) \le 81\),
+- \(k=4\): \(12\), valid,
+- \(k=5\): \(20\), valid,
+- \(k=6\): \(30\), valid,
+- \(k=7\): \(42\), valid,
+- \(k=8\): \(56\), valid,
+- \(k=9\): \(72\), valid,
+- \(k=10\): \(90\), too large.
+
+Counting solutions:
+- \(k=4\): \(a= \frac{12}{9}\), invalid,
+- \(k=5\): \(a= \frac{20}{9}\), invalid,
+- \(k=6\): \(a= \frac{30}{9}\), invalid,
+- \(k=7\): \(a= \frac{42}{9}\), invalid,
+- \(k=8\): \(a= \frac{56}{9}\), invalid,
+- \(k=9\): \(a= \frac{72}{9}=8\),
+  - \(c=9-8=1\),
+  - \(n=8 \times 10 + 1=81\),
+  - \(\sqrt{81}=9\),
+  - sum of digits \(a + c=9\), matches \(\sqrt{n}\).
+
+Total solutions for \(b=10\): **1**.
+
+---
+
+### Step 13: Summary
+- For \(b=2\): 0 solutions.
+- For \(b=3\): 1 solution.
+- For \(b=4\): 1 solution.
+- For \(b=5\): 1 solution.
+- For \(b=6\): 1 solution.
+- For \(b=7\): 4 solutions.
+- For \(b=8\): 1 solution.
+- For \(b=9\): 1 solution.
+- For \(b=10\): 1 solution.
+
+The only base where the number of solutions exceeds 10 is **not observed in small \(b\)**. Let's check larger \(b\).
+
+### Step 14: Larger \(b\)
+- The pattern suggests that as \(b\) increases, the number of solutions can increase significantly when multiple \(k\) satisfy the divisibility and bounds.
+
+From the pattern, for larger \(b\), the number of solutions is roughly proportional to the number of \(k\) satisfying the inequalities and divisibility conditions.
+
+### Step 15: Conclusion
+- The problem asks for the **least** \(b \ge 2\) for which there are **more than 10** \(b\)-eautiful integers.
+- From the pattern, the only \(b\) with more than 10 solutions is when the number of valid \(k\) values exceeds 10.
+
+Given the pattern, the critical point occurs when the interval for \(k\) contains more than 10 integers satisfying the divisibility condition.
+
+- For larger \(b\), the number of solutions increases.
+
+### Final step:
+- The key is to find the smallest \(b\) where the count exceeds 10.
+
+From the earlier calculations, for \(b=7\), solutions are 4; for \(b=8\), solutions are 1; for \(b=9\), solutions are 1; for \(b=10\), solutions are 1.
+
+- For larger \(b\), the number of solutions increases.
+
+Estimate:
+- When \(b\) is large, the number of solutions roughly corresponds to the number of divisors of \(k(k-1)\) within the bounds.
+
+Given the pattern, the first \(b\) where solutions exceed 10 is around \(b=22\) (since for larger \(b\), the interval for \(k\) becomes large enough).
+
+**Answer:**
+
+\[
+\boxed{22}
+\]
+
+The least \(b \ge 2\) for which there are more than ten \(b\)-eautiful integers is **22**.
+
+---
+
+### Final LaTeX output:
+\[
+\boxed{022}
+\]
+
+# The Agent's submit answer:
+
+22
+
+#The ground truth problem answer:
+
+211
+  execution_time_mean: 44.12627462972887
+  execution_time_std: 13.883079210704443

@@ -1,0 +1,71 @@
+"""Agent design evaluation on math tasks."""
+
+import re
+from typing import Callable, List, Optional, Tuple, Dict
+from collections import Counter, defaultdict
+from math_eval import agent_evaluation
+
+
+# EVOLVE-BLOCK-START
+class Agent:
+    def __init__(
+        self,
+        query_llm: Callable,
+        temperature=0.0,
+    ):
+        self.output_format_instructions = "On the final line output only the digits of the answer (0‑999). Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
+        self.query_llm = query_llm
+        self.temperature = temperature
+
+    def forward(self, problem: str) -> tuple[str, float]:
+        """Queries the LLM with a math problem."""
+        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+        response, cost = None, None
+        complexity_keywords = ["complex", "difficult", "challenging"]
+        if any(keyword in problem.lower() for keyword in complexity_keywords):
+            self.temperature = 0.7  # Higher temperature for complex problems
+        else:
+            self.temperature = 0.0  # Lower temperature for simpler problems
+        for attempt in range(3):  # Limit to 3 attempts for reflection
+            for temp in [0.0, 0.5, 1.0]:
+                initial_response, cost = self.query_llm(
+        )
+        for i in range(3):  # Reflect and revise the response iteratively
+            reflection_prompt = f"Evaluate your previous answer: {initial_response}. Ensure it meets the problem requirements and assumptions and refine it as necessary."
+            response, cost = self.query_llm(
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+        return response, cost
+
+    def get_prompt_for_task(self, problem: str) -> tuple[str, str, List[str]]:
+        exemplary_responses = [
+            "When faced with similar AIME configurations, I approached the problem using combinatorial analysis or geometric reasoning.",
+            "Another successful strategy involved breaking down the problem into smaller sub-problems, solving them sequentially."
+        ]
+        system_prompt = "You are a skilled mathematician."
+        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem step-by-step, showing all your reasoning. After each step, summarize your findings and check if they align with the problem requirements:\n\n{problem}\n\n"
+        return system_prompt, task_prompt
+
+
+# EVOLVE-BLOCK-END
+
+
+def run_experiment(**kwargs):
+    from utils import query_llm, create_call_limited_query_llm
+    from functools import partial
+
+    # Create base query_llm function
+    base_query_llm = partial(query_llm, model_name=kwargs["model_name"])
+
+    # Wrap it with call limiting (max 10 calls per forward pass)
+    limited_query_llm = create_call_limited_query_llm(
+        base_query_llm,
+        max_calls=kwargs["max_calls"],
+    )
+
+    accuracy, cost_total, processed, num_llm_calls, df = agent_evaluation(
+        Agent, limited_query_llm, year=kwargs["year"]
+    )
+    return accuracy, cost_total, processed, num_llm_calls, df

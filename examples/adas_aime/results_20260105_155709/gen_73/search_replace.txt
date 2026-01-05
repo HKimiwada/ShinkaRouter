@@ -1,0 +1,71 @@
+<NAME>
+multi_step_refinement_with_verification
+</NAME>
+
+<DESCRIPTION>
+To enhance the agent's performance, I propose implementing a multi-step refinement process that includes iterative verification of the responses. This approach allows the agent to not only generate an initial response but also to reflect on it and refine it based on feedback. By incorporating a verification step that checks the correctness of the response, we can improve the accuracy of the final answer. This method leverages the strengths of the LLM in generating and validating responses, leading to a more robust solution.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+
+        # Step 2: Reflection and refinement
+        reflection_prompt = f"Review the following response and improve it if necessary:\n{response}\n"
+        refined_response, _ = self.query_llm(
+            prompt=reflection_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+
+        return refined_response, cost
+=======
+        # Step 1: Initial response
+        response, cost = self.query_llm(
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+
+        # Step 2: Perform reflection on the initial response
+        reflection_prompt = (
+            f"Please review your answer to the following problem and improve it if needed:\n"
+            f"{problem}\nYour answer was: {response}\n"
+        )
+        improved_response, _ = self.query_llm(
+            prompt=reflection_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+
+        # Step 3: Validate and potentially refine further based on verification
+        verify_prompt = (
+            "Assess the accuracy of the following solution and suggest corrections if necessary:\n"
+            f"{improved_response}\n"
+        )
+        verification_response, _ = self.query_llm(
+            prompt=verify_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+
+        # Check for correctness and adjust if needed
+        if "incorrect" in verification_response.lower():
+            refinement_prompt = (
+                "Based on your review, revise your answer with detailed reasoning:\n"
+                f"Your revised answer is: {improved_response}\n"
+            )
+            refined_response, _ = self.query_llm(
+                prompt=refinement_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            return refined_response, cost
+
+        return improved_response, cost
+>>>>>>> REPLACE
+</DIFF>

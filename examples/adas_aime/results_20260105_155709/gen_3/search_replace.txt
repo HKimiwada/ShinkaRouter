@@ -1,0 +1,78 @@
+```python
+<NAME>
+chain_of_thought
+</NAME>
+
+<DESCRIPTION>
+Implement chain-of-thought reasoning in the task prompt to enhance the agent's ability to break down complex mathematical problems into smaller, manageable steps. By guiding the LLM to think aloud, we hope to improve accuracy on tough problems found in the AIME competition.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        system_prompt = "You are a skilled mathematician."
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
+=======
+        system_prompt = "You are a skilled mathematician who explains each step clearly."
+        task_prompt = f"{self.output_format_instructions}\n\n" \
+                      f"Break the following problem into step-by-step reasoning:\n" \
+                      f"{problem}\n\n"
+>>>>>>> REPLACE
+```
+
+```python
+<NAME>
+self_verification
+</NAME>
+
+<DESCRIPTION>
+Incorporate a self-verification mechanism by allowing the agent to reinterpret its own output and cross-check against alternative approaches or answers. This promotes reflection and can lead to better performance on identifying correct solutions.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        return response, cost
+=======
+        verification_prompt = f"Check the following response. Is it reasonable? If not, what can be improved:\n{response}\n\n"
+        verification_response, verification_cost = self.query_llm(
+            prompt=verification_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+        if "correct" not in verification_response.lower():
+            response = "I believe there might be an error in my reasoning.\n" + response
+
+        return response, cost + verification_cost
+>>>>>>> REPLACE
+```
+
+```python
+<NAME>
+temperature_sampling
+</NAME>
+
+<DESCRIPTION>
+Enhance the model's ability to explore alternative solutions by modifying the temperature parameter dynamically across several queries. This allows the agent to sample a variety of approaches, which can help in capturing diverse reasoning paths.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+=======
+        temperatures = [0.0, 0.5, 1.0]
+        responses = []
+        for temp in temperatures:
+            response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=temp,
+            )
+            responses.append((response, cost))
+
+        # Select the response with the highest confidence or based on self-verification
+        response = max(responses, key=lambda x: len(x[0]))[0]
+        cost = sum(r[1] for r in responses)
+>>>>>>> REPLACE
+```

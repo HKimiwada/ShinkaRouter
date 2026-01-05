@@ -1,0 +1,87 @@
+"""Agent design evaluation on math tasks."""
+
+import re
+from typing import Callable, List, Optional, Tuple, Dict
+from collections import Counter, defaultdict
+from math_eval import agent_evaluation
+
+
+# EVOLVE-BLOCK-START
+class Agent:
+    def __init__(
+        self,
+        query_llm: Callable,
+        temperature=0.0,
+    ):
+        self.output_format_instructions = (
+            "On the final line output only the digits of the answer (0‑999). "
+            "Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
+        )
+        self.query_llm = query_llm
+        self.temperature = temperature
+
+    def forward(self, problem: str) -> tuple[str, float]:
+        """Queries the LLM with a math problem."""
+        steps = self.break_down_problem(problem)
+        responses = []
+        total_cost = 0
+
+        for step in steps:
+            # Use a multi-temperature strategy
+            for temp in [0.0, 0.5, 1.0]:
+                system_prompt, task_prompt = self.get_prompt_for_task(step)
+                response, cost = self.query_llm(
+                    prompt=task_prompt,
+                    system=system_prompt,
+                    temperature=temp,
+                )
+                responses.append(response)
+                total_cost += cost
+
+        final_answer = self.refine_answer(responses)
+        return final_answer, total_cost
+
+    def break_down_problem(self, problem: str) -> List[str]:
+        """Breaks down the problem into manageable steps."""
+        # Here we can implement a more sophisticated breakdown based on problem type
+        return [
+            f"Step {i + 1}: {problem}" for i in range(5)  # Example: 5 steps
+        ]
+
+    def get_prompt_for_task(self, step: str) -> tuple[str, str]:
+        system_prompt = "You are a skilled mathematician."
+        task_prompt = (
+            f"{self.output_format_instructions}\n\n"
+            f"To solve the math problem step-by-step, please think through the following:\n"
+            f"{step}\n\n"
+        )
+        return system_prompt, task_prompt
+
+    def refine_answer(self, responses: List[str]) -> str:
+        """Refines the final answer based on multiple responses."""
+        # Implement a simple voting mechanism or averaging
+        # For simplicity, we will just return the most common response
+        response_counter = Counter(responses)
+        most_common_response, _ = response_counter.most_common(1)[0]
+        return most_common_response.strip()
+
+# EVOLVE-BLOCK-END
+
+
+def run_experiment(**kwargs):
+    from utils import query_llm, create_call_limited_query_llm
+    from functools import partial
+
+    # Create base query_llm function
+    base_query_llm = partial(query_llm, model_name=kwargs["model_name"])
+
+    # Wrap it with call limiting (max 10 calls per forward pass)
+    limited_query_llm = create_call_limited_query_llm(
+        base_query_llm,
+        max_calls=kwargs["max_calls"],
+    )
+
+    accuracy, cost_total, processed, num_llm_calls, df = agent_evaluation(
+        Agent, limited_query_llm, year=kwargs["year"]
+    )
+    return accuracy, cost_total, processed, num_llm_calls, df

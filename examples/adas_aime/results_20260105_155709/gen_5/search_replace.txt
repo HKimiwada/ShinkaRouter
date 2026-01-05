@@ -1,0 +1,80 @@
+<NAME>
+chain_of_thought_prompts
+</NAME>
+
+<DESCRIPTION>
+To enhance reasoning capabilities, I propose implementing a chain-of-thought (CoT) prompting strategy. This method encourages the model to break down problems step-by-step, rather than attempting to arrive at a conclusion in one go. In the `forward` function, we'll prepend additional guidance to the task prompt that encourages CoT thinking by explicitly instructing the model to explore the relevant mathematical concepts and derive the solution systematically. This should help in solving complex math problems more effectively and reduce the number of errors in the format and logic of the answer.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
+=======
+        task_prompt = f"You are required to provide a detailed solution by reasoning through the problem step-by-step. {self.output_format_instructions}:\n\n{problem}\n\n"
+>>>>>>> REPLACE
+
+</DIFF>
+
+---
+
+<NAME>
+self_verification
+</NAME>
+
+<DESCRIPTION>
+To improve accuracy, I suggest implementing a self-verification mechanism. After generating a response, the agent will query the LLM a second time with the same problem, seeking validation or an alternative perspective. This reflection step can help catch errors and refine the final output. We can add a self-verification step in the `forward` method, ensuring it respects the API call limit while allowing additional feedback from the model.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        return response, cost
+=======
+        verification_prompt = f"Verify the solution to the following problem: {problem}\n\nProposed solution: {response}\n\nIs it correct? If not, provide a corrected solution."
+        verification_response, verification_cost = self.query_llm(
+            prompt=verification_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+
+        if "not correct" in verification_response:
+            return verification_response, cost + verification_cost
+
+        return response, cost + verification_cost
+>>>>>>> REPLACE
+
+</DIFF>
+
+---
+
+<NAME>
+temperature_sampling
+</NAME>
+
+<DESCRIPTION>
+I propose implementing temperature sampling to diversify model outputs. By using different temperatures (0.0 for deterministic answers, and 1.0 for creative solutions) in multiple queries, we can ensemble the answers. This may capture a wider range of interpretations of the problem, improving accuracy. The current `forward` method will be updated to leverage multiple temperature settings dynamically and combine the results.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        responses = []
+        costs = []
+
+        for temp in [0.0, 0.5, 1.0]:
+            response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=temp,
+            )
+            responses.append(response)
+            costs.append(cost)
+
+        # Combine responses (e.g., averaging values if numerical or choosing the most common if categorical)
+        final_response = max(set(responses), key=responses.count)
+        total_cost = sum(costs)
+
+        return final_response, total_cost
+>>>>>>> REPLACE
+
+</DIFF>

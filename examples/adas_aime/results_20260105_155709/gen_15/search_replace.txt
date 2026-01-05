@@ -1,0 +1,40 @@
+<NAME>
+multi_step_reflection
+</NAME>
+
+<DESCRIPTION>
+Implement a multi-step reflection mechanism that allows the agent to iteratively refine its answer based on previous attempts. This will help the model to catch errors and improve the accuracy of its responses. The agent will generate an initial response and then reflect on it, checking for correctness and making adjustments as necessary. This iterative approach can lead to more accurate solutions, especially for complex math problems.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+=======
+        response, cost = None, None
+        for attempt in range(3):  # Allow up to 3 attempts for reflection
+            response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=self.temperature,
+            )
+            if self.is_valid_response(response):
+                break  # Accept the first valid response
+
+            # Create new prompt for reflection
+            task_prompt = self.refine_prompt(response)
+>>>>>>> REPLACE
+
+=======
+    def is_valid_response(self, response: str) -> bool:
+        """Check if the response meets the formatting or correctness criteria."""
+        match = re.match(r'^\d{1,3}$', response)
+        return bool(match)
+
+    def refine_prompt(self, last_response: str) -> str:
+        """Create a refined prompt based on the last response."""
+        return f"In the previous attempt, you provided the answer '{last_response}'. Please re-evaluate your reasoning and state if you stand by that answer, or provide a new one with clearer justification."
+>>>>>>> REPLACE

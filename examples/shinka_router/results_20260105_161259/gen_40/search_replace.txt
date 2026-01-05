@@ -1,0 +1,45 @@
+<name>
+enhance_forward_routing
+</name>
+
+<description>
+The existing routing logic in the `forward` method primarily relies on quick strategies for easy problems and a singular approach for medium and hard problems. To improve the performance, we can incorporate a more nuanced method of routing based on both the problem's difficulty and type. Specifically:
+1. For easy problems, use `quick_solve`.
+2. For medium problems, classify based on type and decide between `ensemble_vote` and `deep_think`.
+3. For hard problems, utilize `deep_think`, followed by `self_critique` and `verify`.
+
+This multi-layered routing approach is expected to enhance both accuracy and efficiency, leveraging the strengths of a variety of primitives.
+</description>
+
+<diff>
+<<<<<<< SEARCH
+        response, cost = self.baseline_solve(problem)
+=======
+        difficulty, cost = self.estimate_difficulty(problem)
+        total_cost = cost
+
+        if difficulty == 'easy':
+            response, cost = self.quick_solve(problem)
+            total_cost += cost
+        elif difficulty == 'medium':
+            problem_type, _ = self.classify_problem_type(problem)
+            if problem_type in ['algebra', 'geometry']:
+                response, cost = self.ensemble_vote(problem, n=3)
+            else:
+                response, cost = self.deep_think(problem)
+            total_cost += cost
+        else:  # hard
+            response, cost = self.deep_think(problem)
+            total_cost += cost
+            answer = self.extract_boxed_answer(response)
+            if answer:
+                verify_response, verify_cost = self.verify(problem, answer)
+                total_cost += verify_cost
+                response = verify_response
+                critique_response, critique_cost = self.self_critique(problem, response)
+                total_cost += critique_cost
+                response = critique_response
+
+        return response, total_cost
+>>>>>>> REPLACE
+</diff>

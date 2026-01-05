@@ -1,0 +1,36 @@
+<NAME>
+improve_routing_decision
+</NAME>
+
+<DESCRIPTION>
+Enhance the `forward` method by introducing more effective routing strategies based on the problem's difficulty. The new logic will:
+- Use `baseline_solve` for easy problems.
+- Implement `ensemble_vote` for medium-difficulty problems, allowing for multiple perspectives and improved accuracy.
+- Combine `deep_think` and `verify` for hard problems to ensure thorough reasoning and validation of the solutions presented.
+This improvement aims to balance accuracy and resource efficiency.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+            # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+            response, cost = self.baseline_solve(problem)
+            return response, cost
+=======
+            # Routing logic based on difficulty
+            if difficulty == 'easy':
+                response, cost = self.baseline_solve(problem)
+            elif difficulty == 'medium':
+                response, cost = self.ensemble_vote(problem, n=3)
+            else:  # hard
+                response, deep_cost = self.deep_think(problem)
+                boxed_answer = self.extract_boxed_answer(response)
+                if boxed_answer:
+                    verify_response, verify_cost = self.verify(problem, boxed_answer)
+                    response = verify_response
+                    cost = deep_cost + verify_cost
+                else:
+                    cost = deep_cost
+
+            return response, cost + diff_cost
+>>>>>>> REPLACE
+</DIFF>

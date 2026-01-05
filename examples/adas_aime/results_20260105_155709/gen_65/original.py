@@ -1,0 +1,84 @@
+"""Agent design evaluation on math tasks."""
+
+import re
+from typing import Callable, List, Optional, Tuple, Dict
+from collections import Counter, defaultdict
+from math_eval import agent_evaluation
+
+
+# EVOLVE-BLOCK-START
+class Agent:
+    def __init__(self, query_llm: Callable):
+        self.output_format_instructions = "On the final line output only the digits of the answer (0‑999). Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
+        self.query_llm = query_llm
+
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """Queries the LLM with a math problem."""
+        # Generate prompts for the task
+        system_prompt, task_prompt = self.get_prompt_for_task(problem)
+
+        # Step 1: Initial response with multiple temperature settings
+        responses = []
+        costs = []
+        for temp in [0.0, 0.5, 1.0]:
+            response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=temp,
+            )
+            responses.append(response)
+            costs.append(cost)
+
+        # Step 2: Self-verification of responses
+        verification_results = []
+        for response in responses:
+            verification_prompt = f"Is the answer {response} correct based on the problem requirements? If not, explain why."
+            verification_response, _ = self.query_llm(
+                prompt=verification_prompt,
+                system=system_prompt,
+                temperature=0.0,  # Use a fixed temperature for verification
+            )
+            verification_results.append(verification_response)
+
+        # Step 3: Choose the best response based on verification
+        for i, verification in enumerate(verification_results):
+            if "correct" in verification.lower():
+                return responses[i], costs[i]
+
+        return "No correct response found.", sum(costs)
+
+    def get_prompt_for_task(self, problem: str) -> Tuple[str, str]:
+        system_prompt = "You are a skilled mathematician."
+        task_prompt = (
+            f"{self.output_format_instructions}:\n\n"
+            f"Here are some examples of similar problems solved step-by-step:\n"
+            f"1. Problem: Find the area of a triangle with base 5 and height 10.\n"
+            f"   Solution: Area = 0.5 * base * height = 0.5 * 5 * 10 = 25.\n"
+            f"2. Problem: What is the sum of angles in a triangle?\n"
+            f"   Solution: The sum is always 180 degrees.\n\n"
+            f"Now please solve the following problem step-by-step:\n\n"
+            f"{problem}\n\n"
+        )
+        return system_prompt, task_prompt
+
+
+# EVOLVE-BLOCK-END
+
+
+def run_experiment(**kwargs):
+    from utils import query_llm, create_call_limited_query_llm
+    from functools import partial
+
+    # Create base query_llm function
+    base_query_llm = partial(query_llm, model_name=kwargs["model_name"])
+
+    # Wrap it with call limiting (max 10 calls per forward pass)
+    limited_query_llm = create_call_limited_query_llm(
+        base_query_llm,
+        max_calls=kwargs["max_calls"],
+    )
+
+    accuracy, cost_total, processed, num_llm_calls, df = agent_evaluation(
+        Agent, limited_query_llm, year=kwargs["year"]
+    )
+    return accuracy, cost_total, processed, num_llm_calls, df

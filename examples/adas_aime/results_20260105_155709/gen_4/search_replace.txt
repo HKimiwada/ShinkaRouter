@@ -1,0 +1,77 @@
+<NAME>
+chain_of_thought_prompting
+</NAME>
+
+<DESCRIPTION>
+Implementing chain-of-thought prompting can help the agent break down complex problems into smaller, manageable steps. This approach encourages the model to reason through the problem step-by-step, which is particularly beneficial for math problems. By modifying the task prompt to explicitly ask for a step-by-step solution, we can enhance the agent's reasoning capabilities and improve accuracy.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        task_prompt = f"{self.output_format_instructions}:\n\n{problem}\n\n"
+=======
+        task_prompt = f"{self.output_format_instructions}:\n\nPlease solve the following problem step-by-step:\n\n{problem}\n\n"
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+multi_step_reflection
+</NAME>
+
+<DESCRIPTION>
+Adding a multi-step reflection mechanism allows the agent to review its intermediate steps before arriving at a final answer. This can be implemented by querying the LLM for a summary of the steps taken after each major calculation. This reflection can help catch errors early and refine the final answer, leading to improved accuracy.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        intermediate_steps = []
+        response, cost = self.query_llm(
+        )
+        intermediate_steps.append(response)
+
+        # Reflect on the steps taken
+        reflection_prompt = f"Here are the steps taken so far:\n{intermediate_steps}\n\nPlease summarize and verify the correctness of these steps."
+        reflection_response, reflection_cost = self.query_llm(
+            prompt=reflection_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+        intermediate_steps.append(reflection_response)
+
+        # Final response
+        final_prompt = f"Based on the verified steps, please provide the final answer."
+        final_response, final_cost = self.query_llm(
+            prompt=final_prompt,
+            system=system_prompt,
+            temperature=self.temperature,
+        )
+>>>>>>> REPLACE
+</DIFF>
+
+<NAME>
+temperature_sampling
+</NAME>
+
+<DESCRIPTION>
+Introducing temperature sampling can help explore different reasoning paths by generating multiple responses with varying temperatures. This can be particularly useful for ambiguous problems where multiple approaches may yield different results. By averaging or selecting the best response from these variations, we can improve the robustness of the final answer.
+</DESCRIPTION>
+
+<DIFF>
+<<<<<<< SEARCH
+        response, cost = self.query_llm(
+=======
+        responses = []
+        for temp in [0.0, 0.5, 1.0]:
+            response, cost = self.query_llm(
+                prompt=task_prompt,
+                system=system_prompt,
+                temperature=temp,
+            )
+            responses.append(response)
+
+        # Select the best response based on some criteria (e.g., length, clarity)
+        final_response = max(responses, key=len)  # Example criterion
+>>>>>>> REPLACE
+</DIFF>
