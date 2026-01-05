@@ -67,9 +67,9 @@ class RouterConfig:
     
     def __post_init__(self):
         if self.llm_models is None:
-            self.llm_models = ["gpt-4o-mini"]
+            self.llm_models = ["gpt-4o-mini", "gpt-4o"]
         if self.meta_llm_models is None:
-            self.meta_llm_models = ["gpt-4o-mini"]
+            self.meta_llm_models = ["gpt-4o"]
         
         # Apply environment variable override for score scale
         env_scale = os.environ.get("SHINKA_SCORE_SCALE")

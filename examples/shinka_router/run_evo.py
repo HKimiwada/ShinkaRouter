@@ -18,19 +18,43 @@ ROUTER_TASK_MSG = """You are an expert AI researcher designing ROUTING LOGIC for
 # AGENT ARCHITECTURE
 
 The agent has these PRIMITIVES available (DO NOT modify these):
+
+0. baseline_solve(problem): Exact match to adas_aime baseline (temp=0.0, simple prompt)
+   - This is the STARTING POINT - evolution should improve on this
+   - Uses: temperature=0.0, system="You are a skilled mathematician."
+
 1. quick_solve(problem): Fast solving with temperature=0.7, good for easy problems
+   - Higher temperature = more randomness = worse for math usually
+   - Consider using baseline_solve or deep_think instead for accuracy
+
 2. deep_think(problem): Careful chain-of-thought reasoning with temperature=0.0
+   - Adds "Think step-by-step" instruction
+   - Often better than baseline_solve for complex problems
+
 3. verify(problem, answer): Skeptical validator checking a proposed solution
-4. python_calc(problem): Solve using Python code for computational problems
+   - Use after getting an initial answer to catch errors
+
+4. python_calc(problem): Systematic step-by-step calculation approach
+   - Good for computation-heavy problems
+
 5. ensemble_vote(problem, n): Generate n solutions and vote on answer
+   - Uses temperature=0.7 for diversity, then majority vote
+   - Costs n LLM calls
+
 6. self_critique(problem, draft): Generate solution then critique and refine
+   - Pass the FULL draft response, not just the answer
+
 7. estimate_difficulty(problem): Returns 'easy', 'medium', or 'hard'
+   - Use for adaptive routing decisions
+
+8. classify_problem_type(problem): Returns problem category
+   - algebra, geometry, number_theory, combinatorics, calculus
 
 Your task is to evolve the `forward(problem)` method to INTELLIGENTLY ROUTE between these primitives.
 
 # OPTIMIZATION OBJECTIVE
 
-**Fitness Function:** Score = Accuracy - (λ × AvgCalls)
+**Fitness Function:** Score = Accuracy - (λ × AvgCalls × 100)
 
 Where:
 - Accuracy: Percentage of AIME problems solved correctly (0-100%)
@@ -38,6 +62,14 @@ Where:
 - λ: Efficiency penalty (starts at 0.0, gradually increases to 0.10)
 
 **Goal:** Find routing strategies on the PARETO FRONTIER - maximize accuracy while minimizing LLM calls.
+
+# IMPORTANT: Temperature and Accuracy
+
+For math problems, **lower temperature = better accuracy**:
+- temperature=0.0: Deterministic, best for math (baseline_solve, deep_think)
+- temperature=0.7: Random, worse for math but adds diversity (quick_solve, ensemble_vote)
+
+The baseline (baseline_solve) uses temperature=0.0. To beat it, you need SMARTER routing, not just different primitives.
 
 # CONSTRAINTS
 
@@ -48,34 +80,29 @@ Where:
 
 # ROUTING STRATEGIES TO EXPLORE
 
-1. **Difficulty-based routing:**
-   - Use estimate_difficulty() to classify problem
-   - Route easy→quick_solve, hard→deep_think
+1. **Chain-of-thought enhancement:**
+   - Use deep_think instead of baseline_solve
+   - deep_think adds explicit CoT prompting which often helps
 
 2. **Sequential verification:**
-   - Generate solution with one primitive
-   - Verify with verify() or self_critique()
+   - baseline_solve/deep_think → verify
+   - Catches errors in initial solution
 
-3. **Adaptive depth:**
-   - Start with quick_solve
-   - If uncertain, escalate to deep_think or python_calc
+3. **Difficulty-based routing:**
+   - estimate_difficulty() to classify problem
+   - Route easy→baseline_solve (1 call), hard→deep_think+verify (2 calls)
 
-4. **Problem-type detection:**
-   - Detect keywords (calculate, prove, find)
-   - Route to appropriate primitive
+4. **Self-refinement:**
+   - deep_think → self_critique
+   - Iteratively improve the solution
 
-5. **Ensemble strategies:**
-   - Use ensemble_vote for medium-difficulty problems
-   - Combine multiple primitives for robustness
+5. **Ensemble for hard problems:**
+   - ensemble_vote(n=3) for medium-difficulty problems
+   - More diverse solutions, majority vote
 
-6. **Computational detection:**
-   - If problem involves heavy calculation, use python_calc
-   - Otherwise use reasoning-based primitives
-
-7. **Multi-stage pipelines:**
-   - First stage: quick_solve or estimate_difficulty
-   - Second stage: verify or deep_think based on confidence
-   - Final stage: self_critique if calls remaining
+6. **Multi-stage pipelines:**
+   - estimate_difficulty → route to appropriate depth
+   - Track call budget, adapt strategy
 
 # CURRENT GENERATION INFO
 
@@ -93,31 +120,43 @@ Early generations should focus on maximizing accuracy. Later generations should 
 # PERFORMANCE FEEDBACK
 
 You will receive:
-1. combined_score: The fitness value (accuracy - λ×calls)
+1. combined_score: The fitness value (accuracy - λ×calls×100)
 2. accuracy: Raw accuracy percentage
 3. avg_calls: Average LLM calls per problem
 4. text_feedback: Examples of failed problems to learn from
 5. lambda_used: Current λ value for this generation
-
-# INNOVATION GUIDELINES
-
-- Be creative! Try unconventional routing strategies
-- Use problem features (length, keywords, structure) for routing
-- Consider call budget: track remaining calls, adapt strategy
-- Combine primitives in novel ways
-- Learn from text_feedback about failure patterns
-- Balance exploration (new strategies) vs exploitation (refining good strategies)
+6. primitive_diversity: How many different primitives were used
 
 # CODE REQUIREMENTS
 
 - Only modify the `forward(self, problem)` method inside EVOLVE-BLOCK
-- DO NOT change primitive methods (quick_solve, verify, etc.)
+- DO NOT change primitive methods (baseline_solve, verify, etc.)
 - Return (response, total_cost) tuple
 - Handle all primitives returning (response, cost) tuples
 - Track and sum costs across all primitive calls
-- Keep code clean, readable, and well-commented
+- Call self.reset_tracking() at the start of forward()
 
-Remember: The goal is not just high accuracy, but the BEST POINT on the Pareto frontier - optimal balance of accuracy and efficiency!
+Example improved forward():
+```python
+def forward(self, problem: str) -> Tuple[str, float]:
+    self.reset_tracking()
+    total_cost = 0.0
+    
+    # Use deep_think for better CoT reasoning
+    response, cost = self.deep_think(problem)
+    total_cost += cost
+    
+    # Verify the answer
+    answer = self.extract_boxed_answer(response)
+    if answer:
+        verify_response, verify_cost = self.verify(problem, answer)
+        total_cost += verify_cost
+        return verify_response, total_cost
+    
+    return response, total_cost
+```
+
+Remember: The baseline uses temperature=0.0. To beat it, use better REASONING strategies, not just different temperatures!
 """
 
 

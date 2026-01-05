@@ -88,6 +88,24 @@ class Agent:
     # PRIMITIVE METHODS (Stable - Not Evolved)
     # ========================================================================
     
+    def baseline_solve(self, problem: str) -> Tuple[str, float]:
+        """
+        Exact replication of adas_aime baseline behavior.
+        Temperature=0.0, simple system prompt, minimal task prompt.
+        Use this for fair comparison with baseline ShinkaEvolve.
+        """
+        self._track_call("baseline_solve")
+        
+        system_prompt = "You are a skilled mathematician."
+        task_prompt = f"{self.output_format}:\n\n{problem}\n\n"
+        
+        response, cost = self.query_llm(
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=0.0,  # Deterministic - matches baseline
+        )
+        return response, cost
+    
     def quick_solve(self, problem: str) -> Tuple[str, float]:
         """
         Fast solving with higher temperature for quick guessing.
@@ -351,13 +369,14 @@ class Agent:
         This method will be evolved by ShinkaEvolve to discover
         optimal routing strategies.
         
-        Initial baseline: Simple quick_solve approach.
+        Initial baseline: Use baseline_solve (temperature=0.0) which
+        exactly matches the adas_aime baseline behavior.
         """
         # Reset tracking for this problem
         self.reset_tracking()
         
-        # Baseline: Just use quick_solve for all problems
-        response, cost = self.quick_solve(problem)
+        # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+        response, cost = self.baseline_solve(problem)
         return response, cost
     # EVOLVE-BLOCK-END
 
