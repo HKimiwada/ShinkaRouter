@@ -99,7 +99,7 @@ def create_call_limited_query_llm(base_query_llm, max_calls=3):
     max_value=20,
     on_backoff=backoff_handler,
 )
-def query_llm(prompt, system, temperature=0.0, model_name="gpt-4.1-nano"):
+def query_llm(prompt, system, temperature=0.0, model_name="gpt-4o-mini"):
     # client = openai.AzureOpenAI(
     #     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
     #     api_version=os.getenv("AZURE_API_VERSION"),

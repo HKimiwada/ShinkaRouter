@@ -1,12 +1,12 @@
 """
-Modified math evaluation that supports passing agent configuration parameters.
-Based on the AIME evaluation from adas_aime example.
+Modified math evaluation that supports passing agent configuration parameters
+and tracks primitive usage for analysis.
 """
 
 import time
 import multiprocessing
 import concurrent.futures
-from typing import Callable
+from typing import Callable, List
 import pandas as pd
 from utils import remove_boxed, last_boxed_only_string, is_equiv
 
@@ -59,10 +59,12 @@ def agent_evaluation(
             for i, (_, example) in enumerate(math_test_set.iterrows())
         }
         total, correct_count, total_llm_calls, cost_total = 0, 0, 0, 0
+        
         for future in concurrent.futures.as_completed(future_to_idx):
             idx = future_to_idx[future]
             total += 1
             try:
+                result = future.result()
                 (
                     _idx,
                     problem,
@@ -72,7 +74,9 @@ def agent_evaluation(
                     correct,
                     cost,
                     num_llm_calls,
-                ) = future.result()
+                    primitive_calls,
+                ) = result
+                
                 results.append(
                     {
                         "id": idx,
@@ -83,6 +87,9 @@ def agent_evaluation(
                         "correct": correct,
                         "cost": cost,
                         "num_llm_calls": num_llm_calls,
+                        "primitive_calls": primitive_calls,  # List of primitives used
+                        "num_primitives": len(primitive_calls),
+                        "unique_primitives": len(set(primitive_calls)),
                     }
                 )
             except Exception as e:
@@ -114,11 +121,32 @@ def agent_evaluation(
         print(f"Time taken: {time.time() - start_time:.2f} seconds")
         time_per_example = (time.time() - start_time) / total
         print(f"Time per example: {time_per_example:.2f} seconds")
-
+        
+        # Print primitive usage summary
         df = pd.DataFrame(results)
+        print_primitive_summary(df)
     else:
         raise ValueError("No examples were processed.")
+    
     return final_accuracy, cost_total, total, total_llm_calls, df
+
+
+def print_primitive_summary(df: pd.DataFrame) -> None:
+    """Print summary of primitive usage across all problems."""
+    from collections import Counter
+    
+    all_calls = []
+    for calls in df["primitive_calls"]:
+        all_calls.extend(calls)
+    
+    if all_calls:
+        counts = Counter(all_calls)
+        print("\nPrimitive Usage Summary:")
+        for primitive, count in counts.most_common():
+            pct = 100 * count / len(all_calls)
+            print(f"  {primitive}: {count} ({pct:.1f}%)")
+        print(f"  Total primitive calls: {len(all_calls)}")
+        print(f"  Avg primitives per problem: {len(all_calls) / len(df):.2f}")
 
 
 def evaluate_math_correctness(response: str, solution: str) -> tuple[str, str, bool]:
@@ -143,6 +171,10 @@ def process_example(idx, example, agent, query_llm):
     # Reset call count for each example if using call-limited query_llm
     if hasattr(query_llm, "reset_calls"):
         query_llm.reset_calls()
+    
+    # Reset primitive tracking
+    if hasattr(agent, "reset_tracking"):
+        agent.reset_tracking()
 
     problem = example["problem"].strip()
     solution = example["answer"]
@@ -151,12 +183,16 @@ def process_example(idx, example, agent, query_llm):
         response, cost = agent.forward(problem)
     except Exception as e:
         print(f"Error in agent.forward for example {idx}: {e}")
-        # Return default values on error
         response = ""
         cost = 0.0
     
     llm_answer, true_answer, correct = evaluate_math_correctness(response, solution)
     num_llm_calls = query_llm.get_call_count()
+    
+    # Get primitive calls if tracking is available
+    primitive_calls = []
+    if hasattr(agent, "get_primitive_calls"):
+        primitive_calls = agent.get_primitive_calls()
     
     return (
         idx,
@@ -167,4 +203,5 @@ def process_example(idx, example, agent, query_llm):
         correct,
         cost,
         num_llm_calls,
+        primitive_calls,
     )

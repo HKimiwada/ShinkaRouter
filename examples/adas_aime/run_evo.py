@@ -62,17 +62,16 @@ evo_config = EvolutionConfig(
     language="python",
     llm_models=[
         "gpt-4o-mini",     # Fast and cheap
-        "gpt-4o",          # More capable
     ],
     llm_kwargs=dict(temperatures=[0.0, 0.5, 1.0], max_tokens=16384),
     meta_rec_interval=10,
-    meta_llm_models=["gpt-4o"],
+    meta_llm_models=["gpt-4o-mini"],
     meta_llm_kwargs=dict(temperatures=[0.0]),
     embedding_model="text-embedding-3-small",
     init_program_path="initial.py",
     max_novelty_attempts=3,
     code_embed_sim_threshold=0.95,
-    novelty_llm_models=["gpt-4o"],
+    novelty_llm_models=["gpt-4o-mini"],
     novelty_llm_kwargs=dict(temperatures=[0.0]),
     use_text_feedback=True,
 )

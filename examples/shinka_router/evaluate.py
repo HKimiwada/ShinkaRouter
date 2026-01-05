@@ -2,15 +2,26 @@
 
 This evaluator computes a combined score that balances accuracy with efficiency,
 driving evolution toward the Pareto frontier of accuracy vs. LLM calls.
+
+SCORE SCALE NOTE:
+- Set SCORE_SCALE="normalized" for score in [0,1] range (default)
+- Set SCORE_SCALE="baseline" to match adas_aime baseline (0-100 accuracy)
 """
 
 import argparse
 import json
+import os
 from typing import Dict, Any, List, Tuple
+from collections import Counter
 import numpy as np
 from pathlib import Path
 from shinka.core import run_shinka_eval
 from config import ROUTER_CONFIG, get_lambda_schedule
+
+# Score scale configuration
+# "normalized": score = accuracy/100 - lambda*calls (range ~0-1)
+# "baseline": score = accuracy - lambda*calls*100 (range ~0-100, matches adas_aime)
+SCORE_SCALE = os.environ.get("SHINKA_SCORE_SCALE", "baseline")
 
 
 def construct_text_feedback(all_df) -> str:
@@ -32,6 +43,13 @@ def construct_text_feedback(all_df) -> str:
     random_id = df0_selected.sample(1)["id"].values[0]
     false_answer = df0_selected[df0_selected["id"] == random_id]
     
+    # Get primitive info if available
+    primitive_info = ""
+    if "primitive_calls" in false_answer.columns:
+        primitives = false_answer.iloc[0].get("primitive_calls", [])
+        if primitives:
+            primitive_info = f"\n# Primitives used: {', '.join(primitives)}"
+    
     text_feedback = (
         f"# Example of an AIME problem that could not be answered correctly:\n\n"
         f"{false_answer.iloc[0]['problem']}\n\n"
@@ -39,20 +57,48 @@ def construct_text_feedback(all_df) -> str:
         f"# The Agent's submit answer:\n\n{false_answer.iloc[0]['llm_answer']}\n\n"
         f"# The ground truth problem answer:\n\n{false_answer.iloc[0]['true_answer']}\n\n"
         f"# Number of LLM calls used: {false_answer.iloc[0]['num_llm_calls']}"
+        f"{primitive_info}"
     )
     
     return text_feedback
 
 
-def analyze_primitive_usage(all_df) -> Dict[str, float]:
+def analyze_primitive_usage(all_df) -> Dict[str, Any]:
     """
-    Analyze which primitives were used (if tracked).
-    This would require instrumenting the Agent class to log calls.
+    Analyze which primitives were used across all runs.
+    
+    Returns dict with:
+        - primitive_counts: Counter of primitive usage
+        - primitive_diversity: Number of unique primitives used
+        - avg_chain_length: Average number of primitives per problem
+        - most_common: Most frequently used primitive
     """
-    # Placeholder for future primitive usage tracking
+    all_primitives = []
+    chain_lengths = []
+    
+    for df in all_df:
+        if "primitive_calls" not in df.columns:
+            continue
+        for calls in df["primitive_calls"]:
+            if isinstance(calls, list):
+                all_primitives.extend(calls)
+                chain_lengths.append(len(calls))
+    
+    if not all_primitives:
+        return {
+            "primitive_counts": {},
+            "primitive_diversity": 0,
+            "avg_chain_length": 1.0,
+            "most_common": "unknown",
+        }
+    
+    counts = Counter(all_primitives)
+    
     return {
-        "primitive_diversity": 1.0,  # Could track unique primitives used
-        "avg_depth": 1.0,  # Could track call chain depth
+        "primitive_counts": dict(counts),
+        "primitive_diversity": len(counts),
+        "avg_chain_length": float(np.mean(chain_lengths)) if chain_lengths else 1.0,
+        "most_common": counts.most_common(1)[0][0] if counts else "unknown",
     }
 
 
@@ -64,7 +110,9 @@ def compute_efficiency_score(
     """
     Compute the efficiency-aware combined score.
     
-    Score = Accuracy - (lambda × AvgCalls)
+    Score formula depends on SCORE_SCALE:
+    - "normalized": score = accuracy/100 - (lambda × avg_calls)
+    - "baseline": score = accuracy - (lambda × avg_calls × 100)
     
     Args:
         accuracy: Accuracy percentage (0-100)
@@ -74,27 +122,32 @@ def compute_efficiency_score(
     Returns:
         Tuple of (combined_score, lambda_used)
     """
-    # Get adaptive lambda value
     lambda_val = get_lambda_schedule(generation)
     
-    # Normalize accuracy to 0-1 scale
-    accuracy_norm = accuracy / 100.0
-    
-    # Compute efficiency penalty
-    efficiency_penalty = lambda_val * avg_calls
-    
-    # Combined score (can go negative if very inefficient)
-    combined_score = accuracy_norm - efficiency_penalty
-    
-    # Apply minimum accuracy threshold
-    if accuracy < ROUTER_CONFIG.min_accuracy_threshold * 100:
-        combined_score = -999.0  # Heavily penalize low accuracy
+    if SCORE_SCALE == "normalized":
+        # Normalized scale (0-1 range)
+        accuracy_norm = accuracy / 100.0
+        efficiency_penalty = lambda_val * avg_calls
+        combined_score = accuracy_norm - efficiency_penalty
+        
+        # Minimum accuracy threshold (normalized)
+        if accuracy < ROUTER_CONFIG.min_accuracy_threshold * 100:
+            combined_score = -1.0
+    else:
+        # Baseline scale (0-100 range, matching adas_aime)
+        # Scale lambda to work with 0-100 accuracy
+        efficiency_penalty = lambda_val * avg_calls * 100
+        combined_score = accuracy - efficiency_penalty
+        
+        # Minimum accuracy threshold
+        if accuracy < ROUTER_CONFIG.min_accuracy_threshold * 100:
+            combined_score = -100.0
     
     return combined_score, lambda_val
 
 
 def aggregate_metrics_with_efficiency(
-    results: List[Tuple[float, float, float, float]],
+    results: List[Tuple[float, float, float, float, Any]],
     generation: int = 0,
 ) -> Dict[str, Any]:
     """
@@ -117,7 +170,7 @@ def aggregate_metrics_with_efficiency(
                 "lambda_used": 0.0,
             },
             "private": {"processed": 0},
-            "combined_score": -999.0,
+            "combined_score": -100.0 if SCORE_SCALE == "baseline" else -1.0,
             "text_feedback": "No results generated.",
         }
     
@@ -143,10 +196,16 @@ def aggregate_metrics_with_efficiency(
     )
     
     # Compute efficiency penalty for visibility
-    efficiency_penalty = lambda_used * avg_calls
+    if SCORE_SCALE == "normalized":
+        efficiency_penalty = lambda_used * avg_calls
+    else:
+        efficiency_penalty = lambda_used * avg_calls * 100
     
-    # Analyze primitive usage (if available)
+    # Analyze primitive usage
     primitive_stats = analyze_primitive_usage(all_df)
+    
+    # Compute variance across runs
+    calls_per_run = [calls / proc for calls, proc in zip(all_num_llm_calls, all_processed)]
     
     # Public metrics (visible to evolution)
     public_metrics = {
@@ -155,8 +214,11 @@ def aggregate_metrics_with_efficiency(
         "cost": avg_cost,
         "efficiency_penalty": efficiency_penalty,
         "lambda_used": lambda_used,
-        "calls_std": float(np.std([calls / proc for calls, proc in zip(all_num_llm_calls, all_processed)])),
-        **primitive_stats,
+        "calls_std": float(np.std(calls_per_run)) if len(calls_per_run) > 1 else 0.0,
+        "accuracy_std": float(np.std(all_performance)) if len(all_performance) > 1 else 0.0,
+        "primitive_diversity": primitive_stats["primitive_diversity"],
+        "avg_chain_length": primitive_stats["avg_chain_length"],
+        "most_common_primitive": primitive_stats["most_common"],
     }
     
     # Private metrics (stored but not used for evolution)
@@ -165,14 +227,16 @@ def aggregate_metrics_with_efficiency(
         "all_cost": all_cost,
         "all_processed": all_processed,
         "all_num_llm_calls": all_num_llm_calls,
-        "pareto_coords": (avg_calls, accuracy),  # For Pareto frontier plotting
+        "pareto_coords": (avg_calls, accuracy),
         "generation": generation,
+        "score_scale": SCORE_SCALE,
+        "primitive_counts": primitive_stats["primitive_counts"],
     }
     
     # Extra data stored as pickle
     extra_data = {
         "df": all_df,
-        "primitive_usage": primitive_stats,
+        "primitive_stats": primitive_stats,
     }
     
     # Text feedback
@@ -181,7 +245,10 @@ def aggregate_metrics_with_efficiency(
     text_feedback += f"# Average LLM calls: {avg_calls:.2f}\n"
     text_feedback += f"# Lambda: {lambda_used:.4f}\n"
     text_feedback += f"# Efficiency penalty: {efficiency_penalty:.4f}\n"
-    text_feedback += f"# Combined score: {combined_score:.4f}"
+    text_feedback += f"# Combined score: {combined_score:.4f} (scale: {SCORE_SCALE})\n"
+    text_feedback += f"\n# Primitive Usage:\n"
+    for prim, count in primitive_stats["primitive_counts"].items():
+        text_feedback += f"#   {prim}: {count}\n"
     
     metrics = {
         "public": public_metrics,
@@ -215,19 +282,10 @@ def main(
     year: int = 2024,
     num_experiment_runs: int = 3,
     max_calls: int = 10,
-    generation: int = 0,  # Added for adaptive lambda
+    generation: int = 0,
 ) -> None:
     """
     Run efficiency-aware evaluation for ShinkaRouter.
-    
-    Args:
-        program_path: Path to the program to evaluate
-        results_dir: Directory to save results
-        model_name: LLM model name
-        year: AIME dataset year
-        num_experiment_runs: Number of evaluation runs
-        max_calls: Maximum LLM calls per problem
-        generation: Current generation (for adaptive lambda)
     """
     print(f"=" * 80)
     print(f"ShinkaRouter Evaluation")
@@ -240,11 +298,12 @@ def main(
     print(f"Runs: {num_experiment_runs}")
     print(f"Generation: {generation}")
     print(f"Lambda: {get_lambda_schedule(generation):.4f}")
+    print(f"Score scale: {SCORE_SCALE}")
     print(f"=" * 80)
     
     from functools import partial
     
-    # Create kwargs provider with generation info
+    # Create kwargs provider
     get_kwargs_for_run = partial(
         get_experiment_kwargs,
         model_name=model_name,
@@ -280,15 +339,12 @@ def main(
         print(f"  Lambda: {metrics['public']['lambda_used']:.4f}")
         print(f"  Efficiency Penalty: {metrics['public']['efficiency_penalty']:.4f}")
         print(f"  Combined Score: {metrics['combined_score']:.4f}")
+        print(f"  Primitive Diversity: {metrics['public']['primitive_diversity']}")
+        print(f"  Most Common: {metrics['public']['most_common_primitive']}")
         print("=" * 80)
     else:
         print("\n" + "=" * 80)
         print(f"Evaluation failed: {error}")
-        print("=" * 80)
-        print("\nDefault metrics stored due to error:")
-        for key, value in metrics.items():
-            if key != 'text_feedback':
-                print(f"  {key}: {value}")
         print("=" * 80)
 
 
@@ -296,50 +352,26 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="ShinkaRouter efficiency-aware evaluation"
     )
+    parser.add_argument("--program_path", type=str, default="initial.py")
+    parser.add_argument("--results_dir", type=str, default="results")
+    parser.add_argument("--model_name", type=str, default="gpt-4o-mini")
+    parser.add_argument("--year", type=int, default=2024)
+    parser.add_argument("--num_experiment_runs", type=int, default=3)
+    parser.add_argument("--max_calls", type=int, default=10)
+    parser.add_argument("--generation", type=int, default=0)
     parser.add_argument(
-        "--program_path",
+        "--score_scale",
         type=str,
-        default="initial.py",
-        help="Path to the program to evaluate",
-    )
-    parser.add_argument(
-        "--results_dir",
-        type=str,
-        default="results",
-        help="Directory to save results",
-    )
-    parser.add_argument(
-        "--model_name",
-        type=str,
-        default="gpt-4o-mini",
-        help="LLM model name",
-    )
-    parser.add_argument(
-        "--year",
-        type=int,
-        default=2024,
-        help="AIME dataset year",
-    )
-    parser.add_argument(
-        "--num_experiment_runs",
-        type=int,
-        default=3,
-        help="Number of evaluation runs",
-    )
-    parser.add_argument(
-        "--max_calls",
-        type=int,
-        default=10,
-        help="Maximum LLM calls per problem",
-    )
-    parser.add_argument(
-        "--generation",
-        type=int,
-        default=0,
-        help="Current generation (for adaptive lambda)",
+        choices=["normalized", "baseline"],
+        default=None,
+        help="Score scale: 'normalized' (0-1) or 'baseline' (0-100)",
     )
     
     args = parser.parse_args()
+    
+    # Override score scale if provided via CLI
+    if args.score_scale:
+        SCORE_SCALE = args.score_scale
     
     main(
         args.program_path,

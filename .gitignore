@@ -173,3 +173,6 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+examples/adas_aime/results_20260105_155709
+examples/shinka_router/results_20260105_153232

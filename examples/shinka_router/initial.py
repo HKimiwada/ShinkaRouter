@@ -6,7 +6,8 @@ logic that will be evolved by ShinkaEvolve.
 """
 
 import re
-from typing import Callable, Tuple, List, Optional
+from typing import Callable, Tuple, List, Optional, Dict
+from collections import Counter
 
 
 class Agent:
@@ -41,7 +42,48 @@ class Agent:
             "On the final line output only the digits of the answer (0-999). "
             "Provide your final answer enclosed in a LaTeX \\boxed{{...}} command."
         )
+        
+        # Primitive call tracking (reset per forward() call)
+        self._primitive_calls: List[str] = []
     
+    def _track_call(self, primitive_name: str) -> None:
+        """Track a primitive call for analysis."""
+        self._primitive_calls.append(primitive_name)
+    
+    def get_primitive_calls(self) -> List[str]:
+        """Return list of primitives called in this forward pass."""
+        return self._primitive_calls.copy()
+    
+    def reset_tracking(self) -> None:
+        """Reset primitive call tracking."""
+        self._primitive_calls = []
+    
+    @staticmethod
+    def extract_boxed_answer(response: str) -> Optional[str]:
+        """Extract answer from \\boxed{} in response."""
+        idx = response.rfind("\\boxed")
+        if idx < 0:
+            idx = response.rfind("\\fbox")
+        if idx < 0:
+            return None
+        
+        brace_idx = response.find("{", idx)
+        if brace_idx < 0:
+            return None
+        
+        level = 0
+        for i in range(brace_idx, len(response)):
+            if response[i] == "{":
+                level += 1
+            elif response[i] == "}":
+                level -= 1
+                if level == 0:
+                    content = response[brace_idx + 1:i]
+                    # Clean and normalize
+                    content = content.strip().lstrip("0") or "0"
+                    return content
+        return None
+
     # ========================================================================
     # PRIMITIVE METHODS (Stable - Not Evolved)
     # ========================================================================
@@ -51,6 +93,8 @@ class Agent:
         Fast solving with higher temperature for quick guessing.
         Good for easy problems or first-pass attempts.
         """
+        self._track_call("quick_solve")
+        
         system_prompt = "You are a skilled mathematician. Solve quickly and efficiently."
         task_prompt = f"{self.output_format}\n\n{problem}\n\n"
         
@@ -66,6 +110,8 @@ class Agent:
         Careful reasoning with chain-of-thought and low temperature.
         Good for complex problems requiring step-by-step analysis.
         """
+        self._track_call("deep_think")
+        
         system_prompt = (
             "You are an expert mathematician. Think step-by-step, "
             "showing all your reasoning before arriving at the final answer."
@@ -88,6 +134,8 @@ class Agent:
         Act as a skeptical verifier checking a proposed solution.
         Returns either confirmation or a corrected answer.
         """
+        self._track_call("verify")
+        
         system_prompt = (
             "You are a rigorous mathematics professor checking a student's answer. "
             "Verify if the answer is correct. If wrong, provide the correct answer."
@@ -108,17 +156,20 @@ class Agent:
     
     def python_calc(self, problem: str) -> Tuple[str, float]:
         """
-        Extract computational aspects and solve using Python code.
-        Good for problems requiring numerical calculations.
+        Prompt LLM to reason through computation step-by-step.
+        Encourages systematic calculation approach.
         """
+        self._track_call("python_calc")
+        
         system_prompt = (
-            "You are a mathematician who solves problems using Python. "
-            "Write and execute Python code to solve the problem, then provide the final answer."
+            "You are a mathematician who solves problems systematically. "
+            "Break down any calculations step-by-step, showing intermediate results. "
+            "Double-check arithmetic by computing in multiple ways if helpful."
         )
         task_prompt = (
-            f"Solve this problem using Python code:\n\n"
+            f"Solve this problem with careful step-by-step calculations:\n\n"
             f"{problem}\n\n"
-            f"Show your code and calculations, then {self.output_format}"
+            f"Show all intermediate calculations clearly, then {self.output_format}"
         )
         
         response, cost = self.query_llm(
@@ -130,9 +181,13 @@ class Agent:
     
     def ensemble_vote(self, problem: str, n: Optional[int] = None) -> Tuple[str, float]:
         """
-        Generate multiple solutions and take majority vote.
+        Generate multiple solutions and take majority vote on the answer.
         Good for medium-difficulty problems where consensus helps.
+        
+        Returns the response containing the winning answer.
         """
+        self._track_call("ensemble_vote")
+        
         if n is None:
             n = self.ensemble_size
         
@@ -140,6 +195,7 @@ class Agent:
         task_prompt = f"{self.output_format}\n\n{problem}\n\n"
         
         responses = []
+        answers = []
         total_cost = 0.0
         
         for _ in range(n):
@@ -150,25 +206,51 @@ class Agent:
             )
             responses.append(response)
             total_cost += cost
+            
+            # Extract answer from this response
+            ans = self.extract_boxed_answer(response)
+            if ans:
+                answers.append(ans)
         
-        # Return the first response (in practice, would vote on extracted answers)
-        # The voting logic would be implemented in a real scenario
+        # Majority vote
+        if answers:
+            vote_counts = Counter(answers)
+            winner, count = vote_counts.most_common(1)[0]
+            
+            # Return response that contains the winning answer
+            for resp in responses:
+                extracted = self.extract_boxed_answer(resp)
+                if extracted == winner:
+                    return resp, total_cost
+        
+        # Fallback to first response if no valid answers found
         return responses[0], total_cost
     
-    def self_critique(self, problem: str, draft_answer: str) -> Tuple[str, float]:
+    def self_critique(self, problem: str, draft_response: str) -> Tuple[str, float]:
         """
-        Generate a draft solution, then critique and refine it.
+        Critique a draft solution and provide an improved answer.
         Good for complex problems benefiting from iterative refinement.
+        
+        Args:
+            problem: The original problem
+            draft_response: The full draft response (not just the answer)
         """
+        self._track_call("self_critique")
+        
         system_prompt = (
             "You are a mathematician reviewing your own work. "
-            "Critique the draft solution and provide an improved answer."
+            "Carefully check the solution for errors in logic, calculation, or reasoning. "
+            "Provide an improved answer if you find any issues."
         )
         task_prompt = (
             f"Problem: {problem}\n\n"
-            f"Draft Solution: {draft_answer}\n\n"
-            f"Review this solution carefully. If there are any errors or improvements, "
-            f"provide a better solution. Otherwise, confirm the answer.\n"
+            f"Draft Solution:\n{draft_response}\n\n"
+            f"Review this solution carefully. Check for:\n"
+            f"1. Arithmetic errors\n"
+            f"2. Logical mistakes\n"
+            f"3. Missing cases\n"
+            f"4. Incorrect assumptions\n\n"
+            f"Provide your final answer (same or corrected).\n"
             f"{self.output_format}"
         )
         
@@ -183,12 +265,22 @@ class Agent:
         """
         Estimate problem difficulty as 'easy', 'medium', or 'hard'.
         Can be used for adaptive routing decisions.
+        
+        Returns:
+            Tuple of (difficulty_level, cost) where difficulty is 'easy', 'medium', or 'hard'
         """
-        system_prompt = "You are an expert at evaluating problem difficulty."
+        self._track_call("estimate_difficulty")
+        
+        system_prompt = "You are an expert at evaluating AIME problem difficulty."
         task_prompt = (
-            f"Analyze this AIME problem and classify its difficulty as "
-            f"'easy', 'medium', or 'hard':\n\n{problem}\n\n"
-            f"Respond with only one word: easy, medium, or hard."
+            f"Analyze this AIME problem and classify its difficulty.\n\n"
+            f"Problem: {problem}\n\n"
+            f"Consider:\n"
+            f"- Number of steps required\n"
+            f"- Complexity of mathematical concepts\n"
+            f"- Amount of computation needed\n"
+            f"- Whether it requires insight vs. standard techniques\n\n"
+            f"Respond with exactly one word: easy, medium, or hard"
         )
         
         response, cost = self.query_llm(
@@ -199,10 +291,54 @@ class Agent:
         
         # Extract difficulty level
         difficulty = response.strip().lower()
-        if difficulty not in ['easy', 'medium', 'hard']:
-            difficulty = 'medium'  # Default
+        # Handle common variations
+        if "easy" in difficulty:
+            difficulty = "easy"
+        elif "hard" in difficulty:
+            difficulty = "hard"
+        else:
+            difficulty = "medium"  # Default
         
         return difficulty, cost
+    
+    def classify_problem_type(self, problem: str) -> Tuple[str, float]:
+        """
+        Classify the problem type (algebra, geometry, number theory, etc.)
+        Can be used for specialized routing.
+        
+        Returns:
+            Tuple of (problem_type, cost)
+        """
+        self._track_call("classify_problem_type")
+        
+        system_prompt = "You are an expert at categorizing mathematics competition problems."
+        task_prompt = (
+            f"Classify this AIME problem into ONE primary category:\n\n"
+            f"Problem: {problem}\n\n"
+            f"Categories:\n"
+            f"- algebra (equations, polynomials, sequences)\n"
+            f"- geometry (shapes, angles, coordinates)\n"
+            f"- number_theory (divisibility, primes, modular arithmetic)\n"
+            f"- combinatorics (counting, probability, arrangements)\n"
+            f"- calculus (limits, optimization - rare in AIME)\n\n"
+            f"Respond with exactly one word from the categories above."
+        )
+        
+        response, cost = self.query_llm(
+            prompt=task_prompt,
+            system=system_prompt,
+            temperature=0.0,
+        )
+        
+        # Normalize response
+        ptype = response.strip().lower().replace(" ", "_")
+        valid_types = ["algebra", "geometry", "number_theory", "combinatorics", "calculus"]
+        
+        for vt in valid_types:
+            if vt in ptype:
+                return vt, cost
+        
+        return "algebra", cost  # Default
 
     # ========================================================================
     # ROUTING LOGIC (Evolved by ShinkaEvolve)
@@ -217,6 +353,9 @@ class Agent:
         
         Initial baseline: Simple quick_solve approach.
         """
+        # Reset tracking for this problem
+        self.reset_tracking()
+        
         # Baseline: Just use quick_solve for all problems
         response, cost = self.quick_solve(problem)
         return response, cost
