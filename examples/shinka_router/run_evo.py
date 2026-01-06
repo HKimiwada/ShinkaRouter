@@ -165,7 +165,7 @@ def create_job_config():
     return LocalJobConfig(
         eval_program_path="evaluate.py",
         extra_cmd_args={
-            "model_name": "gpt-4o-mini",
+            "model_name": "gpt-4.1-nano",
             "year": ROUTER_CONFIG.test_year,
             "max_calls": ROUTER_CONFIG.max_calls_per_problem,
             "num_experiment_runs": ROUTER_CONFIG.num_experiment_runs,

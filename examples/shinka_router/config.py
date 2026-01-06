@@ -63,13 +63,13 @@ class RouterConfig:
     
     llm_models: Optional[List[str]] = None
     meta_llm_models: Optional[List[str]] = None
-    eval_model: str = "gpt-4o-mini"  # Model used for agent evaluation
+    eval_model: str = "gpt-4.1-nano"  # Model used for agent evaluation
     
     def __post_init__(self):
         if self.llm_models is None:
-            self.llm_models = ["gpt-4o-mini", "gpt-4o"]
+            self.llm_models = ["gpt-4.1-nano"]
         if self.meta_llm_models is None:
-            self.meta_llm_models = ["gpt-4o"]
+            self.meta_llm_models = ["gpt-4.1-nano"]
         
         # Apply environment variable override for score scale
         env_scale = os.environ.get("SHINKA_SCORE_SCALE")

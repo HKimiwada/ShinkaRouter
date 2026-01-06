@@ -3,6 +3,12 @@
 This agent provides a toolbox of specialized primitives that can be
 composed in different ways. The forward() method contains the routing
 logic that will be evolved by ShinkaEvolve.
+
+FIXES from original:
+1. verify() now accepts full response, not just answer
+2. deep_think() uses same prompt structure as baseline (format first)
+3. ensemble_vote() uses lower temperature (0.5 instead of 0.7)
+4. All primitives use consistent prompt structure
 """
 
 import re
@@ -102,18 +108,20 @@ class Agent:
         response, cost = self.query_llm(
             prompt=task_prompt,
             system=system_prompt,
-            temperature=0.0,  # Deterministic - matches baseline
+            temperature=0.0,
         )
         return response, cost
     
     def quick_solve(self, problem: str) -> Tuple[str, float]:
         """
-        Fast solving with higher temperature for quick guessing.
+        Fast solving with higher temperature for diverse attempts.
         Good for easy problems or first-pass attempts.
+        Uses same prompt structure as baseline.
         """
         self._track_call("quick_solve")
         
-        system_prompt = "You are a skilled mathematician. Solve quickly and efficiently."
+        system_prompt = "You are a skilled mathematician."
+        # Same structure as baseline - format first, then problem
         task_prompt = f"{self.output_format}\n\n{problem}\n\n"
         
         response, cost = self.query_llm(
@@ -127,6 +135,9 @@ class Agent:
         """
         Careful reasoning with chain-of-thought and low temperature.
         Good for complex problems requiring step-by-step analysis.
+        
+        FIX: Uses same prompt structure as baseline (format first) for
+        consistent answer extraction.
         """
         self._track_call("deep_think")
         
@@ -134,10 +145,11 @@ class Agent:
             "You are an expert mathematician. Think step-by-step, "
             "showing all your reasoning before arriving at the final answer."
         )
+        # Format instruction first (like baseline), then problem
         task_prompt = (
+            f"{self.output_format}\n\n"
             f"Solve this problem carefully with detailed reasoning:\n\n"
-            f"{problem}\n\n"
-            f"{self.output_format}"
+            f"{problem}"
         )
         
         response, cost = self.query_llm(
@@ -147,22 +159,31 @@ class Agent:
         )
         return response, cost
     
-    def verify(self, problem: str, candidate_answer: str) -> Tuple[str, float]:
+    def verify(self, problem: str, candidate_response: str) -> Tuple[str, float]:
         """
         Act as a skeptical verifier checking a proposed solution.
         Returns either confirmation or a corrected answer.
+        
+        FIX: Now accepts full response (with reasoning), not just the answer.
+        This allows the verifier to actually check the work.
+        
+        Args:
+            problem: The original problem
+            candidate_response: The FULL response including reasoning (not just answer)
         """
         self._track_call("verify")
         
         system_prompt = (
-            "You are a rigorous mathematics professor checking a student's answer. "
-            "Verify if the answer is correct. If wrong, provide the correct answer."
+            "You are a rigorous mathematics professor checking a student's work. "
+            "Carefully verify the solution step by step. "
+            "If you find any errors, explain them and provide the correct answer."
         )
         task_prompt = (
+            f"{self.output_format}\n\n"
             f"Problem: {problem}\n\n"
-            f"Proposed Answer: {candidate_answer}\n\n"
-            f"Is this answer correct? If not, what is the correct answer?\n"
-            f"{self.output_format}"
+            f"Student's Solution:\n{candidate_response}\n\n"
+            f"Verify this solution. Check each step for errors. "
+            f"Provide the correct final answer."
         )
         
         response, cost = self.query_llm(
@@ -184,10 +205,12 @@ class Agent:
             "Break down any calculations step-by-step, showing intermediate results. "
             "Double-check arithmetic by computing in multiple ways if helpful."
         )
+        # Format first for consistent extraction
         task_prompt = (
+            f"{self.output_format}\n\n"
             f"Solve this problem with careful step-by-step calculations:\n\n"
             f"{problem}\n\n"
-            f"Show all intermediate calculations clearly, then {self.output_format}"
+            f"Show all intermediate calculations clearly."
         )
         
         response, cost = self.query_llm(
@@ -201,6 +224,9 @@ class Agent:
         """
         Generate multiple solutions and take majority vote on the answer.
         Good for medium-difficulty problems where consensus helps.
+        
+        FIX: Uses moderate temperature (0.5) instead of 0.7 to reduce noise
+        while still getting diversity.
         
         Returns the response containing the winning answer.
         """
@@ -216,11 +242,14 @@ class Agent:
         answers = []
         total_cost = 0.0
         
+        # FIX: Use moderate temperature for better accuracy while maintaining diversity
+        ensemble_temp = 0.5
+        
         for _ in range(n):
             response, cost = self.query_llm(
                 prompt=task_prompt,
                 system=system_prompt,
-                temperature=0.7,  # Medium temp for diversity
+                temperature=ensemble_temp,
             )
             responses.append(response)
             total_cost += cost
@@ -260,7 +289,9 @@ class Agent:
             "Carefully check the solution for errors in logic, calculation, or reasoning. "
             "Provide an improved answer if you find any issues."
         )
+        # Format first for consistent extraction
         task_prompt = (
+            f"{self.output_format}\n\n"
             f"Problem: {problem}\n\n"
             f"Draft Solution:\n{draft_response}\n\n"
             f"Review this solution carefully. Check for:\n"
@@ -268,8 +299,7 @@ class Agent:
             f"2. Logical mistakes\n"
             f"3. Missing cases\n"
             f"4. Incorrect assumptions\n\n"
-            f"Provide your final answer (same or corrected).\n"
-            f"{self.output_format}"
+            f"Provide your final answer (same or corrected)."
         )
         
         response, cost = self.query_llm(

@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """
-ShinkaRouter Diagnostic Script
+ShinkaRouter Diagnostic Script (FIXED)
 
 This script tests whether the primitives actually improve over the baseline.
 If they don't, evolution has no room to improve.
 
 Run this BEFORE evolution to understand the performance landscape.
+
+FIXES from original:
+1. Uses is_equiv() for proper answer comparison (matches actual evaluation)
+2. Fixed return bug in deep_think_verify and deep_think_critique
+3. Updated to use new verify signature (full response, not just answer)
 """
 
 import os
@@ -32,7 +37,7 @@ def test_single_primitive(
     
     Returns: (accuracy, avg_cost, list of correct/incorrect)
     """
-    from utils import create_call_limited_query_llm
+    from utils import create_call_limited_query_llm, remove_boxed, last_boxed_only_string, is_equiv
     
     correct_list = []
     total_cost = 0.0
@@ -58,34 +63,35 @@ def test_single_primitive(
             elif primitive_name == "ensemble_vote_3":
                 response, cost = agent.ensemble_vote(problem_text, n=3)
             elif primitive_name == "deep_think_verify":
+                # FIX: Pass full response to verify, not just answer
                 response, cost = agent.deep_think(problem_text)
-                answer = agent.extract_boxed_answer(response)
-                if answer:
-                    response, cost2 = agent.verify(problem_text, answer)
-                    cost += cost2
+                verify_response, verify_cost = agent.verify(problem_text, response)
+                response = verify_response  # FIX: Update response instead of returning
+                cost += verify_cost
             elif primitive_name == "deep_think_critique":
                 response, cost = agent.deep_think(problem_text)
-                response2, cost2 = agent.self_critique(problem_text, response)
-                response = response2
-                cost += cost2
+                critique_response, critique_cost = agent.self_critique(problem_text, response)
+                response = critique_response  # FIX: Update response instead of returning
+                cost += critique_cost
             else:
                 raise ValueError(f"Unknown primitive: {primitive_name}")
             
-            # Extract answer
-            llm_answer = agent.extract_boxed_answer(response)
-            if llm_answer:
-                llm_answer = llm_answer.strip().lstrip("0") or "0"
-            else:
-                llm_answer = ""
+            # FIX: Use same answer extraction as actual evaluation
+            llm_answer_str = remove_boxed(last_boxed_only_string(response))
+            if llm_answer_str is not None:
+                llm_answer_str = llm_answer_str.lstrip("0")
+                if llm_answer_str == "":
+                    llm_answer_str = "0"
+            llm_answer = "" if llm_answer_str is None else llm_answer_str
             
-            true_answer_clean = true_answer.strip().lstrip("0") or "0"
-            correct = (llm_answer == true_answer_clean)
+            # FIX: Use is_equiv for proper comparison
+            correct = is_equiv(llm_answer, true_answer)
             
             correct_list.append(correct)
             total_cost += cost
             
             status = "✓" if correct else "✗"
-            print(f"  [{i+1}/{max_problems}] {status} LLM={llm_answer}, True={true_answer_clean}")
+            print(f"  [{i+1}/{max_problems}] {status} LLM={llm_answer}, True={true_answer}")
             
         except Exception as e:
             print(f"  [{i+1}/{max_problems}] ERROR: {e}")
@@ -98,9 +104,9 @@ def test_single_primitive(
 
 
 def run_primitive_comparison(
-    model_name: str = "gpt-4o-mini",
+    model_name: str = "gpt-4.1-nano",
     year: int = 2024,
-    max_problems: int = 10,
+    max_problems: int = 15,
 ):
     """Compare all primitives on same problem set."""
     
@@ -124,7 +130,7 @@ def run_primitive_comparison(
     problems = df.sample(n=min(max_problems, len(df)), random_state=42).to_dict('records')
     
     print("=" * 80)
-    print(f"ShinkaRouter Primitive Comparison")
+    print(f"ShinkaRouter Primitive Comparison (FIXED)")
     print("=" * 80)
     print(f"Model: {model_name}")
     print(f"Year: {year}")
@@ -136,18 +142,18 @@ def run_primitive_comparison(
     
     # Primitives to test
     primitives = [
-        ("baseline_solve", "Baseline (temp=0.0, simple prompt)"),
-        ("deep_think", "Deep Think (temp=0.0, CoT prompt)"),
-        ("quick_solve", "Quick Solve (temp=0.7, simple prompt)"),
-        ("python_calc", "Python Calc (temp=0.0, calculation prompt)"),
-        ("ensemble_vote_3", "Ensemble Vote n=3 (temp=0.7, majority)"),
-        ("deep_think_verify", "Deep Think + Verify (2 calls)"),
-        ("deep_think_critique", "Deep Think + Self-Critique (2 calls)"),
+        ("baseline_solve", "Baseline (temp=0.0, simple prompt)", 1),
+        ("deep_think", "Deep Think (temp=0.0, CoT prompt)", 1),
+        ("quick_solve", "Quick Solve (temp=0.7, simple prompt)", 1),
+        ("python_calc", "Python Calc (temp=0.0, calculation prompt)", 1),
+        ("ensemble_vote_3", "Ensemble Vote n=3 (temp=0.5, majority)", 3),
+        ("deep_think_verify", "Deep Think + Verify (2 calls, full response)", 2),
+        ("deep_think_critique", "Deep Think + Self-Critique (2 calls)", 2),
     ]
     
     results = []
     
-    for primitive_name, description in primitives:
+    for primitive_name, description, expected_calls in primitives:
         print(f"\n{'='*80}")
         print(f"Testing: {description}")
         print("=" * 80)
@@ -163,6 +169,7 @@ def run_primitive_comparison(
             "avg_cost": avg_cost,
             "correct_count": sum(correct_list),
             "total": len(correct_list),
+            "expected_calls": expected_calls,
         })
         
         print(f"\nResult: {accuracy:.1f}% accuracy, ${avg_cost:.4f} avg cost")
@@ -182,8 +189,7 @@ def run_primitive_comparison(
         if r['primitive'] == 'baseline_solve':
             baseline_acc = r['accuracy']
         
-        calls = "1" if "vote" not in r['primitive'] and "verify" not in r['primitive'] and "critique" not in r['primitive'] else "2-3"
-        print(f"{r['primitive']:<25} {r['accuracy']:>9.1f}% ${r['avg_cost']:>9.4f} {calls:>8}")
+        print(f"{r['primitive']:<25} {r['accuracy']:>9.1f}% ${r['avg_cost']:>9.4f} {r['expected_calls']:>8}")
     
     print("-" * 60)
     
@@ -193,32 +199,39 @@ def run_primitive_comparison(
     print("=" * 80)
     
     if baseline_acc is not None:
-        improvements = [(r['primitive'], r['accuracy'] - baseline_acc) 
+        improvements = [(r['primitive'], r['accuracy'] - baseline_acc, r['expected_calls']) 
                        for r in results if r['primitive'] != 'baseline_solve']
         
-        better = [p for p, delta in improvements if delta > 0]
-        same = [p for p, delta in improvements if delta == 0]
-        worse = [p for p, delta in improvements if delta < 0]
+        better = [(p, d, c) for p, d, c in improvements if d > 0]
+        same = [(p, d, c) for p, d, c in improvements if d == 0]
+        worse = [(p, d, c) for p, d, c in improvements if d < 0]
         
         if better:
-            print(f"\n✓ BETTER than baseline: {', '.join(better)}")
+            print(f"\n✓ BETTER than baseline:")
+            for p, delta, calls in better:
+                print(f"    {p}: +{delta:.1f}% ({calls} calls)")
             print("  → Evolution CAN improve by using these primitives")
         
         if same:
-            print(f"\n= SAME as baseline: {', '.join(same)}")
-            print("  → These primitives don't help")
+            print(f"\n= SAME as baseline:")
+            for p, delta, calls in same:
+                print(f"    {p} ({calls} calls)")
         
         if worse:
-            print(f"\n✗ WORSE than baseline: {', '.join(worse)}")
-            print("  → Avoid these primitives")
+            print(f"\n✗ WORSE than baseline:")
+            for p, delta, calls in worse:
+                print(f"    {p}: {delta:.1f}% ({calls} calls)")
+        
+        # Efficiency analysis
+        print(f"\n📊 EFFICIENCY ANALYSIS:")
+        for r in results:
+            score_per_call = r['accuracy'] / r['expected_calls']
+            print(f"    {r['primitive']}: {score_per_call:.1f}% per call")
         
         if not better:
             print("\n⚠️  WARNING: No primitive beats baseline!")
-            print("   This explains why evolution stagnates.")
-            print("   Possible causes:")
-            print("   1. Model is at its ceiling for AIME")
-            print("   2. Prompting variations don't help this model")
-            print("   3. Need a stronger model (gpt-4o, o1-mini)")
+            print("   This may explain why evolution stagnates.")
+            print("   However, with the FIXED primitives, try running again.")
     
     print("=" * 80)
     
@@ -228,12 +241,12 @@ def run_primitive_comparison(
 def test_model_baseline(
     models: List[str] = None,
     year: int = 2024,
-    max_problems: int = 10,
+    max_problems: int = 15,
 ):
     """Test baseline_solve across different models to find ceiling."""
     
     if models is None:
-        models = ["gpt-4o-mini"]  # Add more if you have access
+        models = ["gpt-4.1-nano"]
     
     from utils import query_llm
     from initial import Agent
@@ -261,7 +274,7 @@ def test_model_baseline(
 
 
 def check_determinism(
-    model_name: str = "gpt-4o-mini",
+    model_name: str = "gpt-4.1-nano",
     year: int = 2024,
     num_runs: int = 3,
 ):
@@ -295,8 +308,6 @@ def check_determinism(
     
     if len(set(answers)) == 1:
         print(f"\n✓ Deterministic: All {num_runs} runs gave same answer")
-        print("  → This means accuracy won't change between runs")
-        print("  → Evolution sees no variance to optimize")
     else:
         print(f"\n⚠ Non-deterministic: Got {len(set(answers))} different answers")
         print(f"  → Answers: {set(answers)}")
@@ -307,10 +318,10 @@ def check_determinism(
 def main():
     import argparse
     
-    parser = argparse.ArgumentParser(description="ShinkaRouter Diagnostics")
-    parser.add_argument("--model", type=str, default="gpt-4o-mini")
+    parser = argparse.ArgumentParser(description="ShinkaRouter Diagnostics (FIXED)")
+    parser.add_argument("--model", type=str, default="gpt-4.1-nano")
     parser.add_argument("--year", type=int, default=2024)
-    parser.add_argument("--problems", type=int, default=10)
+    parser.add_argument("--problems", type=int, default=15)
     parser.add_argument("--test", type=str, default="primitives",
                        choices=["primitives", "models", "determinism", "all"])
     
