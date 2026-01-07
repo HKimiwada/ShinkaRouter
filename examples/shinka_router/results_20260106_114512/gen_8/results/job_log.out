@@ -1,0 +1,82 @@
+================================================================================
+ShinkaRouter Evaluation
+================================================================================
+Program: results_20260106_114512/gen_8/main.py
+Results: results_20260106_114512/gen_8/results
+Model: gpt-4.1-nano
+Year: 2024
+Max calls: 10
+Runs: 3
+Generation: 0
+Lambda: 0.0000
+Score scale: baseline
+================================================================================
+Loaded AIME dataset with 30 examples
+Running parallel evaluation with 30 workers
+Error in agent.forward for example 0: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 1: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 2: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 3: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 4: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 5: 'Agent' object has no attribute 'forward'Error in agent.forward for example 8: 'Agent' object has no attribute 'forward'
+
+Error in agent.forward for example 7: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 10: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 13: 'Agent' object has no attribute 'forward'Error in agent.forward for example 6: 'Agent' object has no attribute 'forward'
+
+Error in agent.forward for example 17: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 9: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 11: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 14: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 12: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 16: 'Agent' object has no attribute 'forward'Error in agent.forward for example 15: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 23: 'Agent' object has no attribute 'forward'
+Error in agent.forward for example 20: 'Agent' object has no attribute 'forward'
+
+Error in agent.forward for example 18: 'Agent' object has no attribute 'forward'Error in agent.forward for example 19: 'Agent' object has no attribute 'forward'Error in agent.forward for example 21: 'Agent' object has no attribute 'forward'Error in agent.forward for example 22: 'Agent' object has no attribute 'forward'
+
+Error in agent.forward for example 28: 'Agent' object has no attribute 'forward'
+
+Error in agent.forward for example 26: 'Agent' object has no attribute 'forward'
+Step: 1, LLM answer: , True answer: 294, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 2, LLM answer: , True answer: 104, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 3, LLM answer: , True answer: 104, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 4, LLM answer: , True answer: 809, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00Error in agent.forward for example 25: 'Agent' object has no attribute 'forward'Error in agent.forward for example 24: 'Agent' object has no attribute 'forward'Error in agent.forward for example 29: 'Agent' object has no attribute 'forward'
+Step: 5, LLM answer: , True answer: 55, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+
+
+
+Step: 6, LLM answer: , True answer: 385, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 7, LLM answer: , True answer: 480, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 8, LLM answer: , True answer: 73, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Error in agent.forward for example 27: 'Agent' object has no attribute 'forward'
+
+Step: 9, LLM answer: , True answer: 721, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 10, LLM answer: , True answer: 113, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 11, LLM answer: , True answer: 23, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 12, LLM answer: , True answer: 371, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 13, LLM answer: , True answer: 211, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 14, LLM answer: , True answer: 540, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 15, LLM answer: , True answer: 197, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 16, LLM answer: , True answer: 45, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 17, LLM answer: , True answer: 110, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 18, LLM answer: , True answer: 204, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 19, LLM answer: , True answer: 127, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 20, LLM answer: , True answer: 25, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 21, LLM answer: , True answer: 315, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 22, LLM answer: , True answer: 468, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 23, LLM answer: , True answer: 116, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 24, LLM answer: , True answer: 601, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 25, LLM answer: , True answer: 80, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 26, LLM answer: , True answer: 902, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 27, LLM answer: , True answer: 321, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 28, LLM answer: , True answer: 33, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 29, LLM answer: , True answer: 236, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Step: 30, LLM answer: , True answer: 699, Accuracy: 0.00%, Cost: 0.0000, LLM calls: 0, Avg LLM calls: 0.00
+Evaluation error: Final accuracy is 0. This should not happen.
+Correctness and error status saved to results_20260106_114512/gen_8/results/correct.json
+Metrics saved to results_20260106_114512/gen_8/results/metrics.json
+
+================================================================================
+Evaluation failed: Final accuracy is 0. This should not happen.
+================================================================================

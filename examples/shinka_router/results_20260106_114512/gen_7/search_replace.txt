@@ -1,0 +1,75 @@
+<NAME>
+use_difficulty_estimation_routing
+</NAME>
+<DESCRIPTION>
+Implement a routing strategy that first estimates the problem's difficulty and then selects an appropriate primitive. For easy problems, use quick_solve; for medium, generate multiple solutions with ensemble_vote and verify; for hard problems, employ deep_think with verification and self_critique. This targeted approach aims to improve accuracy and efficiency by allocating resources based on problem complexity.
+</DESCRIPTION>
+<DIFF>
+<<<<<<< SEARCH
+def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Main entry point - routes problem to appropriate primitives.
+        This method will be evolved by ShinkaEvolve to discover
+        optimal routing strategies.
+
+        Initial baseline: Use baseline_solve (temperature=0.0) which
+        exactly matches the adas_aime baseline behavior.
+        """
+        # Reset tracking for this problem
+        self.reset_tracking()
+
+        # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+        response, cost = self.baseline_solve(problem)
+        return response, cost
+=======
+def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Adaptive routing based on estimated difficulty.
+        - Easy: Use quick_solve.
+        - Medium: Generate multiple solutions with ensemble_vote and verify.
+        - Hard: Use deep_think, verify, and self_critique iteratively.
+        """
+        self.reset_tracking()
+        total_cost = 0.0
+
+        # Step 1: Estimate difficulty
+        difficulty, cost_diff = self.estimate_difficulty(problem)
+        total_cost += cost_diff
+
+        if difficulty == "easy":
+            # Use quick_solve for quick, reliable answer
+            response, cost_response = self.quick_solve(problem)
+            total_cost += cost_response
+            # Verify the answer
+            verified_response, verify_cost = self.verify(problem, response)
+            total_cost += verify_cost
+            return verified_response, total_cost
+
+        elif difficulty == "medium":
+            # Use ensemble voting for diverse solutions
+            response, cost_response = self.ensemble_vote(problem, n=3)
+            total_cost += cost_response
+            # Verify the selected answer
+            verified_response, verify_cost = self.verify(problem, response)
+            total_cost += verify_cost
+            return verified_response, total_cost
+
+        else:  # hard
+            # Use deep_think with iterative self_critique
+            response, cost_response = self.deep_think(problem)
+            total_cost += cost_response
+
+            # First verification
+            verified_response, verify_cost = self.verify(problem, response)
+            total_cost += verify_cost
+
+            # Self critique and refinement
+            refined_response, critique_cost = self.self_critique(problem, verified_response)
+            total_cost += critique_cost
+
+            # Final verification
+            final_response, final_verify_cost = self.verify(problem, refined_response)
+            total_cost += final_verify_cost
+
+            return final_response, total_cost
+>>>>>>> REPLACE

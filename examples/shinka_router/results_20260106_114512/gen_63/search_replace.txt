@@ -1,0 +1,110 @@
+<NAME>
+adaptive_routing_with_type_and_difficulty
+</NAME>
+<DESCRIPTION>
+Implement a more nuanced routing strategy that combines problem type classification and difficulty estimation to select the most appropriate primitive sequence. This allows the agent to leverage specialized reasoning (e.g., geometry problems with deep_think, algebra with python_calc) and avoid unnecessary calls on easier problems, thus improving accuracy and efficiency.
+</DESCRIPTION>
+<DIFF>
+<<<<<<< SEARCH
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Route problem based on estimated difficulty and problem type:
+        - Use classify_problem_type() to identify problem category.
+        - For certain categories, choose specialized reasoning primitives.
+        - For example, algebra problems might benefit from python_calc, geometry from deep_think, etc.
+        - Combine with difficulty estimate for refined routing.
+        """
+        self.reset_tracking()
+        total_cost = 0.0
+
+        # Step 1: Classify problem type
+        ptype, type_cost = self.classify_problem_type(problem)
+        total_cost += type_cost
+
+        # Step 2: Estimate difficulty
+        difficulty, diff_cost = self.estimate_difficulty(problem)
+        total_cost += diff_cost
+
+        # Step 3: Routing based on type and difficulty
+        if ptype in ["algebra", "number_theory"]:
+            if difficulty == "easy":
+                response, cost = self.baseline_solve(problem)
+            elif difficulty == "medium":
+                response, cost = self.deep_think(problem)
+                verify_response, verify_cost = self.verify(problem, response)
+                response, cost = verify_response, cost + verify_cost
+            else:
+                response, cost = self.ensemble_vote(problem, n=3)
+        elif ptype == "geometry":
+            if difficulty != "hard":
+                response, cost = self.deep_think(problem)
+                verify_response, verify_cost = self.verify(problem, response)
+                response, cost = verify_response, cost + verify_cost
+            else:
+                response, cost = self.ensemble_vote(problem, n=3)
+        elif ptype == "combinatorics" or ptype == "calculus":
+            response, cost = self.deep_think(problem)
+            verify_response, verify_cost = self.verify(problem, response)
+            response, cost = verify_response, cost + verify_cost
+        else:
+            # Default fallback
+            response, cost = self.baseline_solve(problem)
+
+        total_cost += cost
+        return response, total_cost
+=======
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Use problem type and difficulty to select reasoning primitives:
+        - Classify problem type (algebra, geometry, etc.)
+        - Estimate difficulty (easy, medium, hard)
+        - For algebra/number_theory & easy: baseline_solve
+        - For algebra/number_theory & medium: deep_think + verify
+        - For algebra/number_theory & hard: ensemble_vote
+        - For geometry & easy/medium: deep_think + verify
+        - For geometry & hard: ensemble_vote
+        - For other types: default to deep_think + verify
+        This approach balances accuracy and efficiency.
+        """
+        self.reset_tracking()
+        total_cost = 0.0
+
+        # Step 1: Classify problem type
+        ptype, type_cost = self.classify_problem_type(problem)
+        total_cost += type_cost
+
+        # Step 2: Estimate difficulty
+        difficulty, diff_cost = self.estimate_difficulty(problem)
+        total_cost += diff_cost
+
+        # Step 3: Routing based on type and difficulty
+        if ptype in ["algebra", "number_theory"]:
+            if difficulty == "easy":
+                response, cost = self.baseline_solve(problem)
+            elif difficulty == "medium":
+                response, cost = self.deep_think(problem)
+                ver_response, ver_cost = self.verify(problem, response)
+                response, cost = ver_response, cost + ver_cost
+            else:
+                response, cost = self.ensemble_vote(problem, n=3)
+        elif ptype == "geometry":
+            if difficulty != "hard":
+                response, cost = self.deep_think(problem)
+                ver_response, ver_cost = self.verify(problem, response)
+                response, cost = ver_response, cost + ver_cost
+            else:
+                response, cost = self.ensemble_vote(problem, n=3)
+        elif ptype in ["combinatorics", "calculus"]:
+            response, cost = self.deep_think(problem)
+            ver_response, ver_cost = self.verify(problem, response)
+            response, cost = ver_response, cost + ver_cost
+        else:
+            # Default fallback
+            response, cost = self.deep_think(problem)
+            ver_response, ver_cost = self.verify(problem, response)
+            response, cost = ver_response, cost + ver_cost
+
+        total_cost += cost
+        return response, total_cost
+>>>>>>> REPLACE
+</DIFF>

@@ -1,0 +1,39 @@
+# The improved program with refined routing logic to balance accuracy and efficiency.
+# EVOLVE-BLOCK-START
+def forward(self, problem: str) -> Tuple[str, float]:
+    """
+    Improved routing: estimate difficulty, then select strategy.
+    For 'easy' - use baseline_solve.
+    For 'medium' - use deep_think + verify.
+    For 'hard' - use ensemble_vote + verify for consensus.
+    """
+    self.reset_tracking()
+    total_cost = 0.0
+
+    # Step 1: Estimate problem difficulty
+    difficulty, cost_diff = self.estimate_difficulty(problem)
+    total_cost += cost_diff
+
+    # Define a threshold for calling primitive types based on difficulty
+    # (here, based on difficulty label)
+    if difficulty == "easy":
+        # Use the fastest, most reliable primitive
+        response, cost_resp = self.baseline_solve(problem)
+        total_cost += cost_resp
+    elif difficulty == "medium":
+        # Use deep_think with detailed reasoning, then verify
+        response, cost_resp = self.deep_think(problem)
+        total_cost += cost_resp
+        v_response, v_cost = self.verify(problem, response)
+        total_cost += v_cost
+        response = v_response
+    else:
+        # For hard: ensemble vote + verify to maximize correctness
+        response, e_cost = self.ensemble_vote(problem)
+        total_cost += e_cost
+        v_response, v_cost = self.verify(problem, response)
+        total_cost += v_cost
+        response = v_response
+
+    return response, total_cost
+# EVOLVE-BLOCK-END

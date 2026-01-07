@@ -1,0 +1,47 @@
+# The new parametric algorithm implementation here.
+# EVOLVE-BLOCK-START
+def forward(self, problem: str) -> Tuple[str, float]:
+    """
+    Adaptive routing based on estimated difficulty.
+    For easy problems: use baseline_solve.
+    For medium: use deep_think + verify.
+    For hard: use ensemble_vote + self_critique.
+    """
+    self.reset_tracking()
+    total_cost = 0.0
+
+    # Step 1: Estimate difficulty
+    difficulty, cost_diff = self.estimate_difficulty(problem)
+    total_cost += cost_diff
+
+    # Routing based on difficulty
+    if difficulty == "easy":
+        # Use fast, deterministic solve
+        response, cost = self.baseline_solve(problem)
+        total_cost += cost
+        # Verify to ensure correctness
+        verify_response, verify_cost = self.verify(problem, response)
+        total_cost += verify_cost
+        return verify_response, total_cost
+
+    elif difficulty == "medium":
+        # Use careful reasoning with deep_think
+        response, cost = self.deep_think(problem)
+        total_cost += cost
+        # Verify the detailed reasoning
+        verify_response, verify_cost = self.verify(problem, response)
+        total_cost += verify_cost
+        return verify_response, total_cost
+
+    else:  # "hard"
+        # Use ensemble voting for diverse solutions
+        response, ensemble_cost = self.ensemble_vote(problem, n=3)
+        total_cost += ensemble_cost
+        # Self critique to refine
+        critique_response, critique_cost = self.self_critique(problem, response)
+        total_cost += critique_cost
+        # Final verification
+        final_response, verify_cost = self.verify(problem, critique_response)
+        total_cost += verify_cost
+        return final_response, total_cost
+# EVOLVE-BLOCK-END

@@ -1,0 +1,53 @@
+# EVOLVE-BLOCK-START
+def forward(self, problem: str) -> Tuple[str, float]:
+    """
+    Hierarchical routing based on difficulty estimation.
+    - Easy: Use baseline_solve directly.
+    - Medium: Use baseline_solve + verify.
+    - Hard: Use deep_think + self_critique + ensemble_vote.
+    """
+    self.reset_tracking()
+    total_cost = 0.0
+
+    # Step 1: Estimate difficulty
+    difficulty, cost_estimate = self.estimate_difficulty(problem)
+    total_cost += cost_estimate
+
+    # Decide routing based on difficulty
+    if difficulty == "easy":
+        # Use simple baseline
+        response, cost = self.baseline_solve(problem)
+        total_cost += cost
+        # Optional verification for safety
+        response, verify_cost = self.verify(problem, response)
+        total_cost += verify_cost
+        return response, total_cost
+
+    elif difficulty == "medium":
+        # Use baseline + verify
+        response, cost = self.baseline_solve(problem)
+        total_cost += cost
+        # Verify the answer
+        response, verify_cost = self.verify(problem, response)
+        total_cost += verify_cost
+        return response, total_cost
+
+    else:  # "hard"
+        # Use deep_think for detailed reasoning
+        response, cost = self.deep_think(problem)
+        total_cost += cost
+
+        # Self critique for refinement
+        response, critique_cost = self.self_critique(problem, response)
+        total_cost += critique_cost
+
+        # Ensemble voting for robustness
+        ensemble_response, ensemble_cost = self.ensemble_vote(problem, n=3)
+        total_cost += ensemble_cost
+
+        # Final verification
+        final_response, verify_cost = self.verify(problem, ensemble_response)
+        total_cost += verify_cost
+
+        return final_response, total_cost
+# EVOLVE-BLOCK-END

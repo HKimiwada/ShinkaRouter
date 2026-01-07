@@ -1,0 +1,52 @@
+<NAME>
+replace_forward_in_editable_block
+</NAME>
+<DESCRIPTION>
+Since the code is within an immutable region, I will now replace the entire content of the `forward` method directly within the specified editable region (lines 395-411). This ensures the new logic for difficulty estimation and routing is correctly inserted without relying on pattern matching. The code will implement the adaptive routing based on estimated difficulty.
+</DESCRIPTION>
+<DIFF>
+<<<<<<< SEARCH
+def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Main entry point - routes problem to appropriate primitives.
+        This method will be evolved by ShinkaEvolve to discover
+        optimal routing strategies.
+        # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+        response, cost = self.baseline_solve(problem)
+        return response, cost
+=======
+def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Routes problem based on estimated difficulty:
+        - easy: use baseline_solve (1 call)
+        - medium: use deep_think + verify (2 calls)
+        - hard: use ensemble_vote (3 calls)
+        """
+        self.reset_tracking()
+        total_cost = 0.0
+
+        # Estimate difficulty
+        difficulty, diff_cost = self.estimate_difficulty(problem)
+        total_cost += diff_cost
+
+        if difficulty == "easy":
+            # Use simple, reliable primitive
+            response, cost = self.baseline_solve(problem)
+            total_cost += cost
+            return response, total_cost
+
+        elif difficulty == "medium":
+            # Use deep_think + verify
+            response, cost = self.deep_think(problem)
+            total_cost += cost
+            verified_response, verify_cost = self.verify(problem, response)
+            total_cost += verify_cost
+            return verified_response, total_cost
+
+        else:
+            # For hard problems, use ensemble_vote for robustness
+            response, cost = self.ensemble_vote(problem, n=3)
+            total_cost += cost
+            return response, total_cost
+>>>>>>> REPLACE
+</DIFF>

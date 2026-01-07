@@ -1,0 +1,163 @@
+================================================================================
+ShinkaRouter Evaluation
+================================================================================
+Program: results_20260106_114512/gen_13/main.py
+Results: results_20260106_114512/gen_13/results
+Model: gpt-4.1-nano
+Year: 2024
+Max calls: 10
+Runs: 3
+Generation: 0
+Lambda: 0.0000
+Score scale: baseline
+================================================================================
+Loaded AIME dataset with 30 examples
+Running parallel evaluation with 30 workers
+Step: 1, LLM answer: 116, True answer: 116, Accuracy: 100.00%, Cost: 0.0005, LLM calls: 3, Avg LLM calls: 3.00
+Step: 2, LLM answer: 294, True answer: 294, Accuracy: 100.00%, Cost: 0.0013, LLM calls: 6, Avg LLM calls: 3.00
+Step: 3, LLM answer: 506, True answer: 809, Accuracy: 66.67%, Cost: 0.0022, LLM calls: 9, Avg LLM calls: 3.00
+Step: 4, LLM answer: 204, True answer: 204, Accuracy: 75.00%, Cost: 0.0032, LLM calls: 12, Avg LLM calls: 3.00
+Step: 5, LLM answer: 47, True answer: 127, Accuracy: 60.00%, Cost: 0.0041, LLM calls: 15, Avg LLM calls: 3.00
+Step: 6, LLM answer: 12, True answer: 315, Accuracy: 50.00%, Cost: 0.0052, LLM calls: 18, Avg LLM calls: 3.00
+Step: 7, LLM answer: 541, True answer: 540, Accuracy: 42.86%, Cost: 0.0064, LLM calls: 21, Avg LLM calls: 3.00
+Step: 8, LLM answer: 33, True answer: 33, Accuracy: 50.00%, Cost: 0.0077, LLM calls: 24, Avg LLM calls: 3.00
+Step: 9, LLM answer: 72097, True answer: 371, Accuracy: 44.44%, Cost: 0.0090, LLM calls: 27, Avg LLM calls: 3.00
+Step: 10, LLM answer: 246, True answer: 236, Accuracy: 40.00%, Cost: 0.0107, LLM calls: 30, Avg LLM calls: 3.00
+Step: 11, LLM answer: 51, True answer: 55, Accuracy: 36.36%, Cost: 0.0120, LLM calls: 33, Avg LLM calls: 3.00
+Step: 12, LLM answer: 35, True answer: 197, Accuracy: 33.33%, Cost: 0.0133, LLM calls: 36, Avg LLM calls: 3.00
+Step: 13, LLM answer: 25, True answer: 25, Accuracy: 38.46%, Cost: 0.0151, LLM calls: 39, Avg LLM calls: 3.00
+Step: 14, LLM answer: 2, True answer: 902, Accuracy: 35.71%, Cost: 0.0168, LLM calls: 42, Avg LLM calls: 3.00
+Step: 15, LLM answer: 45, True answer: 45, Accuracy: 40.00%, Cost: 0.0186, LLM calls: 45, Avg LLM calls: 3.00
+Step: 16, LLM answer: 16, True answer: 211, Accuracy: 37.50%, Cost: 0.0205, LLM calls: 48, Avg LLM calls: 3.00
+Step: 17, LLM answer: 3, True answer: 601, Accuracy: 35.29%, Cost: 0.0221, LLM calls: 51, Avg LLM calls: 3.00
+Step: 18, LLM answer: 480, True answer: 480, Accuracy: 38.89%, Cost: 0.0242, LLM calls: 54, Avg LLM calls: 3.00
+Step: 19, LLM answer: 115, True answer: 80, Accuracy: 36.84%, Cost: 0.0267, LLM calls: 57, Avg LLM calls: 3.00
+Step: 20, LLM answer: 120, True answer: 468, Accuracy: 35.00%, Cost: 0.0291, LLM calls: 60, Avg LLM calls: 3.00
+Step: 21, LLM answer: 53, True answer: 113, Accuracy: 33.33%, Cost: 0.0314, LLM calls: 63, Avg LLM calls: 3.00
+Step: 22, LLM answer: 24, True answer: 321, Accuracy: 31.82%, Cost: 0.0337, LLM calls: 66, Avg LLM calls: 3.00
+Step: 23, LLM answer: 73, True answer: 73, Accuracy: 34.78%, Cost: 0.0360, LLM calls: 69, Avg LLM calls: 3.00
+Step: 24, LLM answer: 2, True answer: 699, Accuracy: 33.33%, Cost: 0.0388, LLM calls: 72, Avg LLM calls: 3.00
+Step: 25, LLM answer: 59, True answer: 110, Accuracy: 32.00%, Cost: 0.0422, LLM calls: 75, Avg LLM calls: 3.00
+Step: 26, LLM answer: 184, True answer: 104, Accuracy: 30.77%, Cost: 0.0451, LLM calls: 78, Avg LLM calls: 3.00
+Step: 27, LLM answer: 607, True answer: 104, Accuracy: 29.63%, Cost: 0.0485, LLM calls: 81, Avg LLM calls: 3.00
+Step: 28, LLM answer: 721, True answer: 721, Accuracy: 32.14%, Cost: 0.0522, LLM calls: 84, Avg LLM calls: 3.00
+Step: 29, LLM answer: 6, True answer: 385, Accuracy: 31.03%, Cost: 0.0550, LLM calls: 88, Avg LLM calls: 3.03
+Step: 30, LLM answer: 2, True answer: 23, Accuracy: 30.00%, Cost: 0.0587, LLM calls: 91, Avg LLM calls: 3.03
+Complete, final accuracy: 30.00%, Cost: 0.06
+Time taken: 56.84 seconds
+Time per example: 1.89 seconds
+
+Primitive Usage Summary:
+  deep_think: 870 (60.0%)
+  verify: 520 (35.9%)
+  estimate_difficulty: 30 (2.1%)
+  ensemble_vote: 30 (2.1%)
+  Total primitive calls: 1450
+  Avg primitives per problem: 48.33
+Run 1/3 completed in 56.85 seconds
+Loaded AIME dataset with 30 examples
+Running parallel evaluation with 30 workers
+Step: 1, LLM answer: 25, True answer: 25, Accuracy: 100.00%, Cost: 0.0006, LLM calls: 3, Avg LLM calls: 3.00
+Step: 2, LLM answer: 294, True answer: 294, Accuracy: 100.00%, Cost: 0.0012, LLM calls: 6, Avg LLM calls: 3.00
+Step: 3, LLM answer: 541, True answer: 540, Accuracy: 66.67%, Cost: 0.0019, LLM calls: 9, Avg LLM calls: 3.00
+Step: 4, LLM answer: 3, True answer: 315, Accuracy: 50.00%, Cost: 0.0027, LLM calls: 12, Avg LLM calls: 3.00
+Step: 5, LLM answer: 116, True answer: 116, Accuracy: 60.00%, Cost: 0.0035, LLM calls: 15, Avg LLM calls: 3.00
+Step: 6, LLM answer: 73, True answer: 73, Accuracy: 66.67%, Cost: 0.0044, LLM calls: 18, Avg LLM calls: 3.00
+Step: 7, LLM answer: 204, True answer: 204, Accuracy: 71.43%, Cost: 0.0054, LLM calls: 21, Avg LLM calls: 3.00
+Step: 8, LLM answer: 300, True answer: 80, Accuracy: 62.50%, Cost: 0.0064, LLM calls: 24, Avg LLM calls: 3.00
+Step: 9, LLM answer: 55, True answer: 55, Accuracy: 66.67%, Cost: 0.0078, LLM calls: 27, Avg LLM calls: 3.00
+Step: 10, LLM answer: 23, True answer: 127, Accuracy: 60.00%, Cost: 0.0091, LLM calls: 30, Avg LLM calls: 3.00
+Step: 11, LLM answer: 13, True answer: 211, Accuracy: 54.55%, Cost: 0.0106, LLM calls: 33, Avg LLM calls: 3.00
+Step: 12, LLM answer: 3, True answer: 197, Accuracy: 50.00%, Cost: 0.0119, LLM calls: 36, Avg LLM calls: 3.00
+Step: 13, LLM answer: 33, True answer: 33, Accuracy: 53.85%, Cost: 0.0135, LLM calls: 39, Avg LLM calls: 3.00
+Step: 14, LLM answer: 79, True answer: 480, Accuracy: 50.00%, Cost: 0.0150, LLM calls: 42, Avg LLM calls: 3.00
+Step: 15, LLM answer: 0, True answer: 45, Accuracy: 46.67%, Cost: 0.0166, LLM calls: 45, Avg LLM calls: 3.00
+Step: 16, LLM answer: 1, True answer: 601, Accuracy: 43.75%, Cost: 0.0181, LLM calls: 48, Avg LLM calls: 3.00
+Step: 17, LLM answer: 84, True answer: 468, Accuracy: 41.18%, Cost: 0.0202, LLM calls: 51, Avg LLM calls: 3.00
+Step: 18, LLM answer: 95, True answer: 104, Accuracy: 38.89%, Cost: 0.0223, LLM calls: 54, Avg LLM calls: 3.00
+Step: 19, LLM answer: 675, True answer: 809, Accuracy: 36.84%, Cost: 0.0245, LLM calls: 57, Avg LLM calls: 3.00
+Step: 20, LLM answer: 5, True answer: 23, Accuracy: 35.00%, Cost: 0.0262, LLM calls: 60, Avg LLM calls: 3.00
+Step: 21, LLM answer: 1024, True answer: 902, Accuracy: 33.33%, Cost: 0.0286, LLM calls: 63, Avg LLM calls: 3.00
+Step: 22, LLM answer: 66369, True answer: 371, Accuracy: 31.82%, Cost: 0.0308, LLM calls: 66, Avg LLM calls: 3.00
+Step: 23, LLM answer: 104, True answer: 104, Accuracy: 34.78%, Cost: 0.0335, LLM calls: 69, Avg LLM calls: 3.00
+Step: 24, LLM answer: 321, True answer: 321, Accuracy: 37.50%, Cost: 0.0362, LLM calls: 72, Avg LLM calls: 3.00
+Step: 25, LLM answer: 127, True answer: 110, Accuracy: 36.00%, Cost: 0.0402, LLM calls: 75, Avg LLM calls: 3.00
+Step: 26, LLM answer: 103, True answer: 721, Accuracy: 34.62%, Cost: 0.0435, LLM calls: 78, Avg LLM calls: 3.00
+Step: 27, LLM answer: 172, True answer: 236, Accuracy: 33.33%, Cost: 0.0472, LLM calls: 81, Avg LLM calls: 3.00
+Step: 28, LLM answer: 81, True answer: 385, Accuracy: 32.14%, Cost: 0.0502, LLM calls: 85, Avg LLM calls: 3.04
+Step: 29, LLM answer: 129, True answer: 113, Accuracy: 31.03%, Cost: 0.0542, LLM calls: 88, Avg LLM calls: 3.03
+Step: 30, LLM answer: 2, True answer: 699, Accuracy: 30.00%, Cost: 0.0590, LLM calls: 91, Avg LLM calls: 3.03
+Complete, final accuracy: 30.00%, Cost: 0.06
+Time taken: 64.75 seconds
+Time per example: 2.16 seconds
+
+Primitive Usage Summary:
+  deep_think: 870 (60.2%)
+  verify: 515 (35.6%)
+  estimate_difficulty: 30 (2.1%)
+  ensemble_vote: 30 (2.1%)
+  Total primitive calls: 1445
+  Avg primitives per problem: 48.17
+Run 2/3 completed in 64.78 seconds
+Loaded AIME dataset with 30 examples
+Running parallel evaluation with 30 workers
+Step: 1, LLM answer: 116, True answer: 116, Accuracy: 100.00%, Cost: 0.0005, LLM calls: 3, Avg LLM calls: 3.00
+Step: 2, LLM answer: 294, True answer: 294, Accuracy: 100.00%, Cost: 0.0012, LLM calls: 6, Avg LLM calls: 3.00
+Step: 3, LLM answer: 73, True answer: 73, Accuracy: 100.00%, Cost: 0.0020, LLM calls: 9, Avg LLM calls: 3.00
+Step: 4, LLM answer: 287, True answer: 197, Accuracy: 75.00%, Cost: 0.0029, LLM calls: 12, Avg LLM calls: 3.00
+Step: 5, LLM answer: 25, True answer: 25, Accuracy: 80.00%, Cost: 0.0040, LLM calls: 15, Avg LLM calls: 3.00
+Step: 6, LLM answer: 3, True answer: 315, Accuracy: 66.67%, Cost: 0.0050, LLM calls: 18, Avg LLM calls: 3.00
+Step: 7, LLM answer: 541, True answer: 540, Accuracy: 57.14%, Cost: 0.0061, LLM calls: 21, Avg LLM calls: 3.00
+Step: 8, LLM answer: 0, True answer: 45, Accuracy: 50.00%, Cost: 0.0071, LLM calls: 24, Avg LLM calls: 3.00
+Step: 9, LLM answer: 58, True answer: 55, Accuracy: 44.44%, Cost: 0.0082, LLM calls: 27, Avg LLM calls: 3.00
+Step: 10, LLM answer: 204, True answer: 204, Accuracy: 50.00%, Cost: 0.0092, LLM calls: 30, Avg LLM calls: 3.00
+Step: 11, LLM answer: 33, True answer: 33, Accuracy: 54.55%, Cost: 0.0105, LLM calls: 33, Avg LLM calls: 3.00
+Step: 12, LLM answer: 8, True answer: 110, Accuracy: 50.00%, Cost: 0.0120, LLM calls: 36, Avg LLM calls: 3.00
+Step: 13, LLM answer: 680, True answer: 902, Accuracy: 46.15%, Cost: 0.0135, LLM calls: 39, Avg LLM calls: 3.00
+Step: 14, LLM answer: 809, True answer: 809, Accuracy: 50.00%, Cost: 0.0150, LLM calls: 42, Avg LLM calls: 3.00
+Step: 15, LLM answer: 120, True answer: 80, Accuracy: 46.67%, Cost: 0.0165, LLM calls: 45, Avg LLM calls: 3.00
+Step: 16, LLM answer: 23, True answer: 127, Accuracy: 43.75%, Cost: 0.0183, LLM calls: 48, Avg LLM calls: 3.00
+Step: 17, LLM answer: 80, True answer: 480, Accuracy: 41.18%, Cost: 0.0197, LLM calls: 51, Avg LLM calls: 3.00
+Step: 18, LLM answer: 199, True answer: 104, Accuracy: 38.89%, Cost: 0.0218, LLM calls: 54, Avg LLM calls: 3.00
+Step: 19, LLM answer: 456161, True answer: 371, Accuracy: 36.84%, Cost: 0.0239, LLM calls: 57, Avg LLM calls: 3.00
+Step: 20, LLM answer: 192, True answer: 699, Accuracy: 35.00%, Cost: 0.0262, LLM calls: 60, Avg LLM calls: 3.00
+Step: 21, LLM answer: 625, True answer: 321, Accuracy: 33.33%, Cost: 0.0280, LLM calls: 63, Avg LLM calls: 3.00
+Step: 22, LLM answer: 6, True answer: 601, Accuracy: 31.82%, Cost: 0.0297, LLM calls: 66, Avg LLM calls: 3.00
+Step: 23, LLM answer: 36, True answer: 468, Accuracy: 30.43%, Cost: 0.0321, LLM calls: 69, Avg LLM calls: 3.00
+Step: 24, LLM answer: 19, True answer: 23, Accuracy: 29.17%, Cost: 0.0341, LLM calls: 72, Avg LLM calls: 3.00
+Step: 25, LLM answer: 35, True answer: 113, Accuracy: 28.00%, Cost: 0.0370, LLM calls: 75, Avg LLM calls: 3.00
+Step: 26, LLM answer: 98, True answer: 104, Accuracy: 26.92%, Cost: 0.0403, LLM calls: 78, Avg LLM calls: 3.00
+Step: 27, LLM answer: 262, True answer: 236, Accuracy: 25.93%, Cost: 0.0440, LLM calls: 81, Avg LLM calls: 3.00
+Step: 28, LLM answer: 121, True answer: 211, Accuracy: 25.00%, Cost: 0.0479, LLM calls: 84, Avg LLM calls: 3.00
+Step: 29, LLM answer: 6, True answer: 385, Accuracy: 24.14%, Cost: 0.0509, LLM calls: 88, Avg LLM calls: 3.03
+Step: 30, LLM answer: 15492823, True answer: 721, Accuracy: 23.33%, Cost: 0.0543, LLM calls: 91, Avg LLM calls: 3.03
+Complete, final accuracy: 23.33%, Cost: 0.05
+Time taken: 54.66 seconds
+Time per example: 1.82 seconds
+
+Primitive Usage Summary:
+  deep_think: 870 (59.9%)
+  verify: 523 (36.0%)
+  estimate_difficulty: 30 (2.1%)
+  ensemble_vote: 30 (2.1%)
+  Total primitive calls: 1453
+  Avg primitives per problem: 48.43
+Run 3/3 completed in 54.68 seconds
+Extra data saved to results_20260106_114512/gen_13/results/extra.pkl
+Correctness and error status saved to results_20260106_114512/gen_13/results/correct.json
+Metrics saved to results_20260106_114512/gen_13/results/metrics.json
+
+================================================================================
+Evaluation completed successfully!
+================================================================================
+
+Metrics:
+  Accuracy: 27.78%
+  Avg Calls: 3.03
+  Cost: $0.0573
+  Lambda: 0.0000
+  Efficiency Penalty: 0.0000
+  Combined Score: -100.0000
+  Primitive Diversity: 4
+  Most Common: deep_think
+================================================================================

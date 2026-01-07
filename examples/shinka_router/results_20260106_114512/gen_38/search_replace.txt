@@ -1,0 +1,62 @@
+<NAME>
+use_difficulty_estimation_for_routing
+</NAME>
+<DESCRIPTION>
+Currently, the agent always uses a very simple routing: it calls baseline_solve directly in the initial version, or in the improved version, it only classifies the problem once with estimate_difficulty() and then chooses a primitive accordingly. However, the current implementation does not leverage the full potential of difficulty estimation to adaptively select the most appropriate primitive. By explicitly integrating difficulty estimation into a multi-stage decision process, the agent can better balance accuracy and efficiency.
+
+Specifically, for easy problems, it should rely on the fast baseline_solve, possibly with verification. For medium problems, it should attempt more reasoning (deep_think + verify). For hard problems, it should use ensemble_vote or multiple deep_think + verify attempts to maximize correctness while respecting call limits.
+
+This targeted routing based on estimated difficulty can improve accuracy on challenging problems and reduce unnecessary primitive calls on easy ones, thereby improving the combined score.
+</DESCRIPTION>
+<DIFF>
+<<<<<<< SEARCH
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Main entry point - routes problem to appropriate primitives.
+        This method will be evolved by ShinkaEvolve to discover
+        optimal routing strategies.
+
+        Initial baseline: Use baseline_solve (temperature=0.0) which
+        exactly matches the adas_aime baseline behavior.
+        """
+        # Reset tracking for this problem
+        self.reset_tracking()
+
+        # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+        response, cost = self.baseline_solve(problem)
+        return response, cost
+=======
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Main entry point - adaptively route problem based on estimated difficulty.
+        """
+        self.reset_tracking()
+        total_cost = 0.0
+
+        # Step 1: Classify problem difficulty
+        difficulty, diff_cost = self.estimate_difficulty(problem)
+        total_cost += diff_cost
+
+        # Step 2: Route based on difficulty
+        if difficulty == "easy":
+            # For easy problems, use fast baseline with verification
+            response, cost = self.baseline_solve(problem)
+            v_response, v_cost = self.verify(problem, response)
+            response = v_response
+            total_cost += cost + v_cost
+        elif difficulty == "medium":
+            # For medium problems, do deep_think + verify
+            response, cost = self.deep_think(problem)
+            v_response, v_cost = self.verify(problem, response)
+            response = v_response
+            total_cost += cost + v_cost
+        else:
+            # For hard problems, attempt ensemble_vote + verify
+            response, e_cost = self.ensemble_vote(problem)
+            v_response, v_cost = self.verify(problem, response)
+            response = v_response
+            total_cost += e_cost + v_cost
+
+        return response, total_cost
+>>>>>>> REPLACE
+</DIFF>

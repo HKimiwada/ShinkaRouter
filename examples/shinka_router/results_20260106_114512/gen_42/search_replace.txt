@@ -1,0 +1,82 @@
+<NAME>
+adaptive_difficulty_routing
+</NAME>
+<DESCRIPTION>
+Implement an initial difficulty estimation step to guide the routing more efficiently. Instead of always performing a deep_think or ensemble_vote, first classify the problem as 'easy', 'medium', or 'hard' using estimate_difficulty(). For 'easy' problems, attempt a quick baseline_solve followed by verify, which is often sufficient and saves calls. For 'medium' problems, use deep_think + verify. For 'hard' problems, use ensemble_vote + verify. This reduces unnecessary primitive calls on easier problems, improving overall efficiency and accuracy.
+</DESCRIPTION>
+<DIFF>
+<<<<<<< SEARCH
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Main entry point - routes problem to appropriate primitives.
+        This method will be evolved by ShinkaEvolve to discover
+        optimal routing strategies.
+        """
+        # Reset tracking for this problem
+        self.reset_tracking()
+
+        # Estimate difficulty
+        difficulty, diff_cost = self.estimate_difficulty(problem)
+        total_cost = diff_cost
+
+        # Routing based on difficulty
+        if difficulty == "easy":
+            # Use baseline_solve directly
+            response, call_cost = self.baseline_solve(problem)
+            total_cost += call_cost
+        elif difficulty == "medium":
+            # Use deep_think + verify
+            response, call_cost = self.deep_think(problem)
+            total_cost += call_cost
+            verify_response, verify_cost = self.verify(problem, response)
+            total_cost += verify_cost
+            response = verify_response
+        else:  # 'hard'
+            # Use ensemble_vote + verify
+            response, call_cost = self.ensemble_vote(problem, n=3)
+            total_cost += call_cost
+            verify_response, verify_cost = self.verify(problem, response)
+            total_cost += verify_cost
+            response = verify_response
+
+        return response, total_cost
+    # EVOLVE-BLOCK-END
+=======
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Main entry point - routes problem to appropriate primitives.
+        Uses initial difficulty estimate to optimize primitive usage.
+        """
+        self.reset_tracking()
+        total_cost = 0.0
+
+        # Step 1: Estimate difficulty
+        difficulty, diff_cost = self.estimate_difficulty(problem)
+        total_cost += diff_cost
+
+        # Step 2: Route based on difficulty
+        if difficulty == "easy":
+            # For easy problems, try baseline_solve + verify
+            response, call_cost = self.baseline_solve(problem)
+            total_cost += call_cost
+            verify_response, verify_cost = self.verify(problem, response)
+            total_cost += verify_cost
+            response = verify_response
+        elif difficulty == "medium":
+            # For medium, use deep_think + verify
+            response, call_cost = self.deep_think(problem)
+            total_cost += call_cost
+            verify_response, verify_cost = self.verify(problem, response)
+            total_cost += verify_cost
+            response = verify_response
+        else:
+            # For hard problems, use ensemble_vote + verify
+            response, call_cost = self.ensemble_vote(problem, n=3)
+            total_cost += call_cost
+            verify_response, verify_cost = self.verify(problem, response)
+            total_cost += verify_cost
+            response = verify_response
+
+        return response, total_cost
+    # EVOLVE-BLOCK-END
+>>>>>>> REPLACE

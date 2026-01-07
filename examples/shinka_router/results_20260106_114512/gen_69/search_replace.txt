@@ -1,0 +1,78 @@
+<NAME>
+prob_type_and_difficulty_routing
+</NAME>
+<DESCRIPTION>
+Implement a more nuanced decision-making process in the forward() method by first classifying the problem's type and estimated difficulty, then routing to primitives tailored to each category. This aims to balance accuracy and efficiency by leveraging classification insights, thus potentially reducing overuse of costly primitives on straightforward problems or applying more refined reasoning where needed.
+</DESCRIPTION>
+<DIFF>
+<<<<<<< SEARCH
+def forward(self, problem: str) -> Tuple[str, float]:
+    self.reset_tracking()
+    total_cost = 0.0
+
+    # Step 1: Classify problem type
+    p_type, c_type = self.classify_problem_type(problem)
+    total_cost += c_type
+
+    # Step 2: Classify difficulty
+    difficulty, c_diff = self.estimate_difficulty(problem)
+    total_cost += c_diff
+
+    # Routing based on classification
+    if p_type == "algebra" and difficulty == "easy":
+        resp, c = self.baseline_solve(problem)
+        total_cost += c
+        return resp, total_cost
+    elif p_type == "geometry" or difficulty == "medium":
+        resp, c = self.deep_think(problem)
+        total_cost += c
+        vresp, vc = self.verify(problem, resp)
+        total_cost += vc
+        return vresp, total_cost
+    elif p_type in ["number_theory", "combinatorics"]:
+        resp, c = self.ensemble_vote(problem)
+        total_cost += c
+        return resp, total_cost
+    else:
+        resp, c = self.deep_think(problem)
+        total_cost += c
+        vresp, vc = self.verify(problem, resp)
+        total_cost += vc
+        return vresp, total_cost
+=======
+def forward(self, problem: str) -> Tuple[str, float]:
+    self.reset_tracking()
+    total_cost = 0.0
+
+    # Step 1: Classify problem type and difficulty
+    p_type, c_type = self.classify_problem_type(problem)
+    total_cost += c_type
+    difficulty, c_diff = self.estimate_difficulty(problem)
+    total_cost += c_diff
+
+    # Route based on classification and difficulty
+    if p_type == "algebra" and difficulty == "easy":
+        resp, c = self.baseline_solve(problem)
+        total_cost += c
+        return resp, total_cost
+    elif p_type == "geometry" and difficulty != "hard":
+        # Geometries are often complex, keep detailed reasoning
+        resp, c = self.deep_think(problem)
+        total_cost += c
+        vresp, vc = self.verify(problem, resp)
+        total_cost += vc
+        return vresp, total_cost
+    elif p_type in ["number_theory", "combinatorics"]:
+        # Use ensemble vote for the more combinatorial problems
+        resp, c = self.ensemble_vote(problem)
+        total_cost += c
+        return resp, total_cost
+    else:
+        # For other types and higher difficulty, prefer deep_think + verify
+        resp, c = self.deep_think(problem)
+        total_cost += c
+        vresp, vc = self.verify(problem, resp)
+        total_cost += vc
+        return vresp, total_cost
+>>>>>>> REPLACE
+</DIFF>

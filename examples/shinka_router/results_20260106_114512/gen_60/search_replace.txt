@@ -1,0 +1,42 @@
+<NAME>
+implement_difficulty_thresholds_in_routing
+</NAME>
+<DESCRIPTION>
+Replace the current placeholder routing logic with explicit numeric thresholds based on the output of `estimate_difficulty()`. This involves converting the string difficulty label into an integer threshold and then routing accordingly. This change ensures the search pattern is present and provides a more robust, tunable routing strategy.
+</DESCRIPTION>
+<DIFF>
+<<<<<<< SEARCH
+        # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+        response, cost = self.baseline_solve(problem)
+        return response, cost
+=======
+        # Step 1: Estimate difficulty
+        difficulty_str, diff_cost = self.estimate_difficulty(problem)
+        total_cost += diff_cost
+
+        # Convert difficulty label to numeric threshold
+        if difficulty_str == "easy":
+            threshold = 1
+        elif difficulty_str == "medium":
+            threshold = 2
+        else:
+            threshold = 3
+
+        # Routing based on thresholds
+        if threshold == 1:
+            response, cost = self.baseline_solve(problem)
+        elif threshold == 2:
+            response, cost = self.deep_think(problem)
+            v_response, v_cost = self.verify(problem, response)
+            response = v_response
+            total_cost += v_cost
+            total_cost += cost
+        else:
+            response, cost = self.ensemble_vote(problem)
+            v_response, v_cost = self.verify(problem, response)
+            response = v_response
+            total_cost += v_cost + cost
+
+        return response, total_cost
+>>>>>>> REPLACE
+</DIFF>

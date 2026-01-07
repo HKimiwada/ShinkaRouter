@@ -1,0 +1,62 @@
+<NAME>
+routing_with_difficulty_estimation_fixed
+</NAME>
+<DESCRIPTION>
+Implement a difficulty estimation step at the start of the forward() method, then route to different primitives based on the estimated difficulty. This allows the agent to allocate resources more efficiently, using simple methods for easy problems and more thorough reasoning for hard problems, improving overall accuracy and efficiency.
+</DESCRIPTION>
+<DIFF>
+<<<<<<< SEARCH
+# EVOLVE-BLOCK-START
+def forward(self, problem: str) -> Tuple[str, float]:
+    """
+    Main entry point - routes problem to appropriate primitives.
+    This method will be evolved by ShinkaEvolve to discover
+    optimal routing strategies.
+
+    Initial baseline: Use baseline_solve (temperature=0.0) which
+    exactly matches the adas_aime baseline behavior.
+    """
+    # Reset tracking for this problem
+    self.reset_tracking()
+
+    # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+    response, cost = self.baseline_solve(problem)
+    return response, cost
+# EVOLVE-BLOCK-END
+=======
+# New routing with difficulty estimation
+def forward(self, problem: str) -> Tuple[str, float]:
+    """
+    Routes problem based on estimated difficulty:
+    - easy: use baseline_solve
+    - medium: use deep_think + verify
+    - hard: use deep_think + self_critique + verify
+    """
+    self.reset_tracking()
+    total_cost = 0.0
+
+    # Step 1: Estimate difficulty
+    difficulty, diff_cost = self.estimate_difficulty(problem)
+    total_cost += diff_cost
+
+    # Step 2: Route based on difficulty
+    if difficulty == "easy":
+        response, cost = self.baseline_solve(problem)
+        total_cost += cost
+    elif difficulty == "medium":
+        response, cost = self.deep_think(problem)
+        total_cost += cost
+        verify_response, verify_cost = self.verify(problem, response)
+        total_cost += verify_cost
+        response = verify_response
+    else:
+        draft_response, cost = self.deep_think(problem)
+        total_cost += cost
+        critique_response, critique_cost = self.self_critique(problem, draft_response)
+        total_cost += critique_cost
+        verify_response, verify_cost = self.verify(problem, critique_response)
+        total_cost += verify_cost
+        response = verify_response
+
+    return response, total_cost
+>>>>>>> REPLACE

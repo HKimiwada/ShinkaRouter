@@ -1,0 +1,82 @@
+<NAME>
+difficulty_based_routing
+</NAME>
+<DESCRIPTION>
+Implement a more nuanced routing strategy that classifies the problem's difficulty upfront using the estimate_difficulty() primitive, then chooses a tailored approach. For 'easy' problems, use baseline_solve for efficiency. For 'medium' problems, perform deep_think with a single verification. For 'hard' problems, perform multiple deep_think steps with self_critique iterations before verification, balancing accuracy and calls. This approach leverages problem difficulty to optimize primitive usage, aiming to improve accuracy while controlling calls.
+</DESCRIPTION>
+<DIFF>
+<<<<<<< SEARCH
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Routes based on estimated difficulty:
+        - 'easy' problems: solve directly with baseline_solve
+        - 'medium' or 'hard' problems: use deep_think then verify
+        """
+        self.reset_tracking()
+        total_cost = 0.0
+
+        # Estimate difficulty for adaptive routing
+        difficulty, est_cost = self.estimate_difficulty(problem)
+        total_cost += est_cost
+
+        if difficulty == "easy":
+            response, cost = self.baseline_solve(problem)
+            total_cost += cost
+        else:
+            # For 'medium' and 'hard', perform deep_think + verify
+            dt_response, dt_cost = self.deep_think(problem)
+            total_cost += dt_cost
+            # Verify the deep_think response
+            ver_response, ver_cost = self.verify(problem, dt_response)
+            total_cost += ver_cost
+            response = ver_response
+        return response, total_cost
+=======
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Classify problem difficulty and route accordingly:
+        - 'easy': use baseline_solve
+        - 'medium': deep_think + verify
+        - 'hard': iterative deep_think + self_critique + verify
+        """
+        self.reset_tracking()
+        total_cost = 0.0
+
+        # Step 1: Classify difficulty
+        difficulty, diff_cost = self.estimate_difficulty(problem)
+        total_cost += diff_cost
+
+        if difficulty == "easy":
+            # Use fast, reliable baseline
+            response, cost = self.baseline_solve(problem)
+            total_cost += cost
+        elif difficulty == "medium":
+            # Use deep_think + verify
+            dt_response, dt_cost = self.deep_think(problem)
+            total_cost += dt_cost
+            v_response, v_cost = self.verify(problem, dt_response)
+            total_cost += v_cost
+            response = v_response
+        else:
+            # For 'hard', perform multiple deep_think + self_critique iterations
+            draft_response, dt_cost = self.deep_think(problem)
+            total_cost += dt_cost
+            # Self critique loop (up to 2 iterations)
+            for _ in range(2):
+                critique_response, crit_cost = self.self_critique(problem, draft_response)
+                total_cost += crit_cost
+                # Re-verify after critique
+                v_response, v_cost = self.verify(problem, critique_response)
+                total_cost += v_cost
+                # If verification confirms correctness, break early
+                if self.is_response_confident(v_response):
+                    response = v_response
+                    break
+                else:
+                    draft_response = critique_response
+            else:
+                # fallback to last critique
+                response = critique_response
+        return response, total_cost
+>>>>>>> REPLACE
+</DIFF>

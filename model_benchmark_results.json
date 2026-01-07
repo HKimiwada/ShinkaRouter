@@ -1,0 +1,20 @@
+{
+    "gpt-4o-mini": {
+        "correct": 0,
+        "total": 0,
+        "costs": [],
+        "details": []
+    },
+    "gpt-4.1-nano": {
+        "correct": 0,
+        "total": 0,
+        "costs": [],
+        "details": []
+    },
+    "o4-mini": {
+        "correct": 0,
+        "total": 0,
+        "costs": [],
+        "details": []
+    }
+}

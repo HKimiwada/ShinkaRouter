@@ -1,0 +1,40 @@
+# The structurally redesigned program here.
+# EVOLVE-BLOCK-START
+def forward(self, problem: str) -> Tuple[str, float]:
+    """
+    Simplified routing: estimate difficulty, then decide to solve directly,
+    then verify. Prioritize minimal primitive calls while ensuring correctness.
+    """
+    self.reset_tracking()
+    total_cost = 0.0
+
+    # Step 1: Estimate difficulty
+    difficulty, cost_diff = self.estimate_difficulty(problem)
+    total_cost += cost_diff
+
+    # Step 2: Decide on solving method based on difficulty
+    if difficulty == "easy" or difficulty == "medium":
+        # For easy/medium, attempt quick_solve first
+        response, cost_response = self.quick_solve(problem)
+        total_cost += cost_response
+    else:
+        # For hard, use baseline_solve directly
+        response, cost_response = self.baseline_solve(problem)
+        total_cost += cost_response
+
+    # Step 3: Verify the response
+    verified_response, cost_verify = self.verify(problem, response)
+    total_cost += cost_verify
+
+    # Step 4: Check if verification confirms correctness
+    # Extract answer from verified_response
+    answer = self.extract_boxed_answer(verified_response)
+    if answer is None:
+        # fallback: use original response if extraction fails
+        answer = self.extract_boxed_answer(response)
+        if answer is None:
+            # fallback: just return original response
+            return response, total_cost
+    # Return the verified response with the answer
+    return verified_response, total_cost
+# EVOLVE-BLOCK-END

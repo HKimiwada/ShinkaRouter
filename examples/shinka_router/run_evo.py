@@ -31,8 +31,9 @@ The agent has these PRIMITIVES available (DO NOT modify these):
    - Adds "Think step-by-step" instruction
    - Often better than baseline_solve for complex problems
 
-3. verify(problem, answer): Skeptical validator checking a proposed solution
-   - Use after getting an initial answer to catch errors
+3. verify(problem, full_response): Skeptical validator checking a proposed solution
+   - Pass the FULL response (with reasoning), not just the answer
+   - Use after getting an initial solution to catch errors
 
 4. python_calc(problem): Systematic step-by-step calculation approach
    - Good for computation-heavy problems
@@ -146,14 +147,11 @@ def forward(self, problem: str) -> Tuple[str, float]:
     response, cost = self.deep_think(problem)
     total_cost += cost
     
-    # Verify the answer
-    answer = self.extract_boxed_answer(response)
-    if answer:
-        verify_response, verify_cost = self.verify(problem, answer)
-        total_cost += verify_cost
-        return verify_response, total_cost
+    # Verify the full solution (pass response, not just answer)
+    verify_response, verify_cost = self.verify(problem, response)
+    total_cost += verify_cost
     
-    return response, total_cost
+    return verify_response, total_cost
 ```
 
 Remember: The baseline uses temperature=0.0. To beat it, use better REASONING strategies, not just different temperatures!

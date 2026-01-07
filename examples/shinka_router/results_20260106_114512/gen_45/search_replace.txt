@@ -1,0 +1,58 @@
+<NAME>
+add_difficulty_fallback_routing
+</NAME>
+<DESCRIPTION>
+Implement a fallback routing for problems where the difficulty estimation is uncertain or indicates an "unknown" case, possibly due to ambiguous responses or borderline cases. This allows the agent to try a more reliable, low-cost primitive (such as a simple baseline_solve) before escalating to more expensive methods. This could help improve accuracy with minimal additional calls on problems of uncertain difficulty, balancing accuracy and calls.
+</DESCRIPTION>
+<DIFF>
+<<<<<<< SEARCH
+    def forward(self, problem: str) -> Tuple[str, float]:
+        self.reset_tracking()
+        total_cost = 0.0
+        # Step 1: estimate difficulty
+        difficulty, diff_cost = self.estimate_difficulty(problem)
+        total_cost += diff_cost
+        if difficulty == "easy":
+            resp, c = self.baseline_solve(problem)
+            total_cost += c
+            return resp, total_cost
+        elif difficulty == "medium":
+            resp, c = self.deep_think(problem)
+            total_cost += c
+            vresp, vc = self.verify(problem, resp)
+            total_cost += vc
+            return vresp, total_cost
+        else:
+            resp, c = self.ensemble_vote(problem, n=3)
+            total_cost += c
+            return resp, total_cost
+=======
+    def forward(self, problem: str) -> Tuple[str, float]:
+        self.reset_tracking()
+        total_cost = 0.0
+        # Step 1: estimate difficulty
+        difficulty, diff_cost = self.estimate_difficulty(problem)
+        total_cost += diff_cost
+        # Implement fallback in case of uncertain or default difficulty
+        if difficulty not in ["easy", "medium", "hard"]:
+            # Fallback: attempt baseline_solve to maximize accuracy at low cost
+            resp, c = self.baseline_solve(problem)
+            total_cost += c
+            return resp, total_cost
+        # Routing based on difficulty
+        if difficulty == "easy":
+            resp, c = self.baseline_solve(problem)
+            total_cost += c
+            return resp, total_cost
+        elif difficulty == "medium":
+            resp, c = self.deep_think(problem)
+            total_cost += c
+            vresp, vc = self.verify(problem, resp)
+            total_cost += vc
+            return vresp, total_cost
+        else:
+            resp, c = self.ensemble_vote(problem, n=3)
+            total_cost += c
+            return resp, total_cost
+>>>>>>> REPLACE
+</DIFF>

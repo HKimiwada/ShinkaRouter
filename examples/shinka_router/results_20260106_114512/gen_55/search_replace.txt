@@ -1,0 +1,48 @@
+<NAME>
+match_exact_forward_region
+</NAME>
+<DESCRIPTION>
+The previous attempt failed because the search pattern for the forward() method did not exactly match the code region. To fix this, I will locate the exact line "def forward(self, problem: str) -> Tuple[str, float]:" and replace the code within the specified region (lines 395-411) with a new implementation that performs threshold-based routing based on estimated difficulty. This ensures the modification occurs precisely where expected.
+</DESCRIPTION>
+<DIFF>
+<<<<<<< SEARCH
+def forward(self, problem: str) -> Tuple[str, float]:
+            """
+            Main entry point - routes problem to appropriate primitives.
+    ... (9 more lines)
+            # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+            response, cost = self.baseline_solve(problem)
+            return response, cost
+=======
+def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Threshold-based routing: use primitive for easy, elaborate for hard.
+        """
+        self.reset_tracking()
+        total_cost = 0.0
+
+        # Step 1: Estimate difficulty
+        difficulty, c_diff = self.estimate_difficulty(problem)
+        total_cost += c_diff
+
+        # Route based on difficulty
+        if difficulty == "easy":
+            resp, c = self.baseline_solve(problem)
+            total_cost += c
+        elif difficulty == "medium":
+            resp, c = self.deep_think(problem)
+            total_cost += c
+            resp, c_v = self.verify(problem, resp)
+            total_cost += c_v
+        else:
+            # For 'hard' or above, use deep_think + verify + self_critique
+            resp, c = self.deep_think(problem)
+            total_cost += c
+            resp_crit, c_c = self.self_critique(problem, resp)
+            total_cost += c_c
+            resp, c_v = self.verify(problem, resp_crit)
+            total_cost += c_v
+
+        return resp, total_cost
+>>>>>>> REPLACE
+</DIFF>

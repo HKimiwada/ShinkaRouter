@@ -8,7 +8,7 @@ import multiprocessing
 import concurrent.futures
 from typing import Callable, List
 import pandas as pd
-from utils import remove_boxed, last_boxed_only_string, is_equiv
+from examples.shinka_router.utils import remove_boxed, last_boxed_only_string, is_equiv
 
 
 def agent_evaluation(

@@ -1,0 +1,51 @@
+<NAME>
+add_difficulty_threshold_routing
+</NAME>
+<DESCRIPTION>
+Implement a low-cost difficulty estimation step immediately after reset, then route problems based on the predicted difficulty. For 'easy' problems, use the fast baseline_solve primitive; for 'medium' and 'hard' problems, use deep_think followed by verify to ensure correctness, consuming two to three calls per problem. This adaptively balances accuracy and resource usage, potentially raising overall performance by focusing more advanced reasoning on challenging problems.
+</DESCRIPTION>
+<DIFF>
+<<<<<<< SEARCH
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Main entry point - routes problem to appropriate primitives.
+        This method will be evolved by ShinkaEvolve to discover
+        optimal routing strategies.
+
+        Initial baseline: Use baseline_solve (temperature=0.0) which
+        exactly matches the adas_aime baseline behavior.
+        """
+        # Reset tracking for this problem
+        self.reset_tracking()
+
+        # Baseline: Exact match to adas_aime (temp=0.0, simple prompt)
+        response, cost = self.baseline_solve(problem)
+        return response, cost
+=======
+    def forward(self, problem: str) -> Tuple[str, float]:
+        """
+        Routes based on estimated difficulty:
+        - 'easy' problems: solve directly with baseline_solve
+        - 'medium' or 'hard' problems: use deep_think then verify
+        """
+        self.reset_tracking()
+        total_cost = 0.0
+
+        # Estimate difficulty for adaptive routing
+        difficulty, est_cost = self.estimate_difficulty(problem)
+        total_cost += est_cost
+
+        if difficulty == "easy":
+            response, cost = self.baseline_solve(problem)
+            total_cost += cost
+        else:
+            # For 'medium' and 'hard', perform deep_think + verify
+            dt_response, dt_cost = self.deep_think(problem)
+            total_cost += dt_cost
+            # Verify the deep_think response
+            ver_response, ver_cost = self.verify(problem, dt_response)
+            total_cost += ver_cost
+            response = ver_response
+        return response, total_cost
+>>>>>>> REPLACE
+</DIFF>
