@@ -48,11 +48,18 @@ def query_openai(
             ],
             **kwargs,
         )
-        try:
-            content = response.output[0].content[0].text
-        except Exception:
-            # Reasoning models - ResponseOutputMessage
-            content = response.output[1].content[0].text
+        content = getattr(response, "output_text", None)
+        if not content:
+            for item in response.output or []:
+                for part in getattr(item, "content", []) or []:
+                    text = getattr(part, "text", None)
+                    if text:
+                        content = text
+                        break
+                if content:
+                    break
+        if not content:
+            raise ValueError("No text content returned from OpenAI response.")
         new_msg_history.append({"role": "assistant", "content": content})
     else:
         response = client.responses.parse(

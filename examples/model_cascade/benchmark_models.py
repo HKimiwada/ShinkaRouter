@@ -35,6 +35,11 @@ def run_benchmark(models_to_test, year=2024, num_problems=None):
         ground_truth = str(row.get('answer', row.get('Answer', "")))
         
         for model_name in models_to_test:
+            if "o4" in model_name or "o1" in model_name:
+                 temp = 1.0  # Or rely on default
+            else:
+                 temp = 0.0
+            
             # Initialize client with the specific model and temperature
             client = LLM(model_names=model_name, temperatures=0.0)
             

@@ -1,20 +1,438 @@
 {
     "gpt-4o-mini": {
-        "correct": 0,
-        "total": 0,
-        "costs": [],
-        "details": []
+        "correct": 2,
+        "total": 30,
+        "costs": [
+            0.0007572,
+            0.000534,
+            0.0004509,
+            0.0009706499999999999,
+            0.00247395,
+            0.0006319499999999999,
+            0.0005719499999999999,
+            0.00044504999999999995,
+            0.0024789,
+            0.00042794999999999997,
+            0.0006797999999999999,
+            0.0005572499999999999,
+            0.00036554999999999997,
+            0.0003825,
+            0.0007046999999999999,
+            0.0024792,
+            0.00055905,
+            0.0005914499999999999,
+            0.0009024,
+            0.0006852,
+            0.002487,
+            0.0004569,
+            0.00247575,
+            0.0006984,
+            0.0008715,
+            0.0008847,
+            0.00048134999999999996,
+            0.00084285,
+            0.00050805,
+            0.0004518
+        ],
+        "details": [
+            {
+                "id": "2024-1",
+                "correct": true,
+                "extracted": "204",
+                "cost": 0.0007572
+            },
+            {
+                "id": "2024-2",
+                "correct": false,
+                "extracted": "16",
+                "cost": 0.000534
+            },
+            {
+                "id": "2024-3",
+                "correct": false,
+                "extracted": "3",
+                "cost": 0.0004509
+            },
+            {
+                "id": "2024-4",
+                "correct": false,
+                "extracted": "8",
+                "cost": 0.0009706499999999999
+            },
+            {
+                "id": "2024-5",
+                "correct": false,
+                "extracted": "",
+                "cost": 0.00247395
+            },
+            {
+                "id": "2024-6",
+                "correct": false,
+                "extracted": "24",
+                "cost": 0.0006319499999999999
+            },
+            {
+                "id": "2024-7",
+                "correct": false,
+                "extracted": "31",
+                "cost": 0.0005719499999999999
+            },
+            {
+                "id": "2024-8",
+                "correct": false,
+                "extracted": "125",
+                "cost": 0.00044504999999999995
+            },
+            {
+                "id": "2024-9",
+                "correct": false,
+                "extracted": "",
+                "cost": 0.0024789
+            },
+            {
+                "id": "2024-10",
+                "correct": true,
+                "extracted": "116",
+                "cost": 0.00042794999999999997
+            },
+            {
+                "id": "2024-11",
+                "correct": false,
+                "extracted": "91",
+                "cost": 0.0006797999999999999
+            },
+            {
+                "id": "2024-12",
+                "correct": false,
+                "extracted": "1225",
+                "cost": 0.0005572499999999999
+            },
+            {
+                "id": "2024-13",
+                "correct": false,
+                "extracted": "598",
+                "cost": 0.00036554999999999997
+            },
+            {
+                "id": "2024-14",
+                "correct": false,
+                "extracted": "2025",
+                "cost": 0.0003825
+            },
+            {
+                "id": "2024-15",
+                "correct": false,
+                "extracted": "176",
+                "cost": 0.0007046999999999999
+            },
+            {
+                "id": "2024-16",
+                "correct": false,
+                "extracted": "",
+                "cost": 0.0024792
+            },
+            {
+                "id": "2024-17",
+                "correct": false,
+                "extracted": "1872",
+                "cost": 0.00055905
+            },
+            {
+                "id": "2024-18",
+                "correct": false,
+                "extracted": "7",
+                "cost": 0.0005914499999999999
+            },
+            {
+                "id": "2024-19",
+                "correct": false,
+                "extracted": "2",
+                "cost": 0.0009024
+            },
+            {
+                "id": "2024-20",
+                "correct": false,
+                "extracted": "192",
+                "cost": 0.0006852
+            },
+            {
+                "id": "2024-21",
+                "correct": false,
+                "extracted": "",
+                "cost": 0.002487
+            },
+            {
+                "id": "2024-22",
+                "correct": false,
+                "extracted": "36",
+                "cost": 0.0004569
+            },
+            {
+                "id": "2024-23",
+                "correct": false,
+                "extracted": "",
+                "cost": 0.00247575
+            },
+            {
+                "id": "2024-24",
+                "correct": false,
+                "extracted": "55",
+                "cost": 0.0006984
+            },
+            {
+                "id": "2024-25",
+                "correct": false,
+                "extracted": "25",
+                "cost": 0.0008715
+            },
+            {
+                "id": "2024-26",
+                "correct": false,
+                "extracted": "100",
+                "cost": 0.0008847
+            },
+            {
+                "id": "2024-27",
+                "correct": false,
+                "extracted": "2028",
+                "cost": 0.00048134999999999996
+            },
+            {
+                "id": "2024-28",
+                "correct": false,
+                "extracted": "1003",
+                "cost": 0.00084285
+            },
+            {
+                "id": "2024-29",
+                "correct": false,
+                "extracted": "481",
+                "cost": 0.00050805
+            },
+            {
+                "id": "2024-30",
+                "correct": false,
+                "extracted": "1024",
+                "cost": 0.0004518
+            }
+        ]
     },
     "gpt-4.1-nano": {
-        "correct": 0,
-        "total": 0,
-        "costs": [],
-        "details": []
-    },
-    "o4-mini": {
-        "correct": 0,
-        "total": 0,
-        "costs": [],
-        "details": []
+        "correct": 8,
+        "total": 30,
+        "costs": [
+            0.0020797999999999997,
+            0.0057496,
+            0.0045748,
+            0.0020525,
+            0.0057453,
+            0.005079899999999999,
+            0.0044409,
+            0.0007767,
+            0.0026601999999999997,
+            0.0011943,
+            0.004008599999999999,
+            0.0017193,
+            0.0018163,
+            0.002944,
+            0.0033642,
+            0.0019814,
+            0.0043275,
+            0.0044618999999999995,
+            0.0038748,
+            0.0032748,
+            0.0040754,
+            0.0009655999999999999,
+            0.0057465,
+            0.0021176,
+            0.0030374,
+            0.002743,
+            0.0019691,
+            0.0057459,
+            0.0046185,
+            0.002008
+        ],
+        "details": [
+            {
+                "id": "2024-1",
+                "correct": true,
+                "extracted": "204",
+                "cost": 0.0020797999999999997
+            },
+            {
+                "id": "2024-2",
+                "correct": false,
+                "extracted": "",
+                "cost": 0.0057496
+            },
+            {
+                "id": "2024-3",
+                "correct": false,
+                "extracted": "59",
+                "cost": 0.0045748
+            },
+            {
+                "id": "2024-4",
+                "correct": false,
+                "extracted": "10",
+                "cost": 0.0020525
+            },
+            {
+                "id": "2024-5",
+                "correct": false,
+                "extracted": "",
+                "cost": 0.0057453
+            },
+            {
+                "id": "2024-6",
+                "correct": false,
+                "extracted": "18290",
+                "cost": 0.005079899999999999
+            },
+            {
+                "id": "2024-7",
+                "correct": false,
+                "extracted": "15100623",
+                "cost": 0.0044409
+            },
+            {
+                "id": "2024-8",
+                "correct": true,
+                "extracted": "25",
+                "cost": 0.0007767
+            },
+            {
+                "id": "2024-9",
+                "correct": false,
+                "extracted": "405",
+                "cost": 0.0026601999999999997
+            },
+            {
+                "id": "2024-10",
+                "correct": true,
+                "extracted": "116",
+                "cost": 0.0011943
+            },
+            {
+                "id": "2024-11",
+                "correct": false,
+                "extracted": "199",
+                "cost": 0.004008599999999999
+            },
+            {
+                "id": "2024-12",
+                "correct": true,
+                "extracted": "294",
+                "cost": 0.0017193
+            },
+            {
+                "id": "2024-13",
+                "correct": true,
+                "extracted": "540",
+                "cost": 0.0018163
+            },
+            {
+                "id": "2024-14",
+                "correct": false,
+                "extracted": "287",
+                "cost": 0.002944
+            },
+            {
+                "id": "2024-15",
+                "correct": false,
+                "extracted": "96",
+                "cost": 0.0033642
+            },
+            {
+                "id": "2024-16",
+                "correct": true,
+                "extracted": "73",
+                "cost": 0.0019814
+            },
+            {
+                "id": "2024-17",
+                "correct": false,
+                "extracted": "156",
+                "cost": 0.0043275
+            },
+            {
+                "id": "2024-18",
+                "correct": false,
+                "extracted": "5",
+                "cost": 0.0044618999999999995
+            },
+            {
+                "id": "2024-19",
+                "correct": false,
+                "extracted": "5",
+                "cost": 0.0038748
+            },
+            {
+                "id": "2024-20",
+                "correct": true,
+                "extracted": "321",
+                "cost": 0.0032748
+            },
+            {
+                "id": "2024-21",
+                "correct": false,
+                "extracted": "15",
+                "cost": 0.0040754
+            },
+            {
+                "id": "2024-22",
+                "correct": false,
+                "extracted": "3",
+                "cost": 0.0009655999999999999
+            },
+            {
+                "id": "2024-23",
+                "correct": false,
+                "extracted": "1, 1, 1, 9, 9, 9",
+                "cost": 0.0057465
+            },
+            {
+                "id": "2024-24",
+                "correct": false,
+                "extracted": "0",
+                "cost": 0.0021176
+            },
+            {
+                "id": "2024-25",
+                "correct": true,
+                "extracted": "33",
+                "cost": 0.0030374
+            },
+            {
+                "id": "2024-26",
+                "correct": false,
+                "extracted": "100",
+                "cost": 0.002743
+            },
+            {
+                "id": "2024-27",
+                "correct": false,
+                "extracted": "58",
+                "cost": 0.0019691
+            },
+            {
+                "id": "2024-28",
+                "correct": false,
+                "extracted": "",
+                "cost": 0.0057459
+            },
+            {
+                "id": "2024-29",
+                "correct": false,
+                "extracted": "141",
+                "cost": 0.0046185
+            },
+            {
+                "id": "2024-30",
+                "correct": false,
+                "extracted": "2048",
+                "cost": 0.002008
+            }
+        ]
     }
 }
