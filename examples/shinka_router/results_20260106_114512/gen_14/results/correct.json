@@ -1,4 +1,0 @@
-{
-    "correct": false,
-    "error": "Agent.__init__() got an unexpected keyword argument 'quick_temp'"
-}
