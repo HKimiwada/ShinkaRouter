@@ -124,15 +124,16 @@ def sample_model_kwargs(
     else:
         kwargs_dict["temperature"] = random.choice(temperatures)
 
-    # perform reasoning effort sampling if list provided
-    # set max_completion_tokens for OAI reasoning models
+    # Handle max_tokens/max_completion_tokens parameter based on model type
+    # REASONING OAI/AZURE MODELS: Use max_completion_tokens
     if kwargs_dict["model_name"] in (REASONING_OAI_MODELS + REASONING_AZURE_MODELS):
-        kwargs_dict["max_output_tokens"] = random.choice(max_tokens)
+        kwargs_dict["max_completion_tokens"] = random.choice(max_tokens)
         r_effort = random.choice(reasoning_efforts)
         if r_effort != "auto":
             kwargs_dict["reasoning"] = {"effort": r_effort}
 
-    if kwargs_dict["model_name"] in (REASONING_GEMINI_MODELS):
+    # GEMINI REASONING MODELS: Use max_tokens with thinking config
+    elif kwargs_dict["model_name"] in (REASONING_GEMINI_MODELS):
         kwargs_dict["max_tokens"] = random.choice(max_tokens)
         r_effort = random.choice(reasoning_efforts)
         think_bool = r_effort != "auto"
@@ -150,6 +151,7 @@ def sample_model_kwargs(
                 }
             }
 
+    # CLAUDE/BEDROCK REASONING MODELS: Use max_tokens with thinking config
     elif kwargs_dict["model_name"] in (
         REASONING_CLAUDE_MODELS + REASONING_BEDROCK_MODELS
     ):
@@ -157,28 +159,16 @@ def sample_model_kwargs(
         r_effort = random.choice(reasoning_efforts)
         think_bool = r_effort != "auto"
         if think_bool:
-            # filter thinking tokens to be smaller than max_tokens
-            # not auto THINKING_TOKENS
             t = THINKING_TOKENS[r_effort]
             thinking_tokens = t if t < kwargs_dict["max_tokens"] else 1024
-            # sample only from thinking tokens that are valid
             kwargs_dict["thinking"] = {
                 "type": "enabled",
                 "budget_tokens": thinking_tokens,
             }
 
+    # ALL OTHER MODELS (Claude, Bedrock, DeepSeek, Gemini non-reasoning, OpenAI non-reasoning)
     else:
-        if (
-            kwargs_dict["model_name"] in CLAUDE_MODELS
-            or kwargs_dict["model_name"] in BEDROCK_MODELS
-            or kwargs_dict["model_name"] in REASONING_CLAUDE_MODELS
-            or kwargs_dict["model_name"] in REASONING_BEDROCK_MODELS
-            or kwargs_dict["model_name"] in DEEPSEEK_MODELS
-            or kwargs_dict["model_name"] in REASONING_DEEPSEEK_MODELS
-        ):
-            kwargs_dict["max_tokens"] = random.choice(max_tokens)
-        else:
-            kwargs_dict["max_output_tokens"] = random.choice(max_tokens)
+        kwargs_dict["max_tokens"] = random.choice(max_tokens)
 
     return kwargs_dict
 

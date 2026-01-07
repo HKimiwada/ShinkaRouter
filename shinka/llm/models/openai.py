@@ -39,46 +39,46 @@ def query_openai(
 ) -> QueryResult:
     """Query OpenAI model."""
     new_msg_history = msg_history + [{"role": "user", "content": msg}]
+    
     if output_model is None:
-        response = client.responses.create(
+        # Standard chat completion
+        response = client.chat.completions.create(
             model=model,
-            input=[
+            messages=[
                 {"role": "system", "content": system_msg},
                 *new_msg_history,
             ],
             **kwargs,
         )
-        content = getattr(response, "output_text", None)
-        if not content:
-            for item in response.output or []:
-                for part in getattr(item, "content", []) or []:
-                    text = getattr(part, "text", None)
-                    if text:
-                        content = text
-                        break
-                if content:
-                    break
-        if not content:
-            raise ValueError("No text content returned from OpenAI response.")
+        content = response.choices[0].message.content
+        
+        # Extract reasoning/thinking content if present (for reasoning models like o1, o4-mini)
+        thought = ""
+        if hasattr(response.choices[0].message, 'reasoning_content'):
+            thought = response.choices[0].message.reasoning_content or ""
+        
         new_msg_history.append({"role": "assistant", "content": content})
     else:
-        response = client.responses.parse(
+        # Structured output using beta API
+        response = client.beta.chat.completions.parse(
             model=model,
-            input=[
+            messages=[
                 {"role": "system", "content": system_msg},
                 *new_msg_history,
             ],
-            text_format=output_model,
+            response_format=output_model,
             **kwargs,
         )
-        content = response.output_parsed
-        new_content = ""
-        for i in content:
-            new_content += i[0] + ":" + i[1] + "\n"
-        new_msg_history.append({"role": "assistant", "content": new_content})
+        content = response.choices[0].message.parsed
+        new_msg_history.append({"role": "assistant", "content": str(content)})
 
-    input_cost = OPENAI_MODELS[model]["input_price"] * response.usage.input_tokens
-    output_cost = OPENAI_MODELS[model]["output_price"] * response.usage.output_tokens
+    # Handle token counting - use the actual field names from OpenAI API
+    input_tokens = response.usage.prompt_tokens
+    output_tokens = response.usage.completion_tokens
+    
+    input_cost = OPENAI_MODELS[model]["input_price"] * input_tokens
+    output_cost = OPENAI_MODELS[model]["output_price"] * output_tokens
+    
     result = QueryResult(
         content=content,
         msg=msg,
@@ -86,12 +86,12 @@ def query_openai(
         new_msg_history=new_msg_history,
         model_name=model,
         kwargs=kwargs,
-        input_tokens=response.usage.input_tokens,
-        output_tokens=response.usage.output_tokens,
+        input_tokens=input_tokens,
+        output_tokens=output_tokens,
         cost=input_cost + output_cost,
         input_cost=input_cost,
         output_cost=output_cost,
-        thought="",
+        thought=thought,
         model_posteriors=model_posteriors,
     )
     return result
