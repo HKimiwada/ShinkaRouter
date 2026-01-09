@@ -271,9 +271,9 @@ else:
 
 if __name__ == "__main__":
     # Configuration
-    NUM_PROBLEMS = 15  # Use subset for faster training
-    NUM_GENERATIONS = 5
-    POPULATION_SIZE = 6
+    NUM_PROBLEMS = 30  # Use subset for faster training
+    NUM_GENERATIONS = 10
+    POPULATION_SIZE = 10
     
     # Load AIME 2024 problems
     problems = load_aime_problems(year=2024, num_problems=NUM_PROBLEMS)
@@ -284,5 +284,5 @@ if __name__ == "__main__":
         dataset=problems,
         num_generations=NUM_GENERATIONS,
         population_size=POPULATION_SIZE,
-        output_dir=Path("./aime_router_results"),
+        output_dir=Path("./2024_30_AIME_router_results"),
     )

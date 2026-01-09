@@ -1,0 +1,637 @@
+{
+  "baselines": {
+    "gpt-4o-mini": {
+      "accuracy": 0.1,
+      "total_cost": 0.011250000000000005,
+      "avg_cost": 0.00037500000000000017,
+      "efficiency": 8.888888888888886,
+      "model_usage": {
+        "gpt-4o-mini": 30,
+        "gpt-4.1-nano": 0,
+        "o4-mini": 0
+      },
+      "num_problems": 30,
+      "correct": 3
+    },
+    "gpt-4.1-nano": {
+      "accuracy": 0.3333333333333333,
+      "total_cost": 0.02250000000000001,
+      "avg_cost": 0.0007500000000000003,
+      "efficiency": 14.814814814814808,
+      "model_usage": {
+        "gpt-4o-mini": 0,
+        "gpt-4.1-nano": 30,
+        "o4-mini": 0
+      },
+      "num_problems": 30,
+      "correct": 10
+    },
+    "o4-mini": {
+      "accuracy": 0.6,
+      "total_cost": 0.08250000000000003,
+      "avg_cost": 0.002750000000000001,
+      "efficiency": 7.27272727272727,
+      "model_usage": {
+        "gpt-4o-mini": 0,
+        "gpt-4.1-nano": 0,
+        "o4-mini": 30
+      },
+      "num_problems": 30,
+      "correct": 18
+    }
+  },
+  "pareto_frontier": [
+    {
+      "router": {
+        "logic": "# Keyword complexity routing\nkeywords = ['prove', 'theorem', 'integral', 'derivative', 'limit']\ncomplexity = sum(1 for kw in keywords if kw in problem.lower())\nif complexity >= 2:\n    model = 'o4-mini'\nelif complexity >= 1:\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "init_1"
+      },
+      "metrics": {
+        "accuracy": 0.06666666666666667,
+        "total_cost": 0.011250000000000005,
+        "avg_cost": 0.00037500000000000017,
+        "efficiency": 5.925925925925923,
+        "model_usage": {
+          "gpt-4o-mini": 30,
+          "gpt-4.1-nano": 0,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 2
+      }
+    },
+    {
+      "router": {
+        "logic": "# Enhanced Router for AIME Problems <enhanced_router>\nimport re\n\n# Define keywords and their weights\nproof_keywords = ['prove', 'show', 'find', 'determine', 'compute']\ncomplexity_keywords = ['integral', 'derivative', 'theorem', 'limit']\nequation_pattern = r'([=<>]|\\d+[\\+\\-\\*/]|\\d+\\s*\\w+\\s*\\d+)'\n\n# Count proof-related keywords\nproof_count = sum(1 for kw in proof_keywords if kw in problem.lower())\n\n# Count complexity-related keywords\ncomplexity_count = sum(1 for kw in complexity_keywords if kw in problem.lower())\n\n# Count equations based on the defined pattern\nequation_count = len(re.findall(equation_pattern, problem))\n\n# Determine number of steps based on the presence of indicators (e.g., \"then\", \"and\")\nmulti_step_indicators = ['then', 'and']\nstep_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif proof_count >= 2 or (proof_count >= 1 and complexity_count >= 1) or equation_count > 2 or step_count > 1:\n    model = 'o4-mini'\nelif complexity_count >= 1 or equation_count > 1:\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.4,
+        "total_cost": 0.04762500000000001,
+        "avg_cost": 0.0015875000000000002,
+        "efficiency": 8.398950131233596,
+        "model_usage": {
+          "gpt-4o-mini": 13,
+          "gpt-4.1-nano": 2,
+          "o4-mini": 15
+        },
+        "num_problems": 30,
+        "correct": 12
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>improved_router</n>\nimport re\n\n# Complexity indicators\nquestion_marks = problem.count('?')\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative']\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\nnumbers = len(re.findall(r'\\d+', problem))\ndensity = numbers / max(len(problem.split()), 1)\n\n# Model routing logic\nif question_marks >= 2 or kw_count >= 3 or (kw_count >= 1 and len(problem) > 150) or density > 0.2:\n    model = 'o4-mini'\nelif question_marks == 1 or (kw_count >= 1 and density > 0.1):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.6333333333333333,
+        "total_cost": 0.07650000000000003,
+        "avg_cost": 0.002550000000000001,
+        "efficiency": 8.27886710239651,
+        "model_usage": {
+          "gpt-4o-mini": 0,
+          "gpt-4.1-nano": 3,
+          "o4-mini": 27
+        },
+        "num_problems": 30,
+        "correct": 19
+      }
+    },
+    {
+      "router": {
+        "logic": "# Improved Router for AIME Problems <n>improved_router</n>\nimport re\n\n# Define keywords for different complexity indicators\nproof_keywords = ['prove', 'theorem', 'show', 'demonstrate']\nmath_keywords = ['integral', 'derivative', 'limit', 'sequence', 'series', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'when']\nequation_density_threshold = 0.2\n\n# Count occurrences of keywords in the problem\nproof_count = sum(1 for kw in proof_keywords if kw in problem.lower())\nmath_count = sum(1 for kw in math_keywords if kw in problem.lower())\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\ndensity = numbers / max(len(problem.split()), 1)\n\n# Determine the model based on complexity\nif proof_count >= 1 or multi_step_count >= 2 or density > equation_density_threshold:\n    model = 'o4-mini'\nelif proof_count >= 1 or math_count >= 2 or multi_step_count >= 1:\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.5,
+        "total_cost": 0.06412500000000002,
+        "avg_cost": 0.0021375000000000005,
+        "efficiency": 7.79727095516569,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 8,
+          "o4-mini": 21
+        },
+        "num_problems": 30,
+        "correct": 15
+      }
+    },
+    {
+      "router": {
+        "logic": "# Improved Router for AIME Problems <improved_router>\nimport re\n\n# Define keywords for reasoning and complexity\nproof_keywords = ['prove', 'show', 'demonstrate', 'establish', 'verify']\ncomplexity_keywords = ['integral', 'derivative', 'limit', 'function', 'sequence', 'series']\nmulti_step_indicators = ['and', 'then', 'if', 'or', 'for all', 'given']\n\n# Evaluate keyword presence and complexity\nproof_count = sum(1 for kw in proof_keywords if kw in problem.lower())\ncomplexity_count = sum(1 for kw in complexity_keywords if kw in problem.lower())\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Calculate number density for equation density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Routing logic\nif proof_count >= 2 or complexity_count >= 2 or multi_step_count >= 2 or number_density > 0.15:\n    model = 'o4-mini'\nelif proof_count >= 1 or complexity_count >= 1 or multi_step_count >= 1 or number_density > 0.1:\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.5,
+        "total_cost": 0.06412500000000002,
+        "avg_cost": 0.0021375000000000005,
+        "efficiency": 7.79727095516569,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 8,
+          "o4-mini": 21
+        },
+        "num_problems": 30,
+        "correct": 15
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Enhanced</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Calculate multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif kw_count >= 3 or (kw_count >= 2 and (equation_density > equation_density_threshold or multi_step_count > 1)):\n    model = 'o4-mini'\nelif kw_count >= 1 or number_density > 0.1 or (equation_density > 0.05 and multi_step_count > 0):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.36666666666666664,
+        "total_cost": 0.02412500000000001,
+        "avg_cost": 0.000804166666666667,
+        "efficiency": 15.198618307426589,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 28,
+          "o4-mini": 1
+        },
+        "num_problems": 30,
+        "correct": 11
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Improved_2</n>\nimport re\n\n# Define mathematical keywords and complexity indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since']\nequation_density_threshold = 0.15\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Routing logic\nif kw_count >= 3 or (kw_count >= 2 and equation_density > equation_density_threshold) or question_marks >= 2:\n    model = 'o4-mini'\nelif kw_count >= 1 or number_density > 0.1 or equation_density > 0.05 or (question_marks == 1 and len(problem) > 150):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.13333333333333333,
+        "total_cost": 0.013625000000000005,
+        "avg_cost": 0.00045416666666666685,
+        "efficiency": 9.785932721712534,
+        "model_usage": {
+          "gpt-4o-mini": 29,
+          "gpt-4.1-nano": 0,
+          "o4-mini": 1
+        },
+        "num_problems": 30,
+        "correct": 4
+      }
+    },
+    {
+      "router": {
+        "logic": "# Enhanced Router for AIME Problems <enhanced_router>\nimport re\n\n# Define keywords and their weights\nproof_keywords = ['prove', 'show', 'find', 'determine', 'compute']\ncomplexity_keywords = ['integral', 'derivative', 'theorem', 'limit']\nequation_pattern = r'([=<>]|\\d+[\\+\\-\\*/]|\\d+\\s*\\w+\\s*\\d+)'\n\n# Count proof-related keywords\nproof_count = sum(1 for kw in proof_keywords if kw in problem.lower())\n\n# Count complexity-related keywords\ncomplexity_count = sum(1 for kw in complexity_keywords if kw in problem.lower())\n\n# Count equations based on the defined pattern\nequation_count = len(re.findall(equation_pattern, problem))\n\n# Determine number of steps based on the presence of indicators (e.g., \"then\", \"and\")\nmulti_step_indicators = ['then', 'and']\nstep_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif proof_count >= 2 or (proof_count >= 1 and complexity_count >= 1) or equation_count > 2 or step_count > 1:\n    model = 'o4-mini'\nelif complexity_count >= 1 or equation_count > 1:\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.4,
+        "total_cost": 0.04762500000000001,
+        "avg_cost": 0.0015875000000000002,
+        "efficiency": 8.398950131233596,
+        "model_usage": {
+          "gpt-4o-mini": 13,
+          "gpt-4.1-nano": 2,
+          "o4-mini": 15
+        },
+        "num_problems": 30,
+        "correct": 12
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Enhanced</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Calculate multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif kw_count >= 3 or (kw_count >= 2 and (equation_density > equation_density_threshold or multi_step_count > 1)):\n    model = 'o4-mini'\nelif kw_count >= 1 or number_density > 0.1 or (equation_density > 0.05 and multi_step_count > 0):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.36666666666666664,
+        "total_cost": 0.02412500000000001,
+        "avg_cost": 0.000804166666666667,
+        "efficiency": 15.198618307426589,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 28,
+          "o4-mini": 1
+        },
+        "num_problems": 30,
+        "correct": 11
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Enhanced</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Calculate multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif kw_count >= 3 or (kw_count >= 2 and (equation_density > equation_density_threshold or multi_step_count > 1)):\n    model = 'o4-mini'\nelif kw_count >= 1 or number_density > 0.1 or (equation_density > 0.05 and multi_step_count > 0):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.36666666666666664,
+        "total_cost": 0.02412500000000001,
+        "avg_cost": 0.000804166666666667,
+        "efficiency": 15.198618307426589,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 28,
+          "o4-mini": 1
+        },
+        "num_problems": 30,
+        "correct": 11
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Improved</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function', 'solve', 'calculate']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\ncomplex_domains = ['geometry', 'combinatorics', 'number theory', 'algebra', 'probability']\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n\n# Check for complex domains\ndomain_count = sum(1 for domain in complex_domains if domain in problem.lower())\n\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Count multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic enhanced for better identification of complex problems\nif kw_count >= 4 or domain_count > 1 or (kw_count >= 3 and (equation_density > equation_density_threshold or multi_step_count >= 2)):\n    model = 'o4-mini'\nelif kw_count >= 2 or number_density > 0.1 or (equation_density > 0.1 and multi_step_count >= 1):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.3,
+        "total_cost": 0.01800000000000001,
+        "avg_cost": 0.0006000000000000003,
+        "efficiency": 16.666666666666657,
+        "model_usage": {
+          "gpt-4o-mini": 12,
+          "gpt-4.1-nano": 18,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 9
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Enhanced</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Calculate multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif kw_count >= 3 or (kw_count >= 2 and (equation_density > equation_density_threshold or multi_step_count > 1)):\n    model = 'o4-mini'\nelif kw_count >= 1 or number_density > 0.1 or (equation_density > 0.05 and multi_step_count > 0):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.36666666666666664,
+        "total_cost": 0.02412500000000001,
+        "avg_cost": 0.000804166666666667,
+        "efficiency": 15.198618307426589,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 28,
+          "o4-mini": 1
+        },
+        "num_problems": 30,
+        "correct": 11
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Improved</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function', 'solve', 'calculate']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\ncomplex_domains = ['geometry', 'combinatorics', 'number theory', 'algebra', 'probability']\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n\n# Check for complex domains\ndomain_count = sum(1 for domain in complex_domains if domain in problem.lower())\n\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Count multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic enhanced for better identification of complex problems\nif kw_count >= 4 or domain_count > 1 or (kw_count >= 3 and (equation_density > equation_density_threshold or multi_step_count >= 2)):\n    model = 'o4-mini'\nelif kw_count >= 2 or number_density > 0.1 or (equation_density > 0.1 and multi_step_count >= 1):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.3,
+        "total_cost": 0.01800000000000001,
+        "avg_cost": 0.0006000000000000003,
+        "efficiency": 16.666666666666657,
+        "model_usage": {
+          "gpt-4o-mini": 12,
+          "gpt-4.1-nano": 18,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 9
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Enhanced</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Calculate multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif kw_count >= 3 or (kw_count >= 2 and (equation_density > equation_density_threshold or multi_step_count > 1)):\n    model = 'o4-mini'\nelif kw_count >= 1 or number_density > 0.1 or (equation_density > 0.05 and multi_step_count > 0):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.36666666666666664,
+        "total_cost": 0.02412500000000001,
+        "avg_cost": 0.000804166666666667,
+        "efficiency": 15.198618307426589,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 28,
+          "o4-mini": 1
+        },
+        "num_problems": 30,
+        "correct": 11
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Improved</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function', 'solve', 'calculate']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\ncomplex_domains = ['geometry', 'combinatorics', 'number theory', 'algebra', 'probability']\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n\n# Check for complex domains\ndomain_count = sum(1 for domain in complex_domains if domain in problem.lower())\n\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Count multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic enhanced for better identification of complex problems\nif kw_count >= 4 or domain_count > 1 or (kw_count >= 3 and (equation_density > equation_density_threshold or multi_step_count >= 2)):\n    model = 'o4-mini'\nelif kw_count >= 2 or number_density > 0.1 or (equation_density > 0.1 and multi_step_count >= 1):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.3,
+        "total_cost": 0.01800000000000001,
+        "avg_cost": 0.0006000000000000003,
+        "efficiency": 16.666666666666657,
+        "model_usage": {
+          "gpt-4o-mini": 12,
+          "gpt-4.1-nano": 18,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 9
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Enhanced</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Calculate multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif kw_count >= 3 or (kw_count >= 2 and (equation_density > equation_density_threshold or multi_step_count > 1)):\n    model = 'o4-mini'\nelif kw_count >= 1 or number_density > 0.1 or (equation_density > 0.05 and multi_step_count > 0):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.36666666666666664,
+        "total_cost": 0.02412500000000001,
+        "avg_cost": 0.000804166666666667,
+        "efficiency": 15.198618307426589,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 28,
+          "o4-mini": 1
+        },
+        "num_problems": 30,
+        "correct": 11
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Optimized</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function', 'solve', 'calculate', 'estimate', 'maximize', 'minimize']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than', 'at least', 'at most', 'for all']\nequation_density_threshold = 0.2\ncomplex_domains = ['geometry', 'combinatorics', 'number theory', 'algebra', 'probability', 'set theory', 'calculus']\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n\n# Check for complex domains\ndomain_count = sum(1 for domain in complex_domains if domain in problem.lower())\n\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Count multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Enhanced routing logic for more precise identification of complex problems\nif kw_count >= 5 or domain_count > 1 or (kw_count >= 4 and (equation_density > equation_density_threshold or multi_step_count >= 3)):\n    model = 'o4-mini'\nelif kw_count >= 3 or number_density > 0.15 or (equation_density > 0.1 and multi_step_count >= 2):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.2,
+        "total_cost": 0.016125000000000007,
+        "avg_cost": 0.0005375000000000002,
+        "efficiency": 12.403100775193794,
+        "model_usage": {
+          "gpt-4o-mini": 17,
+          "gpt-4.1-nano": 13,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 6
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Improved</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function', 'solve', 'calculate']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\ncomplex_domains = ['geometry', 'combinatorics', 'number theory', 'algebra', 'probability']\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n\n# Check for complex domains\ndomain_count = sum(1 for domain in complex_domains if domain in problem.lower())\n\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Count multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic enhanced for better identification of complex problems\nif kw_count >= 4 or domain_count > 1 or (kw_count >= 3 and (equation_density > equation_density_threshold or multi_step_count >= 2)):\n    model = 'o4-mini'\nelif kw_count >= 2 or number_density > 0.1 or (equation_density > 0.1 and multi_step_count >= 1):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.3,
+        "total_cost": 0.01800000000000001,
+        "avg_cost": 0.0006000000000000003,
+        "efficiency": 16.666666666666657,
+        "model_usage": {
+          "gpt-4o-mini": 12,
+          "gpt-4.1-nano": 18,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 9
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Enhanced</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Calculate multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif kw_count >= 3 or (kw_count >= 2 and (equation_density > equation_density_threshold or multi_step_count > 1)):\n    model = 'o4-mini'\nelif kw_count >= 1 or number_density > 0.1 or (equation_density > 0.05 and multi_step_count > 0):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.36666666666666664,
+        "total_cost": 0.02412500000000001,
+        "avg_cost": 0.000804166666666667,
+        "efficiency": 15.198618307426589,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 28,
+          "o4-mini": 1
+        },
+        "num_problems": 30,
+        "correct": 11
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Improved</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function', 'solve', 'calculate']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\ncomplex_domains = ['geometry', 'combinatorics', 'number theory', 'algebra', 'probability']\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n\n# Check for complex domains\ndomain_count = sum(1 for domain in complex_domains if domain in problem.lower())\n\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Count multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic enhanced for better identification of complex problems\nif kw_count >= 4 or domain_count > 1 or (kw_count >= 3 and (equation_density > equation_density_threshold or multi_step_count >= 2)):\n    model = 'o4-mini'\nelif kw_count >= 2 or number_density > 0.1 or (equation_density > 0.1 and multi_step_count >= 1):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.3,
+        "total_cost": 0.01800000000000001,
+        "avg_cost": 0.0006000000000000003,
+        "efficiency": 16.666666666666657,
+        "model_usage": {
+          "gpt-4o-mini": 12,
+          "gpt-4.1-nano": 18,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 9
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Enhanced</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Calculate multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif kw_count >= 3 or (kw_count >= 2 and (equation_density > equation_density_threshold or multi_step_count > 1)):\n    model = 'o4-mini'\nelif kw_count >= 1 or number_density > 0.1 or (equation_density > 0.05 and multi_step_count > 0):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.36666666666666664,
+        "total_cost": 0.02412500000000001,
+        "avg_cost": 0.000804166666666667,
+        "efficiency": 15.198618307426589,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 28,
+          "o4-mini": 1
+        },
+        "num_problems": 30,
+        "correct": 11
+      }
+    }
+  ],
+  "generation_best": [
+    {
+      "router": {
+        "logic": "\n# Math keyword density\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative']\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\nif kw_count >= 3 or 'prove' in problem.lower():\n    model = 'o4-mini'\nelif kw_count >= 1:\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'\n",
+        "name": "math_keywords"
+      },
+      "metrics": {
+        "accuracy": 0.26666666666666666,
+        "total_cost": 0.02175000000000001,
+        "avg_cost": 0.0007250000000000003,
+        "efficiency": 12.260536398467428,
+        "model_usage": {
+          "gpt-4o-mini": 2,
+          "gpt-4.1-nano": 28,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 8
+      }
+    },
+    {
+      "router": {
+        "logic": "# Combined Router\nquestion_marks = problem.count('?')\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative']\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n\nif question_marks >= 2 or kw_count >= 3 or 'prove' in problem.lower():\n    model = 'o4-mini'\nelif question_marks == 1 and len(problem) > 150 or kw_count >= 1:\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "cross_init_2_math_keywords"
+      },
+      "metrics": {
+        "accuracy": 0.3,
+        "total_cost": 0.02250000000000001,
+        "avg_cost": 0.0007500000000000003,
+        "efficiency": 13.333333333333327,
+        "model_usage": {
+          "gpt-4o-mini": 0,
+          "gpt-4.1-nano": 30,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 9
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Enhanced</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Calculate multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif kw_count >= 3 or (kw_count >= 2 and (equation_density > equation_density_threshold or multi_step_count > 1)):\n    model = 'o4-mini'\nelif kw_count >= 1 or number_density > 0.1 or (equation_density > 0.05 and multi_step_count > 0):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.36666666666666664,
+        "total_cost": 0.02412500000000001,
+        "avg_cost": 0.000804166666666667,
+        "efficiency": 15.198618307426589,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 28,
+          "o4-mini": 1
+        },
+        "num_problems": 30,
+        "correct": 11
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Enhanced</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Calculate multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif kw_count >= 3 or (kw_count >= 2 and (equation_density > equation_density_threshold or multi_step_count > 1)):\n    model = 'o4-mini'\nelif kw_count >= 1 or number_density > 0.1 or (equation_density > 0.05 and multi_step_count > 0):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.36666666666666664,
+        "total_cost": 0.02412500000000001,
+        "avg_cost": 0.000804166666666667,
+        "efficiency": 15.198618307426589,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 28,
+          "o4-mini": 1
+        },
+        "num_problems": 30,
+        "correct": 11
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Enhanced</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Calculate multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic\nif kw_count >= 3 or (kw_count >= 2 and (equation_density > equation_density_threshold or multi_step_count > 1)):\n    model = 'o4-mini'\nelif kw_count >= 1 or number_density > 0.1 or (equation_density > 0.05 and multi_step_count > 0):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.36666666666666664,
+        "total_cost": 0.02412500000000001,
+        "avg_cost": 0.000804166666666667,
+        "efficiency": 15.198618307426589,
+        "model_usage": {
+          "gpt-4o-mini": 1,
+          "gpt-4.1-nano": 28,
+          "o4-mini": 1
+        },
+        "num_problems": 30,
+        "correct": 11
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Improved</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function', 'solve', 'calculate']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\ncomplex_domains = ['geometry', 'combinatorics', 'number theory', 'algebra', 'probability']\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n\n# Check for complex domains\ndomain_count = sum(1 for domain in complex_domains if domain in problem.lower())\n\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Count multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic enhanced for better identification of complex problems\nif kw_count >= 4 or domain_count > 1 or (kw_count >= 3 and (equation_density > equation_density_threshold or multi_step_count >= 2)):\n    model = 'o4-mini'\nelif kw_count >= 2 or number_density > 0.1 or (equation_density > 0.1 and multi_step_count >= 1):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.3,
+        "total_cost": 0.01800000000000001,
+        "avg_cost": 0.0006000000000000003,
+        "efficiency": 16.666666666666657,
+        "model_usage": {
+          "gpt-4o-mini": 12,
+          "gpt-4.1-nano": 18,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 9
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Improved</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function', 'solve', 'calculate']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\ncomplex_domains = ['geometry', 'combinatorics', 'number theory', 'algebra', 'probability']\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n\n# Check for complex domains\ndomain_count = sum(1 for domain in complex_domains if domain in problem.lower())\n\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Count multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic enhanced for better identification of complex problems\nif kw_count >= 4 or domain_count > 1 or (kw_count >= 3 and (equation_density > equation_density_threshold or multi_step_count >= 2)):\n    model = 'o4-mini'\nelif kw_count >= 2 or number_density > 0.1 or (equation_density > 0.1 and multi_step_count >= 1):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.3,
+        "total_cost": 0.01800000000000001,
+        "avg_cost": 0.0006000000000000003,
+        "efficiency": 16.666666666666657,
+        "model_usage": {
+          "gpt-4o-mini": 12,
+          "gpt-4.1-nano": 18,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 9
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Improved</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function', 'solve', 'calculate']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\ncomplex_domains = ['geometry', 'combinatorics', 'number theory', 'algebra', 'probability']\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n\n# Check for complex domains\ndomain_count = sum(1 for domain in complex_domains if domain in problem.lower())\n\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Count multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic enhanced for better identification of complex problems\nif kw_count >= 4 or domain_count > 1 or (kw_count >= 3 and (equation_density > equation_density_threshold or multi_step_count >= 2)):\n    model = 'o4-mini'\nelif kw_count >= 2 or number_density > 0.1 or (equation_density > 0.1 and multi_step_count >= 1):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.3,
+        "total_cost": 0.01800000000000001,
+        "avg_cost": 0.0006000000000000003,
+        "efficiency": 16.666666666666657,
+        "model_usage": {
+          "gpt-4o-mini": 12,
+          "gpt-4.1-nano": 18,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 9
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Improved</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function', 'solve', 'calculate']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\ncomplex_domains = ['geometry', 'combinatorics', 'number theory', 'algebra', 'probability']\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n\n# Check for complex domains\ndomain_count = sum(1 for domain in complex_domains if domain in problem.lower())\n\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Count multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic enhanced for better identification of complex problems\nif kw_count >= 4 or domain_count > 1 or (kw_count >= 3 and (equation_density > equation_density_threshold or multi_step_count >= 2)):\n    model = 'o4-mini'\nelif kw_count >= 2 or number_density > 0.1 or (equation_density > 0.1 and multi_step_count >= 1):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.3,
+        "total_cost": 0.01800000000000001,
+        "avg_cost": 0.0006000000000000003,
+        "efficiency": 16.666666666666657,
+        "model_usage": {
+          "gpt-4o-mini": 12,
+          "gpt-4.1-nano": 18,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 9
+      }
+    },
+    {
+      "router": {
+        "logic": "# <n>AIME_Router_Improved</n>\nimport re\n\n# Define mathematical keywords, complexity indicators, and multi-step indicators\nkeywords = ['prove', 'show', 'find', 'determine', 'compute', 'integral', 'derivative', 'theorem', 'limit', 'function', 'solve', 'calculate']\nmulti_step_indicators = ['and', 'or', 'then', 'if', 'since', 'more than', 'less than']\nequation_density_threshold = 0.15\ncomplex_domains = ['geometry', 'combinatorics', 'number theory', 'algebra', 'probability']\n\n# Calculate keyword complexity\nkw_count = sum(1 for kw in keywords if kw in problem.lower())\n\n# Check for complex domains\ndomain_count = sum(1 for domain in complex_domains if domain in problem.lower())\n\n# Calculate number density\nnumbers = len(re.findall(r'\\d+', problem))\nnumber_density = numbers / max(len(problem.split()), 1)\n\n# Calculate equation density\nequation_count = len(re.findall(r'=', problem)) + len(re.findall(r'\\+', problem)) + len(re.findall(r'-', problem)) + len(re.findall(r'\\*', problem)) + len(re.findall(r'/', problem))\nequation_density = equation_count / max(len(problem.split()), 1)\n\n# Count multi-step indicators\nmulti_step_count = sum(1 for indicator in multi_step_indicators if indicator in problem.lower())\n\n# Routing logic enhanced for better identification of complex problems\nif kw_count >= 4 or domain_count > 1 or (kw_count >= 3 and (equation_density > equation_density_threshold or multi_step_count >= 2)):\n    model = 'o4-mini'\nelif kw_count >= 2 or number_density > 0.1 or (equation_density > 0.1 and multi_step_count >= 1):\n    model = 'gpt-4.1-nano'\nelse:\n    model = 'gpt-4o-mini'",
+        "name": "mutated"
+      },
+      "metrics": {
+        "accuracy": 0.3,
+        "total_cost": 0.01800000000000001,
+        "avg_cost": 0.0006000000000000003,
+        "efficiency": 16.666666666666657,
+        "model_usage": {
+          "gpt-4o-mini": 12,
+          "gpt-4.1-nano": 18,
+          "o4-mini": 0
+        },
+        "num_problems": 30,
+        "correct": 9
+      }
+    }
+  ],
+  "dominated_area_pct": 33.33333333333333
+}

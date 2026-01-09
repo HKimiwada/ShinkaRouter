@@ -1,0 +1,89 @@
+{
+  "dataset": {
+    "year": 2025,
+    "num_problems": 15
+  },
+  "baselines": {
+    "summary": [
+      {
+        "model": "gpt-4o-mini",
+        "accuracy": 6.666666666666667,
+        "avg_cost": 0.0007574999999999999,
+        "total_cost": 0.0113625,
+        "efficiency": 88.00880088008802,
+        "correct": 1,
+        "total": 15
+      },
+      {
+        "model": "gpt-4.1-nano",
+        "accuracy": 20.0,
+        "avg_cost": 0.0033605466666666666,
+        "total_cost": 0.0504082,
+        "efficiency": 59.51412666986721,
+        "correct": 3,
+        "total": 15
+      },
+      {
+        "model": "o4-mini",
+        "accuracy": 46.666666666666664,
+        "avg_cost": 0.01374494,
+        "total_cost": 0.2061741,
+        "efficiency": 33.951888234264146,
+        "correct": 7,
+        "total": 15
+      }
+    ]
+  },
+  "routers": {
+    "summary": [
+      {
+        "router": "init_1",
+        "accuracy": 11.11111111111111,
+        "avg_cost": 0.0007430999999999999,
+        "total_cost": 0.0334395,
+        "efficiency": 149.52376680273332,
+        "correct": 5,
+        "total": 45,
+        "model_usage": {
+          "gpt-4o-mini": 45,
+          "gpt-4.1-nano": 0,
+          "o4-mini": 0
+        },
+        "train_accuracy": 13.333333333333334,
+        "train_cost": 0.005625000000000001
+      },
+      {
+        "router": "mutated",
+        "accuracy": 25.833333333333336,
+        "avg_cost": 0.00607002375,
+        "total_cost": 0.72840285,
+        "efficiency": 42.558866978623165,
+        "correct": 31,
+        "total": 120,
+        "model_usage": {
+          "gpt-4o-mini": 51,
+          "gpt-4.1-nano": 29,
+          "o4-mini": 40
+        },
+        "train_accuracy": 40.0,
+        "train_cost": 0.012625
+      },
+      {
+        "router": "cross_mutated_mutated",
+        "accuracy": 20.0,
+        "avg_cost": 0.005514986666666667,
+        "total_cost": 0.0827248,
+        "efficiency": 36.26482022319788,
+        "correct": 3,
+        "total": 15,
+        "model_usage": {
+          "gpt-4o-mini": 7,
+          "gpt-4.1-nano": 4,
+          "o4-mini": 4
+        },
+        "train_accuracy": 40.0,
+        "train_cost": 0.012625
+      }
+    ]
+  }
+}
